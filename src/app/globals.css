@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cinzel+Decorative:wght@700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --canvas: #f6f4fe;
+  --canvas-pure: #ffffff;
+  --indigo-dark: #25176e;
+  --indigo-dark-hover: #1b1054;
+  --indigo-surface: #1e1266;
+  --neon-lime: #d2ff00;
+  --neon-lime-text: #1b1054;
+  --purple-light: #f0ebff;
+  --purple-border: #ebe6fe;
+  --text-primary: #1e1266;
+  --text-muted: #64748b;
+  --card-shadow: 0 20px 40px -15px rgba(37, 23, 110, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--canvas);
+  color: var(--text-primary);
+  font-family: var(--font-outfit), var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Custom Brand Typography */
+.font-algerian {
+  font-family: "Algerian", "Cinzel Decorative", "Georgia", serif;
+}
+
+.font-trajan {
+  font-family: "Trajan Pro", "Cinzel", "Times New Roman", serif;
+}
+
+/* Hide Next.js development indicator logo & toasts in bottom-left */
+div[data-nextjs-toast],
+div[data-nextjs-dialog-overlay],
+div[data-nextjs-toast-wrapper],
+[data-nextjs-dev-indicator],
+[data-nextjs-dev-indicator-container],
+div[class*="nextjs-toast"],
+div[class*="nextjs-dev-indicator"],
+#__next-build-watcher,
+#next-logo-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Saasmo Typography Trackings */
+.font-display-saasmo {
+  font-family: var(--font-outfit), sans-serif;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+/* Tilted Slanted Lime Tag Badge (Saasmo Signature) */
+.tilted-lime-badge {
+  background-color: var(--neon-lime);
+  color: var(--neon-lime-text);
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  transform: rotate(-3deg);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 8px 20px rgba(210, 255, 0, 0.4);
+}
+
+/* Saasmo Indigo Container Box */
+.saasmo-indigo-card {
+  background-color: var(--indigo-dark);
+  color: #ffffff;
+  border-radius: 32px;
+  box-shadow: 0 25px 50px -12px rgba(37, 23, 110, 0.25);
+}
+
+/* Saasmo White Rounded Card */
+.saasmo-white-card {
+  background-color: #ffffff;
+  border: 1px solid var(--purple-border);
+  border-radius: 28px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.saasmo-white-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -15px rgba(37, 23, 110, 0.15);
+  border-color: #d8cefe;
+}
+
+/* Side-by-Side Horizontal Track */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.horizontal-snap-track {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.horizontal-snap-item {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+/* Magic UI Marquee Keyframes */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee var(--duration, 40s) linear infinite reverse;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
+.animate-marquee-vertical-reverse {
+  animation: marquee-vertical var(--duration, 40s) linear infinite reverse;
+}
+
+/* Marquee Pause on Hover */
+.group:hover .animate-marquee,
+.group:hover .animate-marquee-reverse,
+.group:hover .animate-marquee-vertical,
+.group:hover .animate-marquee-vertical-reverse {
+  animation-play-state: paused !important;
+}
