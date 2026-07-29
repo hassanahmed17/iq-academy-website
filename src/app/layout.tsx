@@ -20,11 +20,11 @@ export const metadata: Metadata = {
     "IQ Academy of Excellence is Hyderabad's premier coaching institute for Polytechnic & Diploma Engineering (CSE, ECE, EEE, ME, CE, AI/ML), POLYCET, and ECET entrance preparation.",
   icons: {
     icon: [
-      { url: "/images/iqae-crest.png", type: "image/png" },
+      { url: "/images/iq-logo.png", type: "image/png" },
       { url: "/favicon.ico" },
     ],
-    shortcut: "/images/iqae-crest.png",
-    apple: "/images/iqae-crest.png",
+    shortcut: "/images/iq-logo.png",
+    apple: "/images/iq-logo.png",
   },
   formatDetection: {
     telephone: false,
@@ -88,8 +88,8 @@ export default function RootLayout({
       suppressHydrationWarning={true}
     >
       <head>
-        <link rel="icon" href="/images/iqae-crest.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/images/iqae-crest.png" />
+        <link rel="icon" href="/images/iq-logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/iq-logo.png" />
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
       </head>
       <body
