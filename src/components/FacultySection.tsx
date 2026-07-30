@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { UserCheck } from "lucide-react";
+import { UserRound } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -97,7 +97,7 @@ function FacultyCard({ member }: { member: FacultyMember }) {
           </div>
         ) : (
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-[#F0EBFF] to-[#E5DCFF] border border-[#EBE6FE] mb-5 shrink-0 flex items-center justify-center text-[#25176E] shadow-sm group-hover:bg-[#25176E] group-hover:text-white group-hover:border-[#25176E] group-hover:scale-105 transition-all duration-300">
-            <UserCheck className="w-12 h-12 sm:w-14 sm:h-14 stroke-[1.5]" />
+            <UserRound className="w-12 h-12 sm:w-14 sm:h-14 stroke-[1.5]" />
           </div>
         )}
 

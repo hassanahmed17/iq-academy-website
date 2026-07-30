@@ -110,6 +110,10 @@ export default function ContactSection() {
             <div className="inline-block">
               <a
                 href="#contact-form-block"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
                 className="px-7 py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-sm hover:bg-lime-400 transition-all shadow-xl hover:scale-105 inline-flex items-center gap-2"
               >
                 <span>Enrol Now</span>
@@ -120,7 +124,7 @@ export default function ContactSection() {
         </div>
 
         {/* Contact Information & Form Grid */}
-        <div id="contact-form-block" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Campus Info */}
           <div className="lg:col-span-5 space-y-6">
@@ -193,17 +197,17 @@ export default function ContactSection() {
           </div>
 
           {/* Right Column: Admission Inquiry Form */}
-          <div className="lg:col-span-7">
-            <div className="saasmo-white-card p-6 sm:p-8">
-              <h3 className="font-display-saasmo text-xl sm:text-2xl font-bold text-[#1E1266] mb-1">
+          <div id="contact-form-block" className="scroll-mt-16 sm:scroll-mt-24 lg:col-span-7">
+            <div className="saasmo-white-card p-4 sm:p-8">
+              <h3 className="font-display-saasmo text-lg sm:text-2xl font-bold text-[#1E1266] mb-0.5">
                 Send Admission Inquiry
               </h3>
-              <p className="text-xs text-[#64748B] mb-5">
+              <p className="text-[11px] sm:text-xs text-[#64748B] mb-3 sm:mb-5">
                 Fields marked with a red star (<span className="text-red-500 font-bold">*</span>) are mandatory.
               </p>
 
               {submitted && (
-                <div className="mb-5 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-800 flex items-center gap-2.5">
+                <div className="mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-800 flex items-center gap-2.5">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   <span className="text-xs sm:text-sm font-medium">
                     Thank you! Your inquiry has been received. Our admissions team will contact you shortly.
@@ -211,11 +215,11 @@ export default function ContactSection() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-3.5" noValidate>
+              <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-3.5" noValidate>
                 {/* First Name & Last Name */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
                   <div>
-                    <label htmlFor="firstName" className="block text-xs font-bold text-[#1E1266] mb-1">
+                    <label htmlFor="firstName" className="block text-[11px] sm:text-xs font-bold text-[#1E1266] mb-0.5 sm:mb-1">
                       First Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -225,19 +229,19 @@ export default function ContactSection() {
                       autoComplete="given-name"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className={`w-full px-3.5 py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
+                      className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
                         errors.firstName ? "border-red-500 bg-red-50" : "border-[#EBE6FE] focus:border-[#25176E]"
                       }`}
                     />
                     {errors.firstName && (
-                      <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-red-500 mt-0.5 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> Required field
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="lastName" className="block text-xs font-bold text-[#1E1266] mb-1">
+                    <label htmlFor="lastName" className="block text-[11px] sm:text-xs font-bold text-[#1E1266] mb-0.5 sm:mb-1">
                       Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -247,12 +251,12 @@ export default function ContactSection() {
                       autoComplete="family-name"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className={`w-full px-3.5 py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
+                      className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
                         errors.lastName ? "border-red-500 bg-red-50" : "border-[#EBE6FE] focus:border-[#25176E]"
                       }`}
                     />
                     {errors.lastName && (
-                      <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-red-500 mt-0.5 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> Required field
                       </p>
                     )}
@@ -260,9 +264,9 @@ export default function ContactSection() {
                 </div>
 
                 {/* Mobile Number & Branch Selection */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5">
                   <div>
-                    <label htmlFor="mobile" className="block text-xs font-bold text-[#1E1266] mb-1">
+                    <label htmlFor="mobile" className="block text-[11px] sm:text-xs font-bold text-[#1E1266] mb-0.5 sm:mb-1">
                       Mobile Number <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -272,19 +276,19 @@ export default function ContactSection() {
                       autoComplete="tel"
                       value={formData.mobile}
                       onChange={handleChange}
-                      className={`w-full px-3.5 py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
+                      className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
                         errors.mobile ? "border-red-500 bg-red-50" : "border-[#EBE6FE] focus:border-[#25176E]"
                       }`}
                     />
                     {errors.mobile && (
-                      <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-red-500 mt-0.5 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> Required field
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="branch" className="block text-xs font-bold text-[#1E1266] mb-1">
+                    <label htmlFor="branch" className="block text-[11px] sm:text-xs font-bold text-[#1E1266] mb-0.5 sm:mb-1">
                       Select Branch / Course <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -293,22 +297,34 @@ export default function ContactSection() {
                       autoComplete="off"
                       value={formData.branch}
                       onChange={handleChange}
-                      className={`w-full px-3.5 py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
+                      className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
                         errors.branch ? "border-red-500 bg-red-50" : "border-[#EBE6FE] focus:border-[#25176E]"
                       }`}
                     >
-                      <option value="">Select Branch...</option>
-                      <option value="CSE / AI-ML">Computer Science & AI / ML (CSE)</option>
-                      <option value="ECE">Electronics & Communication (ECE)</option>
-                      <option value="EEE">Electrical & Electronics (EEE)</option>
-                      <option value="Mechanical">Mechanical Engineering (ME)</option>
-                      <option value="Civil">Civil Engineering (CE)</option>
-                      <option value="POLYCET">POLYCET Entrance Coaching</option>
-                      <option value="ECET">ECET Entrance Coaching</option>
-                      <option value="Other">Other / General Inquiry</option>
+                      <option value="">Select Branch / Course...</option>
+                      
+                      {/* School & Intermediate */}
+                      <option value="SSC Class 10th">SSC (Class 10th)</option>
+                      <option value="Intermediate 1st Year">Intermediate 1st Year</option>
+                      <option value="Intermediate 2nd Year">Intermediate 2nd Year</option>
+                      
+                      {/* Entrance Exams */}
+                      <option value="POLYCET Entrance">POLYCET Entrance Coaching</option>
+                      <option value="ECET Entrance">ECET Entrance Coaching</option>
+                      <option value="TS EAPCET Entrance">TS EAPCET (EAMCET) Coaching</option>
+                      
+                      {/* Diploma Engineering Specialties */}
+                      <option value="Diploma CSE / AI-ML">Diploma CSE / AI-ML (Computer Engineering)</option>
+                      <option value="Diploma ECE">Diploma ECE (Electronics & Communication)</option>
+                      <option value="Diploma EEE">Diploma EEE (Electrical & Electronics)</option>
+                      <option value="Diploma Mechanical">Diploma Mechanical Engineering</option>
+                      <option value="Diploma Civil">Diploma Civil Engineering</option>
+                      
+                      {/* General */}
+                      <option value="Other / General Inquiry">Other / General Inquiry</option>
                     </select>
                     {errors.branch && (
-                      <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-red-500 mt-0.5 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> Required field
                       </p>
                     )}
@@ -317,8 +333,8 @@ export default function ContactSection() {
 
                 {/* Email ID (Optional) */}
                 <div>
-                  <label htmlFor="email" className="block text-xs font-bold text-[#1E1266] mb-1">
-                    Email ID <span className="text-xs text-[#64748B] font-normal">(Optional)</span>
+                  <label htmlFor="email" className="block text-[11px] sm:text-xs font-bold text-[#1E1266] mb-0.5 sm:mb-1">
+                    Email ID <span className="text-[10px] sm:text-xs text-[#64748B] font-normal">(Optional)</span>
                   </label>
                   <input
                     id="email"
@@ -327,28 +343,28 @@ export default function ContactSection() {
                     autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border border-[#EBE6FE] focus:border-[#25176E] text-xs sm:text-sm focus:outline-none transition-all"
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border border-[#EBE6FE] focus:border-[#25176E] text-xs sm:text-sm focus:outline-none transition-all"
                   />
                 </div>
 
                 {/* Your Message */}
                 <div>
-                  <label htmlFor="message" className="block text-xs font-bold text-[#1E1266] mb-1">
+                  <label htmlFor="message" className="block text-[11px] sm:text-xs font-bold text-[#1E1266] mb-0.5 sm:mb-1">
                     Your Message <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     autoComplete="off"
-                    rows={3}
+                    rows={2}
                     value={formData.message}
                     onChange={handleChange}
-                    className={`w-full px-3.5 py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
+                    className={`w-full px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-2xl bg-[#F6F4FE] text-[#1E1266] border text-xs sm:text-sm focus:outline-none transition-all ${
                       errors.message ? "border-red-500 bg-red-50" : "border-[#EBE6FE] focus:border-[#25176E]"
                     }`}
                   />
                   {errors.message && (
-                    <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
+                    <p className="text-[10px] text-red-500 mt-0.5 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" /> Required field
                     </p>
                   )}
@@ -357,7 +373,7 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3.5 rounded-full bg-[#25176E] text-white font-bold text-sm hover:bg-[#1b1054] disabled:opacity-70 transition-all shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3 sm:py-3.5 rounded-full bg-[#25176E] text-white font-bold text-xs sm:text-sm hover:bg-[#1b1054] disabled:opacity-70 transition-all shadow-md flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>

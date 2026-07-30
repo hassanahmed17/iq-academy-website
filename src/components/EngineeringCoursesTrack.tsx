@@ -893,19 +893,19 @@ export default function EngineeringCoursesTrack() {
         </div>
 
         {/* Mobile View: 1 Card at a time Carousel with Backward/Forward Buttons */}
-        <div className="block md:hidden px-6 relative">
+        <div className="block md:hidden px-8 sm:px-10 relative">
           <Carousel opts={{ align: "start", loop: true }} className="relative w-full">
             <CarouselContent>
               {coursesData.map((course) => (
                 <CarouselItem key={course.id} className="basis-full">
-                  <div className="p-1 h-full">
+                  <div className="py-1 h-full">
                     <DiplomaCourseCard course={course} onSelect={setSelectedCourse} />
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-5 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF]" />
-            <CarouselNext className="-right-5 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF]" />
+            <CarouselPrevious className="-left-7 bg-white text-[#25176E] border border-[#EBE6FE] shadow-lg hover:bg-[#F0EBFF] active:scale-95" />
+            <CarouselNext className="-right-7 bg-white text-[#25176E] border border-[#EBE6FE] shadow-lg hover:bg-[#F0EBFF] active:scale-95" />
             <CarouselDots />
           </Carousel>
         </div>

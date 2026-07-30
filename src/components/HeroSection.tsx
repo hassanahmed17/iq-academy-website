@@ -48,7 +48,7 @@ export default function HeroSection() {
 
   return (
     <section 
-      className="relative w-full min-h-screen min-h-[100dvh] pt-24 pb-16 lg:pt-32 lg:pb-24 flex flex-col items-center justify-center bg-[#F6F4FE] overflow-hidden" 
+      className="relative w-full min-h-[100dvh] min-h-screen pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-36 lg:pb-24 flex flex-col items-center justify-center bg-[#F6F4FE] overflow-hidden" 
       ref={heroRef}
       suppressHydrationWarning={true}
     >
@@ -62,27 +62,27 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={heroContainerVariants}
-          className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-6 lg:space-y-7 flex flex-col items-center"
+          className="max-w-3xl mx-auto text-center flex flex-col items-center gap-5 sm:gap-7 lg:gap-8 py-2"
           suppressHydrationWarning={true}
         >
           
-          {/* 1. Tilted Electric Lime Tag Badge - Centered */}
-          <motion.div variants={badgePopVariants} className="flex justify-center mb-1 sm:mb-2">
-            <div className="tilted-lime-badge shadow-sm">
-              <Star className="w-3.5 h-3.5 fill-[#1B1054] text-[#1B1054]" />
-              <span>Trusted by Diploma Students</span>
+          {/* 1. Green Pill Tag Badge - Centered */}
+          <motion.div variants={badgePopVariants} className="flex justify-center">
+            <div className="hero-green-badge shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#1B1054] animate-pulse shrink-0"></span>
+              <span className="truncate">SSC • INTERMEDIATE • DIPLOMA ENGINEERING</span>
             </div>
           </motion.div>
 
           {/* 2. Centered Hero Title with Magic UI DiaTextReveal */}
           <motion.h1
             variants={itemFadeUpVariants}
-            className="font-display-saasmo text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-extrabold text-[#1E1266] leading-[1.25] sm:leading-[1.18] tracking-tight text-center my-1 sm:my-2"
+            className="font-display-saasmo text-3xl sm:text-4xl lg:text-5xl xl:text-[54px] font-extrabold text-[#1E1266] leading-[1.2] sm:leading-[1.14] tracking-tight text-center max-w-2xl px-2"
           >
-            <span>Master Engineering Fundamentals.</span> <br className="hidden sm:inline" />
+            <span>Where Excellence</span>{" "}
             <DiaTextReveal
-              className="sm:ml-2"
-              text="Achieve Top Results."
+              className="inline-block"
+              text="Takes Shape."
               colors={["#25176E", "#6366F1", "#8B5CF6", "#25176E"]}
             />
           </motion.h1>
@@ -90,18 +90,22 @@ export default function HeroSection() {
           {/* 3. Centered Subtext Description */}
           <motion.p
             variants={itemFadeUpVariants}
-            className="text-xs sm:text-sm lg:text-base text-[#64748B] font-normal leading-relaxed sm:leading-relaxed max-w-xl mx-auto text-center py-1 sm:py-2"
+            className="text-xs sm:text-sm lg:text-base text-[#475569] font-medium leading-relaxed sm:leading-relaxed max-w-xl mx-auto text-center px-3"
           >
-            Focused coaching for Diploma students through structured learning, regular practice, and expert faculty.
+            Empowering SSC, Intermediate, and Polytechnic Diploma students with expert faculty, structured learning, and personalised guidance to build confidence and achieve academic excellence.
           </motion.p>
 
           {/* 4. Centered CTA Buttons */}
           <motion.div
             variants={itemFadeUpVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 pt-3 sm:pt-4 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 pt-3 sm:pt-5 w-full sm:w-auto px-4 sm:px-0"
           >
             <a
-              href="#contact"
+              href="#contact-form-block"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }}
               className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#25176E] text-white font-bold text-xs sm:text-sm hover:bg-[#1b1054] transition-all shadow-md hover:shadow-lg hover:scale-102 flex items-center justify-center gap-2 group"
             >
               <span>Join the Next Batch</span>

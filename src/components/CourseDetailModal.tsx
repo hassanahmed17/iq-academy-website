@@ -334,8 +334,14 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
             Enrolling for 2026 Academic Batches • Telangana SBTET C-24 & C-26 Aligned
           </p>
           <a
-            href="#contact"
-            onClick={onClose}
+            href="#contact-form-block"
+            onClick={(e) => {
+              e.preventDefault();
+              onClose();
+              setTimeout(() => {
+                document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }, 100);
+            }}
             className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#25176E] text-white font-bold text-xs sm:text-sm hover:bg-[#1b1054] transition-all text-center shadow-md"
           >
             Enrol in this Course

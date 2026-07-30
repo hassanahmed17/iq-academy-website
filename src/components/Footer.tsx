@@ -182,7 +182,11 @@ export default function Footer() {
               Ready to start your engineering journey? Send an inquiry or visit our campus for counseling.
             </p>
             <a
-              href="#contact"
+              href="#contact-form-block"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+              }}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25176E] text-white font-bold text-xs hover:bg-[#1b1054] transition-all shadow-sm"
             >
               <span>Inquire Now</span>

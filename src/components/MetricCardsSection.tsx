@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Award, Cpu, TrendingUp } from "lucide-react";
+import { Award, TrendingUp, Sparkles } from "lucide-react";
 import gsap from "gsap";
 
 export default function MetricCardsSection() {
-  const [passRate, setPassRate] = useState(0);
+  const [gpa, setGpa] = useState(0);
   const [activeTab, setActiveTab] = useState<"POLYCET" | "ECET">("POLYCET");
   const [displayedRank, setDisplayedRank] = useState(0);
 
@@ -22,23 +22,23 @@ export default function MetricCardsSection() {
   };
 
   const triggerScrollNumberAnimations = () => {
-    // 1. Pass Rate Ticker
-    const passDuration = 1400;
-    const passSteps = 40;
-    const passStepTime = passDuration / passSteps;
-    let passStep = 0;
+    // 1. Highest GPA Ticker (0.0 to 9.8)
+    const gpaDuration = 1200;
+    const gpaSteps = 35;
+    const gpaStepTime = gpaDuration / gpaSteps;
+    let gpaStep = 0;
 
-    setPassRate(0);
-    const passTimer = setInterval(() => {
-      passStep++;
-      const progress = passStep / passSteps;
-      setPassRate(Number((progress * 98.4).toFixed(1)));
+    setGpa(0);
+    const gpaTimer = setInterval(() => {
+      gpaStep++;
+      const progress = gpaStep / gpaSteps;
+      setGpa(Number((progress * 9.8).toFixed(1)));
 
-      if (passStep >= passSteps) {
-        setPassRate(98.4);
-        clearInterval(passTimer);
+      if (gpaStep >= gpaSteps) {
+        setGpa(9.8);
+        clearInterval(gpaTimer);
       }
-    }, passStepTime);
+    }, gpaStepTime);
 
     // 2. Rank Ticker
     const targetRank = rankValues[activeTabRef.current];
@@ -73,12 +73,12 @@ export default function MetricCardsSection() {
             gsap.fromTo(
               ".stripe-metric-card",
               { y: 25, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.7, stagger: 0.12, ease: "power2.out" }
+              { y: 0, opacity: 1, duration: 0.7, stagger: 0.14, ease: "power2.out" }
             );
             triggerScrollNumberAnimations();
           } else {
             if (!isFirstMount) {
-              setPassRate(0);
+              setGpa(0);
               setDisplayedRank(0);
             }
           }
@@ -128,114 +128,96 @@ export default function MetricCardsSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 lg:py-24 bg-[#F6F4FE] relative border-t border-[#EBE6FE]" ref={sectionRef} suppressHydrationWarning={true}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-8 sm:py-12 bg-[#F6F4FE] relative border-t border-[#EBE6FE]" ref={sectionRef} suppressHydrationWarning={true}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         
         {/* Section Header / Tag */}
-        <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-          <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#25176E] bg-[#F0EBFF] px-3 sm:px-3.5 py-1.5 rounded-full border border-[#EBE6FE]">
-            Key Performance Metrics
+        <div className="text-center mb-5 sm:mb-7">
+          <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#25176E] bg-[#F0EBFF] px-3.5 py-1 rounded-full border border-[#EBE6FE]">
+            <Sparkles className="w-3.5 h-3.5 text-[#25176E]" />
+            <span>Key Academic Benchmarks</span>
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 items-stretch">
+        {/* 2-Column Compact Responsive Metric Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto items-stretch">
           
-          {/* Card 1: Academic Performance */}
-          <div className="stripe-metric-card saasmo-white-card p-4 sm:p-6 relative shadow-lg border border-[#EBE6FE] flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold shrink-0">
-                  <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          {/* Card 1: Highest GPA */}
+          <div className="stripe-metric-card saasmo-white-card p-4 sm:p-5 relative shadow-md border border-[#EBE6FE] flex flex-col justify-between rounded-2xl group hover:border-[#25176E]/30 transition-all">
+            <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
+              <div className="flex items-start gap-2.5">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold shrink-0 mt-0.5">
+                  <TrendingUp className="w-4 h-4" />
                 </div>
-                <div>
-                  <h3 className="font-display-saasmo font-bold text-sm sm:text-lg text-[#1E1266]">
-                    Academic Performance
+                <div className="flex flex-col gap-0.5">
+                  <h3 className="font-display-saasmo font-extrabold text-sm sm:text-base text-[#1E1266] leading-snug">
+                    Highest GPA
                   </h3>
-                  <p className="text-[10px] sm:text-xs text-[#64748B]">Student Achievement</p>
+                  <p className="text-[11px] sm:text-xs text-[#64748B] font-semibold leading-tight">
+                    SBTET Diploma Semester Exam
+                  </p>
                 </div>
               </div>
               
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-emerald-200 shrink-0">
-                Top Performer
+              <span className="text-[9px] sm:text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shrink-0">
+                Top Score
               </span>
             </div>
 
-            <div className="pt-1 sm:pt-2">
-              <div className="font-display-saasmo text-3xl sm:text-4xl font-extrabold text-[#1E1266] ticker-number-anim" suppressHydrationWarning={true}>
-                {passRate}%
+            <div className="pt-2 border-t border-[#F0EBFF]">
+              <div className="font-display-saasmo text-3xl sm:text-4xl font-extrabold text-[#1E1266] tracking-tight leading-none ticker-number-anim my-1" suppressHydrationWarning={true}>
+                {gpa.toFixed(1)} <span className="text-lg sm:text-xl font-bold text-[#25176E]/70">GPA</span>
               </div>
-              <p className="text-[10px] sm:text-xs text-[#64748B] mt-0.5 sm:mt-1 font-medium">Highest Score Achieved</p>
+              <p className="text-[11px] sm:text-xs text-[#64748B] mt-1.5 font-medium leading-relaxed">
+                Highest GPA achieved by IQ Academy students in previous SBTET semester examinations.
+              </p>
             </div>
           </div>
 
-          {/* Card 2: Interactive POLYCET / ECET Rank Switcher */}
-          <div className="stripe-metric-card rounded-2xl bg-[#D2FF00] p-4 sm:p-6 text-[#1B1054] shadow-md flex flex-col justify-between border border-lime-300 min-h-[140px] sm:min-h-[160px]">
-            <div className="flex items-center justify-between mb-3">
+          {/* Card 2: POLYCET '26 & ECET '26 Ranks */}
+          <div className="stripe-metric-card rounded-2xl bg-[#D2FF00] p-4 sm:p-5 text-[#1B1054] shadow-md flex flex-col justify-between border border-lime-300">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="bg-[#1B1054]/15 p-0.5 rounded-full inline-flex items-center border border-[#1B1054]/10 shadow-inner">
                 <button
                   type="button"
                   onClick={() => handleTabSwitch("POLYCET")}
-                  className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-extrabold tracking-wider transition-all duration-300 ${
+                  className={`px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold tracking-wider transition-all duration-300 ${
                     activeTab === "POLYCET"
                       ? "bg-[#1B1054] text-[#D2FF00] shadow-xs scale-102"
                       : "text-[#1B1054]/80 hover:text-[#1B1054]"
                   }`}
                   suppressHydrationWarning={true}
                 >
-                  POLYCET
+                  POLYCET &apos;26
                 </button>
                 <button
                   type="button"
                   onClick={() => handleTabSwitch("ECET")}
-                  className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-extrabold tracking-wider transition-all duration-300 ${
+                  className={`px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold tracking-wider transition-all duration-300 ${
                     activeTab === "ECET"
                       ? "bg-[#1B1054] text-[#D2FF00] shadow-xs scale-102"
                       : "text-[#1B1054]/80 hover:text-[#1B1054]"
                   }`}
                   suppressHydrationWarning={true}
                 >
-                  ECET
+                  ECET &apos;26
                 </button>
               </div>
 
-              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-[#1B1054] shrink-0" />
-            </div>
-
-            <div>
-              <p className="text-[10px] sm:text-xs font-semibold opacity-80" suppressHydrationWarning={true}>
-                {activeTab} Highest Rank Achieved
-              </p>
-              <h3 className="font-display-saasmo text-3xl sm:text-4xl font-extrabold text-[#1B1054] tracking-tight my-0.5 sm:my-1 rank-number-text" suppressHydrationWarning={true}>
-                {displayedRank}
-              </h3>
-              <p className="text-[10px] sm:text-[11px] font-bold opacity-80">
-                Among IQ Academy Students
-              </p>
-            </div>
-          </div>
-
-          {/* Card 3: Specialized Branches (Includes AI/ML + Increased Spacing below heading) */}
-          <div className="stripe-metric-card rounded-2xl bg-[#25176E] p-4 sm:p-6 text-white shadow-md flex flex-col justify-between border border-[#3b279b] min-h-[140px] sm:min-h-[160px]">
-            <div className="flex items-center justify-between mb-4 sm:mb-4">
-              <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#D2FF00]">
-                SPECIALIZED BRANCHES
-              </span>
-              <Cpu className="w-4 h-4 sm:w-5 sm:h-5 text-[#D2FF00]" />
-            </div>
-
-            <div>
-              <div className="flex flex-wrap gap-1.5 my-2">
-                {["CSE", "ECE", "EEE", "MECH", "CIVIL", "AI/ML"].map((branch) => (
-                  <span
-                    key={branch}
-                    className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-white/12 text-white font-extrabold text-[10px] sm:text-xs tracking-wider border border-white/15 shadow-2xs"
-                  >
-                    {branch}
-                  </span>
-                ))}
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#1B1054]/10 flex items-center justify-center shrink-0">
+                <Award className="w-4 h-4 text-[#1B1054]" />
               </div>
-              <p className="text-[10px] sm:text-xs text-white/80 font-medium leading-tight mt-2 sm:mt-2.5">
-                Focused Coaching for Diploma Students
+            </div>
+
+            <div className="pt-2 border-t border-[#1B1054]/15">
+              <p className="text-[11px] sm:text-xs font-bold opacity-80 uppercase tracking-wider my-0.5" suppressHydrationWarning={true}>
+                {activeTab} 2026 State Rank
+              </p>
+              <h3 className="font-display-saasmo text-3xl sm:text-4xl font-extrabold text-[#1B1054] tracking-tight leading-none rank-number-text my-1" suppressHydrationWarning={true}>
+                Rank #{displayedRank}
+              </h3>
+              <p className="text-[11px] sm:text-xs font-bold opacity-85 mt-1.5 leading-relaxed" suppressHydrationWarning={true}>
+                Top Telangana state ranks achieved by IQ Academy students in {activeTab} entrance exam.
               </p>
             </div>
           </div>

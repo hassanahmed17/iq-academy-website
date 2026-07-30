@@ -16,18 +16,18 @@ export default function CoachingServices() {
             <span>Entrance Exam Specialization</span>
           </div>
           <h2 className="font-display-saasmo text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-[#1E1266]">
-            Specialized Coaching for POLYCET & ECET Aspirants
+            Specialized Entrance Exam Coaching
           </h2>
           <p className="text-sm sm:text-base text-[#64748B]">
-            Targeted preparation modules for Post-10th Diploma Entrance (POLYCET) and BE / B.Tech Lateral Entry (ECET) with proven state top-rank results.
+            Targeted preparation for POLYCET, ECET, and TS EAPCET entrance examinations.
           </p>
         </div>
 
-        {/* 2 Featured Modules */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        {/* 3 Featured Modules */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           
-          {/* POLYCET Card (Featured Indigo Card with Noisy Gradient) */}
-          <div className="saasmo-indigo-card p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
+          {/* Module 1: POLYCET Card */}
+          <div className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
             <GradientBackground
               gradientOrigin="top-left"
               colors={[
@@ -40,8 +40,8 @@ export default function CoachingServices() {
             />
 
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-5">
-                <span className="px-3.5 py-1 rounded-full bg-[#D2FF00] text-[#1B1054] text-xs font-extrabold shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 rounded-full bg-[#D2FF00] text-[#1B1054] text-[11px] sm:text-xs font-extrabold shadow-sm">
                   POST-10TH DIPLOMA ENTRANCE
                 </span>
                 <BookOpen className="w-5 h-5 text-[#D2FF00]" />
@@ -54,7 +54,7 @@ export default function CoachingServices() {
                 Complete preparation for Class 10 students aiming for top government polytechnic colleges.
               </p>
 
-              <div className="space-y-2.5 border-t border-white/10 pt-5 mb-6">
+              <div className="space-y-2.5 border-t border-white/10 pt-4 mb-6">
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white/90">
                   <CheckCircle2 className="w-4 h-4 text-[#D2FF00] shrink-0" />
                   <span>Comprehensive 10th Math, Physics & Chemistry</span>
@@ -72,7 +72,11 @@ export default function CoachingServices() {
 
             <div className="relative z-10">
               <a
-                href="#contact"
+                href="#contact-form-block"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
                 className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-xs sm:text-sm hover:bg-lime-400 transition-all shadow-md"
               >
                 <span>Join POLYCET Batch</span>
@@ -81,8 +85,8 @@ export default function CoachingServices() {
             </div>
           </div>
 
-          {/* ECET Card (Aesthetic Light Card with Soft Noisy Gradient) */}
-          <div className="saasmo-white-card p-6 sm:p-8 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#EBE6FE]">
+          {/* Module 2: ECET Card */}
+          <div className="saasmo-white-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#EBE6FE]">
             <GradientBackground
               gradientOrigin="bottom-right"
               colors={[
@@ -95,9 +99,9 @@ export default function CoachingServices() {
             />
 
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-5">
-                <span className="px-3.5 py-1 rounded-full bg-[#F0EBFF] text-[#25176E] text-xs font-extrabold border border-[#EBE6FE]">
-                  BE / B.TECH LATERAL ENTRY ENTRANCE
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 rounded-full bg-[#F0EBFF] text-[#25176E] text-[11px] sm:text-xs font-extrabold border border-[#EBE6FE]">
+                  BE / B.TECH LATERAL ENTRY
                 </span>
                 <BookOpen className="w-5 h-5 text-[#25176E]" />
               </div>
@@ -109,7 +113,7 @@ export default function CoachingServices() {
                 Dedicated coaching for diploma holders seeking 2nd-year BE / B.Tech lateral admission into top engineering colleges.
               </p>
 
-              <div className="space-y-2.5 border-t border-[#EBE6FE] pt-5 mb-6">
+              <div className="space-y-2.5 border-t border-[#EBE6FE] pt-4 mb-6">
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm text-[#1E1266]">
                   <CheckCircle2 className="w-4 h-4 text-[#25176E] shrink-0" />
                   <span>Branch Subjects (CSE, ECE, EEE, ME, CE) + Maths</span>
@@ -127,10 +131,73 @@ export default function CoachingServices() {
 
             <div className="relative z-10">
               <a
-                href="#contact"
+                href="#contact-form-block"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
                 className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#1E1266] text-white font-extrabold text-xs sm:text-sm hover:bg-[#25176E] transition-all shadow-md"
               >
                 <span>Join ECET Batch</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* Module 3: TS EAPCET Card */}
+          <div className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
+            <GradientBackground
+              gradientOrigin="top-right"
+              colors={[
+                { color: "rgba(37,23,110,1)", stop: "0%" },
+                { color: "rgba(25,14,80,1)", stop: "50%" },
+                { color: "rgba(15,8,50,1)", stop: "100%" }
+              ]}
+              noiseIntensity={0.65}
+              noisePatternSize={90}
+            />
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 rounded-full bg-[#D2FF00] text-[#1B1054] text-[11px] sm:text-xs font-extrabold shadow-sm">
+                  INTERMEDIATE B.TECH ENTRANCE
+                </span>
+                <BookOpen className="w-5 h-5 text-[#D2FF00]" />
+              </div>
+
+              <h3 className="font-display-saasmo text-2xl sm:text-3xl font-bold text-white mb-2">
+                TS EAPCET (EAMCET)
+              </h3>
+              <p className="text-xs sm:text-sm text-white/80 leading-relaxed mb-5">
+                Targeted coaching for Intermediate (Class 12) students aiming for top engineering & pharmacy universities across Telangana.
+              </p>
+
+              <div className="space-y-2.5 border-t border-white/10 pt-4 mb-6">
+                <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white/90">
+                  <CheckCircle2 className="w-4 h-4 text-[#D2FF00] shrink-0" />
+                  <span>Comprehensive Inter 1st & 2nd Year Syllabus</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white/90">
+                  <CheckCircle2 className="w-4 h-4 text-[#D2FF00] shrink-0" />
+                  <span>Concept-based Problem Solving</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white/90">
+                  <CheckCircle2 className="w-4 h-4 text-[#D2FF00] shrink-0" />
+                  <span>Regular Mock Tests for Better Rank</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10">
+              <a
+                href="#contact-form-block"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
+                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-xs sm:text-sm hover:bg-lime-400 transition-all shadow-md"
+              >
+                <span>Join TS EAPCET Batch</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>

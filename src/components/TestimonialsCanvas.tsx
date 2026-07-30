@@ -369,7 +369,7 @@ function TestimonialCard({ review }: { review: Testimonial }) {
 
 export default function TestimonialsCanvas() {
   return (
-    <section id="reviews" className="py-16 sm:py-24 relative bg-[#F6F4FE] overflow-hidden border-y border-[#EBE6FE]" suppressHydrationWarning={true}>
+    <section id="testimonials" className="scroll-mt-20 py-16 sm:py-24 min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center relative bg-[#F6F4FE] overflow-hidden border-y border-[#EBE6FE]" suppressHydrationWarning={true}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 sm:mb-14 text-center">
         {/* Header Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F0EBFF] text-[#25176E] text-xs font-extrabold uppercase tracking-wider border border-[#EBE6FE] mb-3">

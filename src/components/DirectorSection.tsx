@@ -48,14 +48,6 @@ export default function DirectorSection() {
                   {/* Bottom Vignette Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#120A3E] via-[#120A3E]/20 to-transparent opacity-90" />
 
-                  {/* Top Floating Pill Badge */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#D2FF00] text-[#1B1054] text-xs font-black shadow-lg uppercase tracking-wider">
-                      <Award className="w-4 h-4 text-[#1B1054]" />
-                      <span>13+ Years Experience</span>
-                    </span>
-                  </div>
-
                   {/* Bottom Name Overlay on Photo */}
                   <div className="absolute bottom-4 left-4 right-4 text-white z-10 space-y-1">
                     <h3 className="font-display-saasmo text-2xl font-bold tracking-wide drop-shadow-md">

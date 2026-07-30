@@ -30,8 +30,26 @@ export default function Navbar() {
     { name: "Entrance Exams (POLYCET & ECET)", href: "#coaching" },
     { name: "Faculty & Instructors", href: "#faculty" },
     { name: "Director's Message", href: "#director" },
+    { name: "Campus Gallery", href: "#gallery" },
     { name: "Student Testimonials", href: "#testimonials" },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      if (element) {
+        const navHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = Math.max(0, elementPosition - navHeight);
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }
+  };
 
   // Option A: Top-Right Expanding Circle Mask (Typed with as const for framer-motion v12 compatibility)
   const menuOverlayVariants: Variants = {
@@ -72,23 +90,26 @@ export default function Navbar() {
         </a>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-7 text-sm font-semibold text-[#64748B]">
-          <a href="#about" className="hover:text-[#25176E] transition-colors">
+        <div className="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-semibold text-[#64748B]">
+          <a href="#about" onClick={(e) => handleNavClick(e, "#about")} className="hover:text-[#25176E] transition-colors">
             About Us
           </a>
-          <a href="#courses" className="hover:text-[#25176E] transition-colors">
+          <a href="#courses" onClick={(e) => handleNavClick(e, "#courses")} className="hover:text-[#25176E] transition-colors">
             Engineering Fields
           </a>
-          <a href="#coaching" className="hover:text-[#25176E] transition-colors">
+          <a href="#coaching" onClick={(e) => handleNavClick(e, "#coaching")} className="hover:text-[#25176E] transition-colors">
             Entrance Exams
           </a>
-          <a href="#faculty" className="hover:text-[#25176E] transition-colors">
+          <a href="#faculty" onClick={(e) => handleNavClick(e, "#faculty")} className="hover:text-[#25176E] transition-colors">
             Faculty
           </a>
-          <a href="#director" className="hover:text-[#25176E] transition-colors">
-            Director
+          <a href="#director" onClick={(e) => handleNavClick(e, "#director")} className="hover:text-[#25176E] transition-colors">
+            Director's Message
           </a>
-          <a href="#testimonials" className="hover:text-[#25176E] transition-colors">
+          <a href="#gallery" onClick={(e) => handleNavClick(e, "#gallery")} className="hover:text-[#25176E] transition-colors">
+            Gallery
+          </a>
+          <a href="#testimonials" onClick={(e) => handleNavClick(e, "#testimonials")} className="hover:text-[#25176E] transition-colors">
             Testimonials
           </a>
         </div>
@@ -96,7 +117,8 @@ export default function Navbar() {
         {/* Desktop CTA Action Button */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="#contact"
+            href="#contact-form-block"
+            onClick={(e) => handleNavClick(e, "#contact-form-block")}
             className="px-6 py-2.5 rounded-full bg-[#25176E] text-white font-bold text-sm hover:bg-[#1b1054] transition-all shadow-md flex items-center gap-1.5"
           >
             <span>Enrol Now</span>
@@ -141,7 +163,10 @@ export default function Navbar() {
                     <a
                       key={link.name}
                       href={link.href}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={(e) => {
+                        setMobileMenuOpen(false);
+                        handleNavClick(e, link.href);
+                      }}
                       className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
                     >
                       <span>{link.name}</span>
@@ -154,8 +179,11 @@ export default function Navbar() {
               {/* Mobile Bottom Action Buttons */}
               <div className="pt-5 border-t border-[#EBE6FE] space-y-3">
                 <a
-                  href="#contact"
-                  onClick={() => setMobileMenuOpen(false)}
+                  href="#contact-form-block"
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    handleNavClick(e, "#contact-form-block");
+                  }}
                   className="w-full py-3.5 rounded-full bg-[#25176E] text-white font-bold text-center text-sm shadow-lg flex items-center justify-center gap-2"
                 >
                   <span>Enrol Now for Next Batch</span>

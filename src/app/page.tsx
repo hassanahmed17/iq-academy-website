@@ -6,6 +6,8 @@ import EngineeringCoursesTrack from "@/components/EngineeringCoursesTrack";
 import CoachingServices from "@/components/CoachingServices";
 import FacultySection from "@/components/FacultySection";
 import DirectorSection from "@/components/DirectorSection";
+import VideoReviewsSection from "@/components/VideoReviewsSection";
+import GallerySection from "@/components/GallerySection";
 import TestimonialsCanvas from "@/components/TestimonialsCanvas";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -23,6 +25,8 @@ export default function Home() {
       <CoachingServices />
       <FacultySection />
       <DirectorSection />
+      <VideoReviewsSection />
+      <GallerySection />
       <TestimonialsCanvas />
       <ContactSection />
       <Footer />
