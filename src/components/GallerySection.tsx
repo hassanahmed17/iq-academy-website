@@ -21,18 +21,19 @@ export const initialGalleryImages: GalleryItem[] = Array.from({ length: 11 }, (_
 
 // Custom Bento Grid span configurations for visual harmony (Mobile 2-col & Desktop 4-col)
 const bentoSpans = [
-  "col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 lg:row-span-2 h-56 sm:h-80 lg:h-full", // 1: Hero Featured
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 2: Standard
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 3: Standard
-  "col-span-2 sm:col-span-2 lg:col-span-2 row-span-1 h-36 sm:h-80 lg:h-full", // 4: Wide
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 5: Standard
-  "col-span-1 sm:col-span-1 lg:col-span-1 row-span-2 lg:row-span-2 h-72 sm:h-96 lg:h-full", // 6: Tall Portrait
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 7: Standard
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 8: Standard
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 9: Standard
-  "col-span-2 sm:col-span-2 lg:col-span-2 row-span-1 h-36 sm:h-80 lg:h-full", // 10: Ultrawide
-  "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full", // 11: Square
+  "col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 lg:row-span-2 h-full", // 1: Hero Featured
+  "col-span-1 row-span-1 h-full", // 2: Standard
+  "col-span-1 row-span-1 h-full", // 3: Standard
+  "col-span-2 sm:col-span-2 lg:col-span-2 row-span-1 h-full", // 4: Wide
+  "col-span-1 row-span-1 h-full", // 5: Standard
+  "col-span-1 sm:col-span-1 lg:col-span-1 row-span-2 lg:row-span-2 h-full", // 6: Tall Portrait
+  "col-span-1 row-span-1 h-full", // 7: Standard
+  "col-span-1 row-span-1 h-full", // 8: Standard
+  "col-span-1 row-span-1 h-full", // 9: Standard
+  "col-span-2 sm:col-span-2 lg:col-span-2 row-span-1 h-full", // 10: Ultrawide
+  "col-span-1 row-span-1 h-full", // 11: Square
 ];
+
 
 export default function GallerySection() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -93,7 +94,7 @@ export default function GallerySection() {
         {/* Dynamic Responsive Bento Grid (2-cols on mobile, 4-cols on desktop) */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[260px] gap-3 sm:gap-5">
           {initialGalleryImages.map((item, index) => {
-            const spanClass = bentoSpans[index] || "col-span-1 row-span-1 h-36 sm:h-80 lg:h-full";
+            const spanClass = bentoSpans[index] || "col-span-1 row-span-1 h-full";
             const isLoaded = loadedImages[item.id];
             return (
               <div
