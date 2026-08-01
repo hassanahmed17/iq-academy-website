@@ -1,12 +1,31 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, X, ArrowRight, ChevronRight, PhoneCall } from "lucide-react";
+import { Menu, X, ArrowRight, ChevronRight, ChevronDown, PhoneCall, Sparkles, GraduationCap } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+
+const engineeringFields = [
+  { id: "cse", name: "Computer Science Engineering", code: "CSE" },
+  { id: "aiml", name: "Artificial Intelligence & ML", code: "AI & ML" },
+  { id: "ce", name: "Civil Engineering", code: "CIVIL" },
+  { id: "ece", name: "Electronics & Communication", code: "ECE" },
+  { id: "eee", name: "Electrical & Electronics", code: "EEE" },
+  { id: "me", name: "Mechanical Engineering", code: "MECH" },
+];
+
+const entranceExams = [
+  { id: "exam-polycet", name: "POLYCET Coaching", tag: "Post-10th Diploma Entrance" },
+  { id: "exam-ecet", name: "ECET Coaching", tag: "BE / B.Tech Lateral Entry" },
+  { id: "exam-eapcet", name: "TS EAPCET (EAMCET)", tag: "Intermediate B.Tech Entrance" },
+];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [coursesHover, setCoursesHover] = useState(false);
+  const [examsHover, setExamsHover] = useState(false);
+  const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
+  const [mobileExamsOpen, setMobileExamsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -24,17 +43,15 @@ export default function Navbar() {
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
-    { name: "About Us", href: "#about" },
-    { name: "Engineering Fields", href: "#courses" },
-    { name: "Entrance Exams (POLYCET & ECET)", href: "#coaching" },
-    { name: "Faculty & Instructors", href: "#faculty" },
-    { name: "Director's Message", href: "#director" },
-    { name: "Campus Gallery", href: "#gallery" },
-    { name: "Student Testimonials", href: "#testimonials" },
-  ];
-
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === "#top" || href === "#") {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      return;
+    }
     if (href.startsWith("#")) {
       e.preventDefault();
       const targetId = href.replace("#", "");
@@ -51,7 +68,26 @@ export default function Navbar() {
     }
   };
 
-  // Option A: Top-Right Expanding Circle Mask (Typed with as const for framer-motion v12 compatibility)
+  const handleCourseClick = (courseId: string) => {
+    setCoursesHover(false);
+    setMobileMenuOpen(false);
+    window.dispatchEvent(new CustomEvent("open-course-modal", { detail: courseId }));
+  };
+
+  const handleExamClick = (examId: string) => {
+    setExamsHover(false);
+    setMobileMenuOpen(false);
+    const element = document.getElementById(examId);
+    if (element) {
+      const navHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: Math.max(0, elementPosition - navHeight),
+        behavior: "smooth"
+      });
+    }
+  };
+
   const menuOverlayVariants: Variants = {
     closed: {
       opacity: 0,
@@ -73,42 +109,139 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F6F4FE]/90 backdrop-blur-md border-b border-[#EBE6FE]" suppressHydrationWarning={true}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 md:h-20" suppressHydrationWarning={true}>
+      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between h-16 md:h-20" suppressHydrationWarning={true}>
         
-        {/* Brand Logo & Text */}
-        <a href="#" className="flex items-center gap-2 sm:gap-3 group z-50">
+        {/* Brand Logo & Text (Shifted cleanly left on mobile) */}
+        <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="flex items-center gap-1.5 sm:gap-3 group z-50">
           <img
             src="/images/iqae-crest.png"
             alt="IQ Academy of Excellence Shield Crest"
-            className="h-9 sm:h-10 md:h-11 lg:h-12 w-auto object-contain group-hover:scale-105 transition-transform"
+            className="h-8 sm:h-10 md:h-11 lg:h-12 w-auto object-contain group-hover:scale-105 transition-transform"
           />
           <img
             src="/images/iq-text-logo.png"
             alt="IQ Academy of Excellence"
-            className="h-5 sm:h-7 md:h-8 w-auto object-contain group-hover:scale-102 transition-transform"
+            className="h-4.5 sm:h-7 md:h-8 w-auto object-contain group-hover:scale-102 transition-transform"
           />
         </a>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-semibold text-[#64748B]">
+        <div className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-[#64748B]">
+          
+          {/* 1. Home */}
+          <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="hover:text-[#25176E] transition-colors">
+            Home
+          </a>
+
+          {/* 2. About Us */}
           <a href="#about" onClick={(e) => handleNavClick(e, "#about")} className="hover:text-[#25176E] transition-colors">
             About Us
           </a>
-          <a href="#courses" onClick={(e) => handleNavClick(e, "#courses")} className="hover:text-[#25176E] transition-colors">
-            Engineering Fields
-          </a>
-          <a href="#coaching" onClick={(e) => handleNavClick(e, "#coaching")} className="hover:text-[#25176E] transition-colors">
-            Entrance Exams
-          </a>
+
+          {/* 3. Engineering Fields with Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setCoursesHover(true)}
+            onMouseLeave={() => setCoursesHover(false)}
+          >
+            <a
+              href="#courses"
+              onClick={(e) => handleNavClick(e, "#courses")}
+              className="hover:text-[#25176E] transition-colors py-2 flex items-center gap-1 cursor-pointer"
+            >
+              <span>Engineering Fields</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${coursesHover ? "rotate-180 text-[#25176E]" : ""}`} />
+            </a>
+
+            <AnimatePresence>
+              {coursesHover && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-xl border border-[#EBE6FE] p-2 z-50"
+                >
+                  <div className="space-y-0.5">
+                    {engineeringFields.map((field) => (
+                      <button
+                        key={field.id}
+                        onClick={() => handleCourseClick(field.id)}
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#1E1266] hover:bg-[#F6F4FE] hover:text-[#25176E] transition-colors flex items-center justify-between group/item"
+                      >
+                        <span className="group-hover/item:translate-x-0.5 transition-transform">{field.name}</span>
+                        <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-[#F0EBFF] text-[#25176E] shrink-0">
+                          {field.code}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* 4. Entrance Exams with Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setExamsHover(true)}
+            onMouseLeave={() => setExamsHover(false)}
+          >
+            <a
+              href="#coaching"
+              onClick={(e) => handleNavClick(e, "#coaching")}
+              className="hover:text-[#25176E] transition-colors py-2 flex items-center gap-1 cursor-pointer"
+            >
+              <span>Entrance Exams</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${examsHover ? "rotate-180 text-[#25176E]" : ""}`} />
+            </a>
+
+            <AnimatePresence>
+              {examsHover && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full left-0 w-80 bg-white rounded-2xl shadow-xl border border-[#EBE6FE] p-2 z-50"
+                >
+                  <div className="space-y-1">
+                    {entranceExams.map((exam) => (
+                      <button
+                        key={exam.id}
+                        onClick={() => handleExamClick(exam.id)}
+                        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F6F4FE] transition-colors group/exam flex flex-col gap-0.5"
+                      >
+                        <span className="text-xs font-extrabold text-[#1E1266] group-hover/exam:text-[#25176E]">
+                          {exam.name}
+                        </span>
+                        <span className="text-[10px] font-medium text-[#64748B]">
+                          {exam.tag}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* 5. Faculty */}
           <a href="#faculty" onClick={(e) => handleNavClick(e, "#faculty")} className="hover:text-[#25176E] transition-colors">
             Faculty
           </a>
+
+          {/* 6. Director's Message */}
           <a href="#director" onClick={(e) => handleNavClick(e, "#director")} className="hover:text-[#25176E] transition-colors">
             Director's Message
           </a>
+
+          {/* 7. Gallery */}
           <a href="#gallery" onClick={(e) => handleNavClick(e, "#gallery")} className="hover:text-[#25176E] transition-colors">
             Gallery
           </a>
+
+          {/* 8. Testimonials */}
           <a href="#testimonials" onClick={(e) => handleNavClick(e, "#testimonials")} className="hover:text-[#25176E] transition-colors">
             Testimonials
           </a>
@@ -140,7 +273,7 @@ export default function Navbar() {
 
       </div>
 
-      {/* FULL-SCREEN MOBILE OVERLAY MENU (Renders safely after client mount) */}
+      {/* FULL-SCREEN MOBILE OVERLAY MENU */}
       {mounted && (
         <AnimatePresence>
           {mobileMenuOpen && (
@@ -159,20 +292,135 @@ export default function Navbar() {
                 </p>
 
                 <div className="flex flex-col space-y-2.5">
-                  {navLinks.map((link) => (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      onClick={(e) => {
-                        setMobileMenuOpen(false);
-                        handleNavClick(e, link.href);
-                      }}
-                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  
+                  {/* Home */}
+                  <a
+                    href="#top"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      handleNavClick(e, "#top");
+                    }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>Home</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </a>
+
+                  {/* About Us */}
+                  <a
+                    href="#about"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      handleNavClick(e, "#about");
+                    }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>About Us</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </a>
+
+                  {/* Engineering Fields Sub-Accordion */}
+                  <div className="rounded-2xl bg-white/85 border border-[#EBE6FE] overflow-hidden">
+                    <button
+                      onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}
+                      className="w-full flex items-center justify-between p-3.5 text-[#1E1266] font-bold text-base text-left"
                     >
-                      <span>{link.name}</span>
-                      <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
-                    </a>
-                  ))}
+                      <span>Engineering Fields</span>
+                      <ChevronDown className={`w-5 h-5 text-[#64748B] transition-transform duration-200 ${mobileCoursesOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {mobileCoursesOpen && (
+                      <div className="px-3.5 pb-3.5 pt-1 space-y-1.5 border-t border-[#F0EBFF]">
+                        {engineeringFields.map((field) => (
+                          <button
+                            key={field.id}
+                            onClick={() => handleCourseClick(field.id)}
+                            className="w-full text-left p-2.5 rounded-xl bg-[#F6F4FE] text-[#25176E] font-bold text-xs flex items-center justify-between hover:bg-[#25176E] hover:text-white transition-colors"
+                          >
+                            <span>{field.name}</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#EBE6FE] text-[#1E1266] font-extrabold">{field.code}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Entrance Exams Sub-Accordion */}
+                  <div className="rounded-2xl bg-white/85 border border-[#EBE6FE] overflow-hidden">
+                    <button
+                      onClick={() => setMobileExamsOpen(!mobileExamsOpen)}
+                      className="w-full flex items-center justify-between p-3.5 text-[#1E1266] font-bold text-base text-left"
+                    >
+                      <span>Entrance Exams</span>
+                      <ChevronDown className={`w-5 h-5 text-[#64748B] transition-transform duration-200 ${mobileExamsOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {mobileExamsOpen && (
+                      <div className="px-3.5 pb-3.5 pt-1 space-y-1.5 border-t border-[#F0EBFF]">
+                        {entranceExams.map((exam) => (
+                          <button
+                            key={exam.id}
+                            onClick={() => handleExamClick(exam.id)}
+                            className="w-full text-left p-2.5 rounded-xl bg-[#F6F4FE] text-[#25176E] font-bold text-xs flex flex-col hover:bg-[#25176E] hover:text-white transition-colors group/m"
+                          >
+                            <span className="font-extrabold">{exam.name}</span>
+                            <span className="text-[10px] text-[#64748B] group-hover/m:text-white/80 font-normal">{exam.tag}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Faculty */}
+                  <a
+                    href="#faculty"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      handleNavClick(e, "#faculty");
+                    }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>Faculty & Instructors</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </a>
+
+                  {/* Director's Message */}
+                  <a
+                    href="#director"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      handleNavClick(e, "#director");
+                    }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>Director's Message</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </a>
+
+                  {/* Campus Gallery */}
+                  <a
+                    href="#gallery"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      handleNavClick(e, "#gallery");
+                    }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>Campus Gallery</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </a>
+
+                  {/* Student Testimonials */}
+                  <a
+                    href="#testimonials"
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      handleNavClick(e, "#testimonials");
+                    }}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>Student Testimonials</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </a>
+
                 </div>
               </div>
 

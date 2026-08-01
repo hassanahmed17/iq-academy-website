@@ -841,6 +841,7 @@ function DiplomaCourseCard({
 }) {
   return (
     <div
+      id={`course-${course.id}`}
       onClick={() => onSelect(course)}
       className="rounded-[24px] bg-white border border-[#EBE6FE] p-6 flex flex-col justify-between items-center text-center group hover:shadow-xl hover:border-[#25176E]/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer h-full"
     >
@@ -875,6 +876,31 @@ function DiplomaCourseCard({
 export default function EngineeringCoursesTrack() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
+  React.useEffect(() => {
+    const handleOpenCourse = (e: Event) => {
+      const customEvt = e as CustomEvent<string>;
+      const courseId = customEvt.detail;
+      const found = coursesData.find((c) => c.id === courseId);
+      if (found) {
+        setSelectedCourse(found);
+        const elem = document.getElementById("courses");
+        if (elem) {
+          const navHeight = 80;
+          const elementPosition = elem.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({
+            top: Math.max(0, elementPosition - navHeight),
+            behavior: "smooth"
+          });
+        }
+      }
+    };
+
+    window.addEventListener("open-course-modal", handleOpenCourse);
+    return () => {
+      window.removeEventListener("open-course-modal", handleOpenCourse);
+    };
+  }, []);
+
   return (
     <section id="courses" className="py-14 sm:py-20 relative bg-[#F6F4FE]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -905,7 +931,7 @@ export default function EngineeringCoursesTrack() {
               ))}
             </CarouselContent>
             <CarouselPrevious className="-left-7 bg-white text-[#25176E] border border-[#EBE6FE] shadow-lg hover:bg-[#F0EBFF] active:scale-95" />
-            <CarouselNext className="-right-7 bg-white text-[#25176E] border border-[#EBE6FE] shadow-lg hover:bg-[#F0EBFF] active:scale-95" />
+            <CarouselNext className="-right-7 bg-[#25176E] text-white border border-[#EBE6FE] shadow-lg hover:bg-[#1B1054] active:scale-95" />
             <CarouselDots />
           </Carousel>
         </div>

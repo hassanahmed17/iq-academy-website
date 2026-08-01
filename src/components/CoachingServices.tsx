@@ -27,7 +27,7 @@ export default function CoachingServices() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           
           {/* Module 1: POLYCET Card */}
-          <div className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
+          <div id="exam-polycet" className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
             <GradientBackground
               gradientOrigin="top-left"
               colors={[
@@ -86,7 +86,7 @@ export default function CoachingServices() {
           </div>
 
           {/* Module 2: ECET Card */}
-          <div className="saasmo-white-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#EBE6FE]">
+          <div id="exam-ecet" className="saasmo-white-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#EBE6FE]">
             <GradientBackground
               gradientOrigin="bottom-right"
               colors={[
@@ -145,7 +145,7 @@ export default function CoachingServices() {
           </div>
 
           {/* Module 3: TS EAPCET Card */}
-          <div className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
+          <div id="exam-eapcet" className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
             <GradientBackground
               gradientOrigin="top-right"
               colors={[

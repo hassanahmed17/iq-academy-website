@@ -9,6 +9,38 @@ import { DiaTextReveal } from "@/components/ui/dia-text-reveal";
 export default function HeroSection() {
   const heroRef = useRef<HTMLDivElement>(null);
 
+  // Typewriter animation state for: Polytechnic, Intermediate, SSC
+  const words = React.useMemo(() => ["Polytechnic", "Intermediate", "SSC"], []);
+  const [wordIndex, setWordIndex] = React.useState(0);
+  const [currentText, setCurrentText] = React.useState("");
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
+  React.useEffect(() => {
+    const currentFullWord = words[wordIndex];
+
+    const timer = setTimeout(
+      () => {
+        if (!isDeleting) {
+          if (currentText.length < currentFullWord.length) {
+            setCurrentText(currentFullWord.slice(0, currentText.length + 1));
+          } else {
+            setTimeout(() => setIsDeleting(true), 1600);
+          }
+        } else {
+          if (currentText.length > 0) {
+            setCurrentText(currentFullWord.slice(0, currentText.length - 1));
+          } else {
+            setIsDeleting(false);
+            setWordIndex((prev) => (prev + 1) % words.length);
+          }
+        }
+      },
+      isDeleting ? 45 : 100
+    );
+
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, wordIndex, words]);
+
   // Framer Motion Animation Variants (Staggered Fade-Slide for Executive Polish)
   const heroContainerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -62,7 +94,7 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={heroContainerVariants}
-          className="max-w-3xl mx-auto text-center flex flex-col items-center gap-5 sm:gap-7 lg:gap-8 py-2"
+          className="max-w-4xl mx-auto text-center flex flex-col items-center gap-5 sm:gap-7 lg:gap-8 py-2"
           suppressHydrationWarning={true}
         >
           
@@ -74,17 +106,16 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* 2. Centered Hero Title with Magic UI DiaTextReveal */}
+          {/* 2. Centered Hero Title with Strict 2-Line Layout (Line 1: Static, Line 2: Animated) */}
           <motion.h1
             variants={itemFadeUpVariants}
-            className="font-display-saasmo text-3xl sm:text-4xl lg:text-5xl xl:text-[54px] font-extrabold text-[#1E1266] leading-[1.2] sm:leading-[1.14] tracking-tight text-center max-w-2xl px-2"
+            className="font-display-saasmo text-3xl sm:text-4xl lg:text-5xl xl:text-[56px] font-extrabold text-[#1E1266] leading-[1.2] sm:leading-[1.18] tracking-tight text-center max-w-4xl px-2 flex flex-col items-center justify-center gap-1 sm:gap-2"
           >
-            <span>Where Excellence</span>{" "}
-            <DiaTextReveal
-              className="inline-block"
-              text="Takes Shape."
-              colors={["#25176E", "#6366F1", "#8B5CF6", "#25176E"]}
-            />
+            <span className="block w-full text-center">A leading institute for</span>
+            <span className="block w-full text-center text-transparent bg-clip-text bg-gradient-to-r from-[#25176E] via-[#5B3DF5] to-[#7C3AED] font-black min-h-[1.25em] flex items-center justify-center">
+              <span>{currentText}</span>
+              <span className="w-[3px] sm:w-[4px] h-[0.75em] bg-[#5B3DF5] animate-cursor-blink ml-1 sm:ml-2 rounded-full inline-block shrink-0 align-middle" />
+            </span>
           </motion.h1>
 
           {/* 3. Centered Subtext Description */}
