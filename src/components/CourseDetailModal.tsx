@@ -15,6 +15,15 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
   const [selectedC24Sem, setSelectedC24Sem] = useState<"sem1" | "sem2" | "sem3" | "sem4" | "sem5">("sem1");
   const [selectedC26Tab, setSelectedC26Tab] = useState<"year1" | "sem3" | "sem4" | "sem5">("year1");
 
+  const contentBodyRef = React.useRef<HTMLDivElement>(null);
+
+  // Automatically scroll modal body back to top on tab/scheme switch
+  React.useEffect(() => {
+    if (contentBodyRef.current) {
+      contentBodyRef.current.scrollTop = 0;
+    }
+  }, [activeTab, course, selectedScheme, selectedC26Tab, selectedC24Sem]);
+
   if (!course) return null;
 
   const courseTitle = course.fullTitle || course.name || course.title || "Engineering Course";
@@ -107,7 +116,7 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
         </div>
 
         {/* Content Body */}
-        <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-sm text-[#1E1266] grow">
+        <div ref={contentBodyRef} className="p-6 sm:p-8 overflow-y-auto space-y-6 text-sm text-[#1E1266] grow">
           
           {/* TAB 1: COACHING BENEFITS */}
           {activeTab === "benefits" && (

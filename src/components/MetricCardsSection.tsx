@@ -1,227 +1,319 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Award, TrendingUp, Sparkles } from "lucide-react";
-import gsap from "gsap";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { Sparkles } from "lucide-react";
 
-export default function MetricCardsSection() {
-  const [gpa, setGpa] = useState(0);
-  const [activeTab, setActiveTab] = useState<"POLYCET" | "ECET">("POLYCET");
-  const [displayedRank, setDisplayedRank] = useState(0);
+const INK = "#17153A";
+const PAPER = "#F4F1FC";
+const CARD_TINT = "#FBFAFF";
+const LIME = "#D7FF3F";
 
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const activeTabRef = useRef<"POLYCET" | "ECET">("POLYCET");
+type ExamKey = "POLYCET" | "ECET";
 
-  useEffect(() => {
-    activeTabRef.current = activeTab;
-  }, [activeTab]);
+interface ExamInfo {
+  tabLabel: string;
+  statLabel: string;
+  rank: number;
+  description: string;
+}
 
-  const rankValues = {
-    POLYCET: 1714,
-    ECET: 1042,
-  };
+const EXAM_DATA: Record<ExamKey, ExamInfo> = {
+  POLYCET: {
+    tabLabel: "POLYCET '26",
+    statLabel: "POLYCET 2026 STATE RANK",
+    rank: 874, // placeholder — swap in the real POLYCET '26 rank
+    description:
+      "Top Telangana state ranks achieved by IQ Academy students in the POLYCET entrance exam.",
+  },
+  ECET: {
+    tabLabel: "ECET '26",
+    statLabel: "ECET 2026 STATE RANK",
+    rank: 1042,
+    description:
+      "Top Telangana state ranks achieved by IQ Academy students in the ECET entrance exam.",
+  },
+};
 
-  const triggerScrollNumberAnimations = () => {
-    // 1. Highest GPA Ticker (0.0 to 9.8)
-    const gpaDuration = 1200;
-    const gpaSteps = 35;
-    const gpaStepTime = gpaDuration / gpaSteps;
-    let gpaStep = 0;
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia !== undefined &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
-    setGpa(0);
-    const gpaTimer = setInterval(() => {
-      gpaStep++;
-      const progress = gpaStep / gpaSteps;
-      setGpa(Number((progress * 9.8).toFixed(1)));
-
-      if (gpaStep >= gpaSteps) {
-        setGpa(9.8);
-        clearInterval(gpaTimer);
-      }
-    }, gpaStepTime);
-
-    // 2. Rank Ticker
-    const targetRank = rankValues[activeTabRef.current];
-    const rankDuration = 1200;
-    const rankSteps = 35;
-    const rankStepTime = rankDuration / rankSteps;
-    let rankStep = 0;
-
-    setDisplayedRank(0);
-    const rankTimer = setInterval(() => {
-      rankStep++;
-      const progress = rankStep / rankSteps;
-      setDisplayedRank(Math.floor(progress * targetRank));
-
-      if (rankStep >= rankSteps) {
-        setDisplayedRank(targetRank);
-        clearInterval(rankTimer);
-      }
-    }, rankStepTime);
-  };
+function useCountUp(target: number, active: boolean, decimals = 0, duration = 1000) {
+  const [display, setDisplay] = useState(0);
+  const fromRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const targetElement = sectionRef.current;
-    if (!targetElement) return;
-
-    let isFirstMount = true;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            gsap.fromTo(
-              ".stripe-metric-card",
-              { y: 25, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.7, stagger: 0.14, ease: "power2.out" }
-            );
-            triggerScrollNumberAnimations();
-          } else {
-            if (!isFirstMount) {
-              setGpa(0);
-              setDisplayedRank(0);
-            }
-          }
-          isFirstMount = false;
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(targetElement);
-
-    return () => {
-      if (targetElement) observer.unobserve(targetElement);
-    };
-  }, []);
-
-  const handleTabSwitch = (tab: "POLYCET" | "ECET") => {
-    if (tab === activeTab) return;
-
-    setActiveTab(tab);
-
-    const target = rankValues[tab];
-    const duration = 700;
-    const steps = 25;
-    const stepTime = duration / steps;
-    let step = 0;
-
-    setDisplayedRank(0);
-    const timer = setInterval(() => {
-      step++;
-      const progress = step / steps;
-      setDisplayedRank(Math.floor(progress * target));
-
-      if (step >= steps) {
-        setDisplayedRank(target);
-        clearInterval(timer);
-      }
-    }, stepTime);
-
-    if (sectionRef.current) {
-      gsap.fromTo(
-        ".rank-number-text",
-        { y: 6, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }
-      );
+    if (!active) return;
+    if (prefersReducedMotion()) {
+      setDisplay(target);
+      fromRef.current = target;
+      return;
     }
-  };
+    const from = fromRef.current;
+    const start = performance.now();
+    function tick(now: number) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = from + (target - from) * eased;
+      setDisplay(value);
+      if (t < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        fromRef.current = target;
+      }
+    }
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, active, duration]);
+
+  return decimals > 0 ? display.toFixed(decimals) : Math.round(display);
+}
+
+function Badge({ children, dot }: { children: React.ReactNode; dot: string }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide"
+      style={{ backgroundColor: "rgba(255,255,255,0.85)", color: INK, letterSpacing: "0.06em" }}
+    >
+      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: dot }} />
+      {children}
+    </span>
+  );
+}
+
+function Sparkline() {
+  return (
+    <div className="p-1.5 rounded-xl bg-[#F0EBFF] border border-[rgba(23,21,58,0.08)] flex items-center justify-center shrink-0">
+      <svg width="42" height="28" viewBox="-4 -4 48 36" fill="none" className="overflow-visible">
+        <path
+          d="M2 22 L11 15 L20 18 L29 8 L38 4"
+          stroke={INK}
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity="0.65"
+        />
+        {[
+          [2, 22],
+          [11, 15],
+          [20, 18],
+          [29, 8],
+          [38, 4],
+        ].map(([x, y], i) => (
+          <circle 
+            key={i} 
+            cx={x} 
+            cy={y} 
+            r={i === 4 ? 3.5 : 2} 
+            fill={i === 4 ? LIME : INK} 
+            stroke={i === 4 ? INK : "none"} 
+            strokeWidth={i === 4 ? 1.5 : 0} 
+            opacity={i === 4 ? 1 : 0.65} 
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function RibbonWatermark() {
+  return (
+    <svg
+      className="absolute -right-3 -top-3 pointer-events-none"
+      width="140"
+      height="150"
+      viewBox="0 0 140 150"
+      fill="none"
+      style={{ opacity: 0.1 }}
+    >
+      <circle cx="70" cy="55" r="42" fill={INK} />
+      <path d="M45 90 L38 148 L70 128 L102 148 L95 90 Z" fill={INK} />
+      <path d="M60 55 L67 63 L82 46" stroke={PAPER} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ExamToggle({ active, onChange }: { active: ExamKey; onChange: (key: ExamKey) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [rect, setRect] = useState({ left: 0, width: 0 });
+
+  useLayoutEffect(() => {
+    const btn = btnRefs.current[active];
+    const container = containerRef.current;
+    if (btn && container) {
+      const c = container.getBoundingClientRect();
+      const b = btn.getBoundingClientRect();
+      setRect({ left: b.left - c.left, width: b.width });
+    }
+  }, [active]);
 
   return (
-    <section className="py-8 sm:py-12 bg-[#F6F4FE] relative border-t border-[#EBE6FE]" ref={sectionRef} suppressHydrationWarning={true}>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        
-        {/* Section Header / Tag */}
-        <div className="text-center mb-5 sm:mb-7">
-          <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#25176E] bg-[#F0EBFF] px-3.5 py-1 rounded-full border border-[#EBE6FE]">
-            <Sparkles className="w-3.5 h-3.5 text-[#25176E]" />
-            <span>Key Academic Benchmarks</span>
-          </span>
+    <div
+      ref={containerRef}
+      className="relative inline-flex p-1 rounded-full"
+      style={{ backgroundColor: "rgba(23,21,58,0.1)" }}
+      role="tablist"
+      aria-label="Select exam"
+    >
+      <div
+        className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out"
+        style={{ backgroundColor: INK, left: rect.left, width: rect.width }}
+      />
+      {(Object.keys(EXAM_DATA) as ExamKey[]).map((key) => {
+        const exam = EXAM_DATA[key];
+        const isActive = active === key;
+        return (
+          <button
+            key={key}
+            ref={(el) => {
+              btnRefs.current[key] = el;
+            }}
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => onChange(key)}
+            className="relative z-10 rounded-full px-3 py-1 text-xs font-bold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+            style={{ color: isActive ? LIME : "rgba(23,21,58,0.55)" }}
+          >
+            {exam.tabLabel}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function MetricCardsSection() {
+  const [activeExam, setActiveExam] = useState<ExamKey>("ECET");
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const gpa = useCountUp(9.8, visible, 1, 1100);
+  const rank = useCountUp(EXAM_DATA[activeExam].rank, visible, 0, 900);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="pt-6 pb-12 sm:py-16 px-4 sm:px-6 relative border-t border-[#EBE6FE]"
+      style={{
+        backgroundColor: PAPER,
+        backgroundImage: "radial-gradient(circle at 1px 1px, rgba(23,21,58,0.07) 1px, transparent 0)",
+        backgroundSize: "18px 18px",
+        fontFamily: "'Inter', sans-serif",
+      }}
+    >
+      <div className="flex justify-center mb-6 sm:mb-10">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold uppercase shadow-xs"
+          style={{ backgroundColor: "white", color: INK, letterSpacing: "0.08em", border: "1px solid rgba(23,21,58,0.08)" }}
+        >
+          <Sparkles size={12} />
+          Key Academic Benchmarks
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 max-w-3xl mx-auto items-start">
+        {/* Card 1 — Highest GPA (quiet) */}
+        <div
+          className="sm:col-span-5 p-5 sm:p-6 flex flex-col transition-all duration-300 hover:-translate-y-1"
+          style={{
+            backgroundColor: CARD_TINT,
+            border: "1px solid rgba(23,21,58,0.08)",
+            borderRadius: "22px",
+            boxShadow: "0 1px 2px rgba(23,21,58,0.04)",
+          }}
+        >
+          <div className="flex items-start justify-between mb-4">
+            <Sparkline />
+            <Badge dot="#22C55E">Top Score</Badge>
+          </div>
+
+          <h3 className="font-bold text-sm sm:text-base mb-0.5" style={{ color: INK }}>
+            Highest GPA
+          </h3>
+          <p className="text-xs sm:text-sm mb-4" style={{ color: "rgba(23,21,58,0.45)" }}>
+            SBTET Diploma Semester Exam
+          </p>
+
+          <div className="h-px mb-4" style={{ backgroundColor: "rgba(23,21,58,0.08)" }} />
+
+          <div className="flex items-baseline gap-1.5 mb-2">
+            <span className="stat-numeral text-5xl font-bold tabular-nums" style={{ color: INK }}>
+              {gpa}
+            </span>
+            <span className="text-sm sm:text-base font-semibold" style={{ color: "rgba(23,21,58,0.35)" }}>
+              GPA
+            </span>
+          </div>
+
+          <p className="text-xs sm:text-sm leading-relaxed mt-auto" style={{ color: "rgba(23,21,58,0.55)" }}>
+            Highest GPA achieved by IQ Academy students in previous SBTET semester examinations.
+          </p>
         </div>
 
-        {/* 2-Column Compact Responsive Metric Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto items-stretch">
-          
-          {/* Card 1: Highest GPA */}
-          <div className="stripe-metric-card saasmo-white-card p-4 sm:p-5 relative shadow-md border border-[#EBE6FE] flex flex-col justify-between rounded-2xl group hover:border-[#25176E]/30 transition-all">
-            <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
-              <div className="flex items-start gap-2.5">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold shrink-0 mt-0.5">
-                  <TrendingUp className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col gap-0.5">
-                  <h3 className="font-display-saasmo font-extrabold text-sm sm:text-base text-[#1E1266] leading-snug">
-                    Highest GPA
-                  </h3>
-                  <p className="text-[11px] sm:text-xs text-[#64748B] font-semibold leading-tight">
-                    SBTET Diploma Semester Exam
-                  </p>
-                </div>
-              </div>
-              
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shrink-0">
-                Top Score
+        {/* Card 2 — State Rank (hero, stamped) */}
+        <div className="sm:col-span-7 relative sm:mt-[-10px]">
+          <div
+            className="absolute inset-0 rounded-[22px]"
+            style={{ backgroundColor: INK, transform: "rotate(1.4deg) translate(4px, 6px)", zIndex: 0 }}
+          />
+          <div
+            className="relative overflow-hidden p-5 sm:p-6 flex flex-col transition-all duration-300 hover:-translate-y-1"
+            style={{
+              backgroundColor: LIME,
+              borderRadius: "22px",
+              transform: "rotate(-0.6deg)",
+              boxShadow: "0 10px 20px -6px rgba(23,21,58,0.22)",
+              zIndex: 1,
+            }}
+          >
+            <RibbonWatermark />
+
+            <div className="flex items-start justify-between mb-4 relative">
+              <ExamToggle active={activeExam} onChange={setActiveExam} />
+              <Badge dot={INK}>Top Rank</Badge>
+            </div>
+
+            <div className="h-px mb-4" style={{ backgroundColor: "rgba(23,21,58,0.15)" }} />
+
+            <p
+              className="text-[11px] font-bold uppercase mb-1.5 relative"
+              style={{ color: "rgba(23,21,58,0.6)", letterSpacing: "0.08em" }}
+            >
+              {EXAM_DATA[activeExam].statLabel}
+            </p>
+            <div className="mb-2 relative">
+              <span className="stat-numeral text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: INK }}>
+                Rank #{rank}
               </span>
             </div>
 
-            <div className="pt-2 border-t border-[#F0EBFF]">
-              <div className="font-display-saasmo text-3xl sm:text-4xl font-extrabold text-[#1E1266] tracking-tight leading-none ticker-number-anim my-1" suppressHydrationWarning={true}>
-                {gpa.toFixed(1)} <span className="text-lg sm:text-xl font-bold text-[#25176E]/70">GPA</span>
-              </div>
-              <p className="text-[11px] sm:text-xs text-[#64748B] mt-1.5 font-medium leading-relaxed">
-                Highest GPA achieved by IQ Academy students in previous SBTET semester examinations.
-              </p>
-            </div>
+            <p className="text-xs sm:text-sm font-medium leading-relaxed mt-auto relative" style={{ color: "rgba(23,21,58,0.75)" }}>
+              {EXAM_DATA[activeExam].description}
+            </p>
           </div>
-
-          {/* Card 2: POLYCET '26 & ECET '26 Ranks */}
-          <div className="stripe-metric-card rounded-2xl bg-[#D2FF00] p-4 sm:p-5 text-[#1B1054] shadow-md flex flex-col justify-between border border-lime-300">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="bg-[#1B1054]/15 p-0.5 rounded-full inline-flex items-center border border-[#1B1054]/10 shadow-inner">
-                <button
-                  type="button"
-                  onClick={() => handleTabSwitch("POLYCET")}
-                  className={`px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold tracking-wider transition-all duration-300 ${
-                    activeTab === "POLYCET"
-                      ? "bg-[#1B1054] text-[#D2FF00] shadow-xs scale-102"
-                      : "text-[#1B1054]/80 hover:text-[#1B1054]"
-                  }`}
-                  suppressHydrationWarning={true}
-                >
-                  POLYCET &apos;26
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleTabSwitch("ECET")}
-                  className={`px-3 py-0.5 rounded-full text-[11px] sm:text-xs font-extrabold tracking-wider transition-all duration-300 ${
-                    activeTab === "ECET"
-                      ? "bg-[#1B1054] text-[#D2FF00] shadow-xs scale-102"
-                      : "text-[#1B1054]/80 hover:text-[#1B1054]"
-                  }`}
-                  suppressHydrationWarning={true}
-                >
-                  ECET &apos;26
-                </button>
-              </div>
-
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#1B1054]/10 flex items-center justify-center shrink-0">
-                <Award className="w-4 h-4 text-[#1B1054]" />
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-[#1B1054]/15">
-              <p className="text-[11px] sm:text-xs font-bold opacity-80 uppercase tracking-wider my-0.5" suppressHydrationWarning={true}>
-                {activeTab} 2026 State Rank
-              </p>
-              <h3 className="font-display-saasmo text-3xl sm:text-4xl font-extrabold text-[#1B1054] tracking-tight leading-none rank-number-text my-1" suppressHydrationWarning={true}>
-                Rank #{displayedRank}
-              </h3>
-              <p className="text-[11px] sm:text-xs font-bold opacity-85 mt-1.5 leading-relaxed" suppressHydrationWarning={true}>
-                Top Telangana state ranks achieved by IQ Academy students in {activeTab} entrance exam.
-              </p>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>

@@ -37,11 +37,19 @@ function WhatsappIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+import { motion } from "framer-motion";
+
 export default function Footer() {
   return (
-    <footer className="bg-white text-[#64748B] pt-16 pb-12 text-sm border-t border-[#EBE6FE] shadow-sm relative overflow-hidden" suppressHydrationWarning={true}>
+    <footer className="bg-white text-[#64748B] pt-16 pb-12 text-sm border-t border-[#EBE6FE] shadow-sm relative overflow-hidden">
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 25, filter: "blur(3px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+      >
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           
@@ -201,7 +209,7 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} IQ Academy of Excellence. All rights reserved.</p>
         </div>
 
-      </div>
+      </motion.div>
     </footer>
   );
 }

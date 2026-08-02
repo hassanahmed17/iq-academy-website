@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { BookOpen, Target, Users, ShieldCheck, CheckCircle2, Check } from "lucide-react";
-import gsap from "gsap";
+import { motion, Variants } from "framer-motion";
 
 export default function AboutUsSection() {
   // Independent refs for each card viewport
@@ -98,12 +98,6 @@ export default function AboutUsSection() {
                 setVisibleAvatarsCount((prev) => Math.max(prev, idx + 1));
               }, 250 + idx * 180);
             });
-
-            gsap.fromTo(
-              ".faculty-badge-anim",
-              { x: -15, opacity: 0 },
-              { x: 0, opacity: 1, duration: 0.6, delay: 0.5, ease: "power2.out" }
-            );
           } else {
             setVisibleAvatarsCount(0);
           }
@@ -154,17 +148,47 @@ export default function AboutUsSection() {
     };
   }, []);
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.7,
+        ease: [0.21, 0.47, 0.32, 0.98],
+      },
+    },
+  };
+
   return (
-    <section id="about" className="py-16 sm:py-20 relative bg-[#F6F4FE] overflow-hidden" suppressHydrationWarning={true}>
+    <section id="about" className="py-16 sm:py-20 relative bg-[#F6F4FE] overflow-hidden">
 
       {/* Ambient Background Glows */}
       <div className="absolute top-1/4 right-0 w-[550px] h-[550px] bg-[#D8CEFE]/35 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-[#D2FF00]/15 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+      >
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+        <motion.div variants={cardVariants} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F0EBFF] text-[#25176E] text-xs font-extrabold uppercase tracking-widest border border-[#EBE6FE]">
             <span>THE IQ ACADEMY ADVANTAGE</span>
           </div>
@@ -174,16 +198,17 @@ export default function AboutUsSection() {
           <p className="text-sm sm:text-base text-[#64748B] leading-relaxed max-w-2xl mx-auto">
             From SBTET Board exams to core engineering fundamentals, we provide the exact syllabus coverage, regular practice tests, and faculty guidance you need to excel.
           </p>
-        </div>
+        </motion.div>
 
         {/* Clean Bento Showcase Grid */}
-        {/* Balanced 2x2 Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
 
           {/* Bento Card 1: Complete SBTET Curriculum Coverage */}
-          <div
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -4, transition: { duration: 0.25 } }}
             ref={heroCardRef}
-            className="rounded-[32px] bg-[#FFFFFF] p-7 sm:p-8 shadow-lg hover:shadow-2xl border border-[#EBE6FE] relative overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1"
+            className="rounded-[28px] sm:rounded-[32px] bg-[#FFFFFF] p-5 sm:p-8 shadow-lg border border-[#EBE6FE] relative overflow-hidden flex flex-col justify-between group transition-all duration-300"
           >
             <div className="space-y-5">
               <div className="flex items-center justify-between">
@@ -243,161 +268,168 @@ export default function AboutUsSection() {
                       </span>
                     );
                   })}
-                </div>
               </div>
             </div>
           </div>
+        </motion.div>
 
-            {/* Feature Card 1: Experienced Engineering Faculty */}
-            <div
-              ref={facultyCardRef}
-              className="rounded-[32px] bg-white p-7 shadow-lg hover:shadow-xl border border-[#EBE6FE] flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold">
-                    <Users className="w-5 h-5" />
-                  </div>
-                  <span className="text-[10px] font-extrabold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
-                    EXPERT EDUCATORS
-                  </span>
+          {/* Feature Card 1: Experienced Engineering Faculty */}
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -4, transition: { duration: 0.25 } }}
+            ref={facultyCardRef}
+            className="rounded-[32px] bg-white p-7 shadow-lg border border-[#EBE6FE] flex flex-col justify-between group transition-all duration-300"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold">
+                  <Users className="w-5 h-5" />
                 </div>
+                <span className="text-[10px] font-extrabold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
+                  EXPERT EDUCATORS
+                </span>
+              </div>
 
-                <h3 className="font-display-saasmo text-lg font-bold text-[#1E1266]">
-                  Experienced Engineering Faculty
-                </h3>
+              <h3 className="font-display-saasmo text-lg font-bold text-[#1E1266]">
+                Experienced Engineering Faculty
+              </h3>
 
-                <p className="text-xs text-[#64748B] leading-relaxed">
-                  Learn from senior educators with 5+ years of diploma coaching expertise who break down complex technical topics clearly.
-                </p>
+              <p className="text-xs text-[#64748B] leading-relaxed">
+                Learn from senior educators with 5+ years of diploma coaching expertise who break down complex technical topics clearly.
+              </p>
 
-                {/* Faculty Avatar Stack Animating to the Right 1-by-1 */}
-                <div className="p-3.5 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] space-y-2 overflow-hidden">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center -space-x-2 relative min-w-[80px]">
-                      <div
-                        className={`w-7 h-7 rounded-full bg-[#25176E] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white transition-all duration-500 ease-out shadow-xs ${visibleAvatarsCount >= 1
-                            ? "opacity-100 translate-x-0 scale-100"
-                            : "opacity-0 -translate-x-4 scale-75"
-                          }`}
-                      >
-                        M.T
-                      </div>
-                      <div
-                        className={`w-7 h-7 rounded-full bg-[#3c289e] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white transition-all duration-500 ease-out shadow-xs ${visibleAvatarsCount >= 2
-                            ? "opacity-100 translate-x-0 scale-100"
-                            : "opacity-0 -translate-x-4 scale-75"
-                          }`}
-                      >
-                        Ph.D
-                      </div>
-                      <div
-                        className={`w-7 h-7 rounded-full bg-[#25176E] text-[#D2FF00] flex items-center justify-center text-[10px] font-bold border-2 border-white transition-all duration-500 ease-out shadow-xs ${visibleAvatarsCount >= 3
-                            ? "opacity-100 translate-x-0 scale-100"
-                            : "opacity-0 -translate-x-4 scale-75"
-                          }`}
-                      >
-                        5+Y
-                      </div>
+              {/* Faculty Avatar Stack Animating to the Right 1-by-1 */}
+              <div className="p-3.5 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] space-y-2 overflow-hidden">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center -space-x-2 relative min-w-[80px]">
+                    <div
+                      className={`w-7 h-7 rounded-full bg-[#25176E] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white transition-all duration-500 ease-out shadow-xs ${visibleAvatarsCount >= 1
+                          ? "opacity-100 translate-x-0 scale-100"
+                          : "opacity-0 -translate-x-4 scale-75"
+                        }`}
+                    >
+                      M.T
                     </div>
-
-                    <span className="text-[11px] font-extrabold text-[#25176E] bg-white px-2.5 py-0.5 rounded-full border border-[#EBE6FE] faculty-badge-anim">
-                      5+ Years Mentors
-                    </span>
+                    <div
+                      className={`w-7 h-7 rounded-full bg-[#3c289e] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white transition-all duration-500 ease-out shadow-xs ${visibleAvatarsCount >= 2
+                          ? "opacity-100 translate-x-0 scale-100"
+                          : "opacity-0 -translate-x-4 scale-75"
+                        }`}
+                    >
+                      Ph.D
+                    </div>
+                    <div
+                      className={`w-7 h-7 rounded-full bg-[#25176E] text-[#D2FF00] flex items-center justify-center text-[10px] font-bold border-2 border-white transition-all duration-500 ease-out shadow-xs ${visibleAvatarsCount >= 3
+                          ? "opacity-100 translate-x-0 scale-100"
+                          : "opacity-0 -translate-x-4 scale-75"
+                        }`}
+                    >
+                      5+Y
+                    </div>
                   </div>
 
-                  <p className="text-[10px] text-[#64748B] font-medium leading-tight">
-                    Dedicated Senior Polytechnic Mentors
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Feature Card 2: Weekly Academic Performance Tests */}
-            <div
-              ref={barChartCardRef}
-              className="rounded-[32px] bg-white p-7 shadow-lg hover:shadow-xl border border-[#EBE6FE] flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold">
-                    <Target className="w-5 h-5" />
-                  </div>
-                  <span className="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
-                    WEEKLY EVALUATION
+                  <span className="text-[11px] font-extrabold text-[#25176E] bg-white px-2.5 py-0.5 rounded-full border border-[#EBE6FE] faculty-badge-anim">
+                    5+ Years Mentors
                   </span>
                 </div>
 
-                <h3 className="font-display-saasmo text-lg font-bold text-[#1E1266]">
-                  Weekly Academic Performance Tests
-                </h3>
-
-                <p className="text-xs text-[#64748B] leading-relaxed">
-                  Regular weekend chapter tests designed to track your understanding and ensure steady academic grade improvement.
+                <p className="text-[10px] text-[#64748B] font-medium leading-tight">
+                  Dedicated Senior Polytechnic Mentors
                 </p>
+              </div>
+            </div>
+          </motion.div>
 
-                {/* Bottom-to-Top 1-by-1 Staggered Rising Bar Chart Widget */}
-                <div className="p-4 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] space-y-3">
-                  <div className="flex items-center justify-between text-[11px] font-bold text-[#1E1266]">
-                    <span className="text-[#25176E]">Academic Evaluation</span>
-                    <span className="text-[#25176E] font-extrabold">Weekly Progress</span>
-                  </div>
+          {/* Feature Card 2: Weekly Academic Performance Tests */}
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -4, transition: { duration: 0.25 } }}
+            ref={barChartCardRef}
+            className="rounded-[32px] bg-white p-7 shadow-lg border border-[#EBE6FE] flex flex-col justify-between group transition-all duration-300"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold">
+                  <Target className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+                  WEEKLY EVALUATION
+                </span>
+              </div>
 
-                  {/* 4 Performance Bars Animating 1-BY-1 from bottom to top */}
-                  <div className="flex items-end gap-3 h-[68px] pt-1 border-b border-[#EBE6FE] pb-1">
-                    {barConfigs.map((config, idx) => {
-                      const scaleY = barScales[idx];
-                      return (
-                        <div
-                          key={idx}
-                          className="flex-1 rounded-md bg-[#25176E] shadow-sm"
-                          style={{
-                            height: config.height,
-                            opacity: config.opacity,
-                            transform: `scaleY(${scaleY})`,
-                            transformOrigin: "bottom",
-                            transition: "transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                          }}
-                          suppressHydrationWarning={true}
-                        />
-                      );
-                    })}
-                  </div>
+              <h3 className="font-display-saasmo text-lg font-bold text-[#1E1266]">
+                Weekly Academic Performance Tests
+              </h3>
+
+              <p className="text-xs text-[#64748B] leading-relaxed">
+                Regular weekend chapter tests designed to track your understanding and ensure steady academic grade improvement.
+              </p>
+
+              {/* Bottom-to-Top 1-by-1 Staggered Rising Bar Chart Widget */}
+              <div className="p-4 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] space-y-3">
+                <div className="flex items-center justify-between text-[11px] font-bold text-[#1E1266]">
+                  <span className="text-[#25176E]">Academic Evaluation</span>
+                  <span className="text-[#25176E] font-extrabold">Weekly Progress</span>
+                </div>
+
+                {/* 4 Performance Bars Animating 1-BY-1 from bottom to top */}
+                <div className="flex items-end gap-3 h-[68px] pt-1 border-b border-[#EBE6FE] pb-1">
+                  {barConfigs.map((config, idx) => {
+                    const scaleY = barScales[idx];
+                    return (
+                      <div
+                        key={idx}
+                        className="flex-1 rounded-md bg-[#25176E] shadow-sm"
+                        style={{
+                          height: config.height,
+                          opacity: config.opacity,
+                          transform: `scaleY(${scaleY})`,
+                          transformOrigin: "bottom",
+                          transition: "transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                        }}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </div>
+          </motion.div>
 
-            {/* Feature Card 3: Daily 1-on-1 Doubt Clarification */}
-            <div className="rounded-[32px] bg-white p-7 shadow-lg hover:shadow-xl border border-[#EBE6FE] flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-2xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                    1-ON-1 SESSIONS
-                  </span>
+          {/* Feature Card 3: Daily 1-on-1 Doubt Clarification */}
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -4, transition: { duration: 0.25 } }}
+            className="rounded-[32px] bg-white p-7 shadow-lg border border-[#EBE6FE] flex flex-col justify-between group transition-all duration-300"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-11 h-11 rounded-2xl bg-[#F0EBFF] text-[#25176E] flex items-center justify-center font-bold">
+                  <ShieldCheck className="w-5 h-5" />
                 </div>
+                <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  1-ON-1 SESSIONS
+                </span>
+              </div>
 
-                <h3 className="font-display-saasmo text-lg font-bold text-[#1E1266]">
-                  Daily 1-on-1 Doubt Clarification
-                </h3>
+              <h3 className="font-display-saasmo text-lg font-bold text-[#1E1266]">
+                Daily 1-on-1 Doubt Clarification
+              </h3>
 
-                <p className="text-xs text-[#64748B] leading-relaxed">
-                  Never get stuck on a difficult problem. Dedicated daily doubt-clearing sessions ensure 100% conceptual clarity for every student.
-                </p>
+              <p className="text-xs text-[#64748B] leading-relaxed">
+                Never get stuck on a difficult problem. Dedicated daily doubt-clearing sessions ensure 100% conceptual clarity for every student.
+              </p>
 
-                {/* Doubt Clearing Desk Widget */}
-                <div className="p-3.5 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] flex items-center gap-2 text-xs font-medium text-[#1E1266]">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                  <span className="truncate text-[11px] text-[#64748B]">Daily Evening Doubt Desk</span>
-                </div>
+              {/* Doubt Clearing Desk Widget */}
+              <div className="p-3.5 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] flex items-center gap-2 text-xs font-medium text-[#1E1266]">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="truncate text-[11px] text-[#64748B]">Daily Evening Doubt Desk</span>
               </div>
             </div>
+          </motion.div>
 
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

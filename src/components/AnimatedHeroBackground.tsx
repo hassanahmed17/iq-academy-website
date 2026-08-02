@@ -1,21 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
 export default function AnimatedHeroBackground() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return <div className="absolute inset-0 bg-[#F6F4FE]" suppressHydrationWarning={true} />;
-  }
-
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0" suppressHydrationWarning={true}>
+    <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
       
       {/* 1. Soft Brand Ambient Glow Orbs */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[900px] h-[450px] bg-gradient-to-r from-[#D8CEFE]/30 via-[#F0EBFF]/50 to-[#E8F0FE]/30 rounded-full blur-[130px] animate-pulse pointer-events-none" />
@@ -39,3 +29,4 @@ export default function AnimatedHeroBackground() {
     </div>
   );
 }
+

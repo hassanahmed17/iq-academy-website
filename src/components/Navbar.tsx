@@ -26,9 +26,25 @@ export default function Navbar() {
   const [examsHover, setExamsHover] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
   const [mobileExamsOpen, setMobileExamsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Track scroll position to trigger smooth navbar reveal
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Lock body scroll when full-screen mobile menu is open
@@ -108,10 +124,17 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F6F4FE]/90 backdrop-blur-md border-b border-[#EBE6FE]" suppressHydrationWarning={true}>
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
+        isScrolled || mobileMenuOpen 
+          ? "bg-[#F6F4FE]/90 backdrop-blur-md border-b border-[#EBE6FE] shadow-xs" 
+          : "bg-transparent border-b border-transparent shadow-none"
+      }`} 
+      suppressHydrationWarning={true}
+    >
       <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between h-16 md:h-20" suppressHydrationWarning={true}>
         
-        {/* Brand Logo & Text (Shifted cleanly left on mobile) */}
+        {/* Brand Logo & Text (ALWAYS VISIBLE in top-left corner) */}
         <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="flex items-center gap-1.5 sm:gap-3 group z-50">
           <img
             src="/images/iqae-crest.png"
@@ -125,8 +148,10 @@ export default function Navbar() {
           />
         </a>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-[#64748B]">
+        {/* Desktop Links (Appears smoothly on scroll) */}
+        <div className={`hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-[#64748B] transition-all duration-300 ease-out ${
+          isScrolled ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+        }`}>
           
           {/* 1. Home */}
           <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="hover:text-[#25176E] transition-colors">
@@ -247,8 +272,10 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Desktop CTA Action Button */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Desktop CTA Action Button (Appears smoothly on scroll) */}
+        <div className={`hidden md:flex items-center gap-3 transition-all duration-300 ease-out ${
+          isScrolled ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+        }`}>
           <a
             href="#contact-form-block"
             onClick={(e) => handleNavClick(e, "#contact-form-block")}
@@ -259,7 +286,7 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
+        {/* Mobile Hamburger Toggle Button (Always visible in mobile view) */}
         <div className="md:hidden flex items-center gap-2 z-50">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -274,15 +301,14 @@ export default function Navbar() {
       </div>
 
       {/* FULL-SCREEN MOBILE OVERLAY MENU */}
-      {mounted && (
-        <AnimatePresence>
-          {mobileMenuOpen && (
+      <AnimatePresence>
+        {mobileMenuOpen && (
             <motion.div
               initial="closed"
               animate="open"
               exit="closed"
               variants={menuOverlayVariants}
-              className="fixed inset-0 w-screen h-screen min-h-screen bg-[#F6F4FE] z-40 flex flex-col justify-between px-6 pt-24 pb-10 md:hidden overflow-y-auto"
+              className="fixed inset-0 w-full max-w-full h-full min-h-screen bg-[#F6F4FE] z-40 flex flex-col justify-between px-6 pt-24 pb-10 md:hidden overflow-y-auto"
               suppressHydrationWarning={true}
             >
               {/* Navigation Links Container */}
@@ -447,7 +473,6 @@ export default function Navbar() {
             </motion.div>
           )}
         </AnimatePresence>
-      )}
     </nav>
   );
 }

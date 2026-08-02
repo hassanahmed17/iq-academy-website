@@ -25,8 +25,21 @@ body {
   background-color: var(--canvas);
   color: var(--text-primary);
   font-family: var(--font-outfit), var(--font-inter), system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
   scroll-behavior: smooth;
+}
+
+/* UI/UX Pro Max Focus Ring Accessibility Token */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px #F6F4FE, 0 0 0 4px #5B3DF5 !important;
 }
 
 /* Custom Brand Typography */

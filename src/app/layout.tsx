@@ -15,6 +15,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://iqacademy.in"),
   title: "IQ Academy of Excellence | Best Polytechnic & Diploma Coaching in Hyderabad",
   description:
     "IQ Academy of Excellence is Hyderabad's premier coaching institute for Polytechnic & Diploma Engineering (CSE, ECE, EEE, ME, CE, AI/ML), POLYCET, and ECET entrance preparation.",

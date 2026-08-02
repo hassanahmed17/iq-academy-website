@@ -2,7 +2,35 @@
 
 import React, { useState } from "react";
 import { Phone, MapPin, Send, CheckCircle2, AlertCircle, ArrowRight, Loader2 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import { GradientBackground } from "@/components/ui/noisy-gradient-backgrounds";
+
+const leftColumnVariants: Variants = {
+  hidden: { opacity: 0, x: -28, filter: "blur(3px)" },
+  visible: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.7,
+      ease: [0.21, 0.47, 0.32, 0.98],
+    },
+  },
+};
+
+const rightColumnVariants: Variants = {
+  hidden: { opacity: 0, x: 28, filter: "blur(3px)" },
+  visible: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.7,
+      delay: 0.12,
+      ease: [0.21, 0.47, 0.32, 0.98],
+    },
+  },
+};
 
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwFyXjbt4GYQBX5--hvbaH8GsbwNSC60p268VQhF2Gw-wzRsdz3EN_FjMdZ_ypWiUNo/exec";
@@ -81,7 +109,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-20 relative bg-[#F6F4FE]" suppressHydrationWarning={true}>
+    <section id="contact" className="pt-6 pb-16 sm:pt-8 sm:pb-20 relative bg-[#F6F4FE] overflow-hidden" suppressHydrationWarning={true}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Saasmo Indigo CTA Banner with Noisy Gradient Background */}
@@ -127,7 +155,13 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Campus Info */}
-          <div className="lg:col-span-5 space-y-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={leftColumnVariants}
+            className="lg:col-span-5 space-y-6"
+          >
             <div className="saasmo-white-card p-6 sm:p-7 space-y-5">
               <h3 className="font-display-saasmo text-xl font-bold text-[#1E1266]">
                 IQ Academy Campus
@@ -192,12 +226,18 @@ export default function ContactSection() {
                   ></iframe>
                 </div>
               </div>
-
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Admission Inquiry Form */}
-          <div id="contact-form-block" className="scroll-mt-16 sm:scroll-mt-24 lg:col-span-7">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={rightColumnVariants}
+            id="contact-form-block"
+            className="scroll-mt-16 sm:scroll-mt-24 lg:col-span-7"
+          >
             <div className="saasmo-white-card p-4 sm:p-8">
               <h3 className="font-display-saasmo text-lg sm:text-2xl font-bold text-[#1E1266] mb-0.5">
                 Send Admission Inquiry
@@ -388,9 +428,8 @@ export default function ContactSection() {
                   )}
                 </button>
               </form>
-
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

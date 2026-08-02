@@ -368,8 +368,14 @@ function TestimonialCard({ review }: { review: Testimonial }) {
 }
 
 export default function TestimonialsCanvas() {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <section id="testimonials" className="scroll-mt-20 py-16 sm:py-24 min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center relative bg-[#F6F4FE] overflow-hidden border-y border-[#EBE6FE]" suppressHydrationWarning={true}>
+    <section id="testimonials" className="scroll-mt-20 pt-12 pb-6 sm:pt-16 sm:pb-8 flex flex-col justify-center relative bg-[#F6F4FE] overflow-hidden border-y border-[#EBE6FE]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 sm:mb-14 text-center">
         {/* Header Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F0EBFF] text-[#25176E] text-xs font-extrabold uppercase tracking-wider border border-[#EBE6FE] mb-3">
@@ -387,21 +393,28 @@ export default function TestimonialsCanvas() {
       </div>
 
       {/* Magic UI Dual-Row Marquee with Pause on Hover */}
-      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden space-y-4">
-        
-        {/* Row 1: Right-to-Left Infinite Marquee */}
-        <Marquee pauseOnHover className="[--duration:65s]">
-          {row1Reviews.map((review) => (
-            <TestimonialCard key={review.id} review={review} />
-          ))}
-        </Marquee>
+      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden space-y-4 min-h-[300px]">
+        {mounted ? (
+          <>
+            {/* Row 1: Right-to-Left Infinite Marquee */}
+            <Marquee pauseOnHover className="[--duration:65s]">
+              {row1Reviews.map((review) => (
+                <TestimonialCard key={review.id} review={review} />
+              ))}
+            </Marquee>
 
-        {/* Row 2: Left-to-Right Infinite Marquee */}
-        <Marquee reverse pauseOnHover className="[--duration:65s]">
-          {row2Reviews.map((review) => (
-            <TestimonialCard key={review.id} review={review} />
-          ))}
-        </Marquee>
+            {/* Row 2: Left-to-Right Infinite Marquee */}
+            <Marquee reverse pauseOnHover className="[--duration:65s]">
+              {row2Reviews.map((review) => (
+                <TestimonialCard key={review.id} review={review} />
+              ))}
+            </Marquee>
+          </>
+        ) : (
+          <div className="h-[280px] w-full flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full border-2 border-[#25176E]/20 border-t-[#25176E] animate-spin" />
+          </div>
+        )}
 
         {/* Edge Gradient Blurs */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-24 sm:w-36 bg-gradient-to-r from-[#F6F4FE] to-transparent z-10" />

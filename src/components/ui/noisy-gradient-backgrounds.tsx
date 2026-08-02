@@ -97,34 +97,26 @@ function Noise({
       ctx.restore();
     };
 
-    let animationFrameId: number;
-    const loop = () => {
+    const renderNoise = () => {
       if (canvasCssSizeRef.current.width > 0 && canvasCssSizeRef.current.height > 0) {
-        if (frame % patternRefreshInterval === 0) {
-          updatePattern();
-          drawGrain();
-        }
+        updatePattern();
+        drawGrain();
       }
-      frame++;
-      animationFrameId = window.requestAnimationFrame(loop);
     };
 
-    window.addEventListener("resize", resize);
+    const handleResize = () => {
+      resize();
+      renderNoise();
+    };
+
+    window.addEventListener("resize", handleResize);
     resize();
-    if (patternRefreshInterval > 0) {
-      loop();
-    } else {
-      updatePattern();
-      drawGrain();
-    }
+    renderNoise();
 
     return () => {
-      window.removeEventListener("resize", resize);
-      if (animationFrameId) {
-        window.cancelAnimationFrame(animationFrameId);
-      }
+      window.removeEventListener("resize", handleResize);
     };
-  }, [patternSize, patternScaleX, patternScaleY, patternRefreshInterval, patternAlpha, intensity]);
+  }, [patternSize, patternScaleX, patternScaleY, patternAlpha, intensity]);
 
   return <canvas className="absolute inset-0 w-full h-full pointer-events-none" ref={grainRef} />;
 }

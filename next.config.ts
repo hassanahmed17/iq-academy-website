@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   compress: true,
   images: {
+    qualities: [75, 85, 90],
     unoptimized: true,
   },
   turbopack: {

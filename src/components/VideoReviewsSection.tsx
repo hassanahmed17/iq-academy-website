@@ -2,8 +2,33 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Volume2, VolumeX, Play, Pause, Sparkles, MessageSquareQuote } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import { GradientBackground } from "@/components/ui/noisy-gradient-backgrounds";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.7,
+      ease: [0.21, 0.47, 0.32, 0.98],
+    },
+  },
+};
 
 interface VideoCardProps {
   id: number;
@@ -192,6 +217,10 @@ function VideoCardItem({ id, src, studentName, course, quote, unmutedId, onToggl
 
 export default function VideoReviewsSection() {
   const [unmutedId, setUnmutedId] = useState<number | null>(null);
+
+  const handleToggleMute = (id: number) => {
+    setUnmutedId((prev) => (prev === id ? null : id));
+  };
   const containerRef = useRef<HTMLDivElement>(null);
 
   const videoReviewsData = [
@@ -211,18 +240,12 @@ export default function VideoReviewsSection() {
     },
   ];
 
-  const handleToggleMute = (id: number) => {
-    setUnmutedId((prev) => (prev === id ? null : id));
-  };
-
   return (
-    <section id="video-reviews" className="py-16 sm:py-24 relative bg-white border-y border-[#EBE6FE]" suppressHydrationWarning={true}>
+    <section id="video-reviews" className="py-16 sm:py-24 relative bg-white border-y border-[#EBE6FE] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Main Indigo Glassmorphic Card Container matching Director Section */}
-        <div className="relative rounded-[32px] p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-hidden border border-[#372692]" ref={containerRef}>
-          
-          {/* Noisy Indigo Gradient Background */}
+        {/* Main Indigo Glassmorphic Container with Noisy Gradient */}
+        <div className="relative rounded-[32px] p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-hidden border border-[#372692]">
           <GradientBackground
             gradientOrigin="bottom-right"
             colors={[
@@ -232,7 +255,6 @@ export default function VideoReviewsSection() {
             ]}
             noiseIntensity={0.65}
             noisePatternSize={95}
-            noisePatternRefreshInterval={2}
           />
 
           {/* Soft Subtle Flickering Grid Overlay Effect */}
@@ -250,10 +272,16 @@ export default function VideoReviewsSection() {
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#8B5CF6]/20 rounded-full blur-3xl pointer-events-none" />
 
           {/* Section Content */}
-          <div className="relative z-10 space-y-10 sm:space-y-12">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={containerVariants}
+            className="relative z-10 space-y-10 sm:space-y-12"
+          >
             
             {/* Header Eyebrow & Title */}
-            <div className="text-center max-w-3xl mx-auto space-y-3">
+            <motion.div variants={itemVariants} className="text-center max-w-3xl mx-auto space-y-3">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/15 text-[#D2FF00] text-xs font-extrabold uppercase tracking-widest">
                 <Sparkles className="w-4 h-4 text-[#D2FF00]" />
                 <span>Student Video Testimonials</span>
@@ -265,21 +293,22 @@ export default function VideoReviewsSection() {
               <p className="text-xs sm:text-sm text-white/80 max-w-2xl mx-auto leading-relaxed">
                 Watch our students share their genuine learning experience and academic growth with IQ Academy.
               </p>
-            </div>
+            </motion.div>
 
             {/* 2 Video Cards Grid (4:5 Aspect Ratio) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto items-center">
               {videoReviewsData.map((video) => (
-                <VideoCardItem
-                  key={video.id}
-                  {...video}
-                  unmutedId={unmutedId}
-                  onToggleMute={handleToggleMute}
-                />
+                <motion.div key={video.id} variants={itemVariants} whileHover={{ y: -6, transition: { duration: 0.25 } }}>
+                  <VideoCardItem
+                    {...video}
+                    unmutedId={unmutedId}
+                    onToggleMute={handleToggleMute}
+                  />
+                </motion.div>
               ))}
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
 

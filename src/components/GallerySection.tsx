@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Sparkles, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 export interface GalleryItem {
   id: number;
@@ -33,7 +34,6 @@ const bentoSpans = [
   "col-span-2 sm:col-span-2 lg:col-span-2 row-span-1 h-full", // 10: Ultrawide
   "col-span-1 row-span-1 h-full", // 11: Square
 ];
-
 
 export default function GallerySection() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -73,12 +73,42 @@ export default function GallerySection() {
     }
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 28, filter: "blur(3px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.65,
+        ease: [0.21, 0.47, 0.32, 0.98],
+      },
+    },
+  };
+
   return (
-    <section id="gallery" className="py-14 sm:py-24 relative bg-white border-t border-[#EBE6FE]" suppressHydrationWarning={true}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="gallery" className="py-14 sm:py-24 relative bg-white border-t border-[#EBE6FE] overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-14 space-y-2">
+        <motion.div variants={itemVariants} className="text-center max-w-3xl mx-auto mb-8 sm:mb-14 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#F0EBFF] text-[#25176E] text-xs font-extrabold uppercase tracking-widest border border-[#EBE6FE]">
             <Sparkles className="w-3.5 h-3.5 text-[#25176E]" />
             <span>Campus & Events</span>
@@ -89,7 +119,7 @@ export default function GallerySection() {
           <p className="text-xs sm:text-sm text-[#64748B] max-w-2xl mx-auto leading-relaxed">
             A glimpse into our classrooms, academic sessions, industrial visits, and campus environment.
           </p>
-        </div>
+        </motion.div>
 
         {/* Dynamic Responsive Bento Grid (2-cols on mobile, 4-cols on desktop) */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[260px] gap-3 sm:gap-5">
@@ -97,8 +127,9 @@ export default function GallerySection() {
             const spanClass = bentoSpans[index] || "col-span-1 row-span-1 h-full";
             const isLoaded = loadedImages[item.id];
             return (
-              <div
+              <motion.div
                 key={item.id}
+                variants={itemVariants}
                 onClick={() => openLightbox(index)}
                 className={`group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-[#EBE6FE] bg-[#F6F4FE] md:cursor-default cursor-pointer hover:shadow-lg transition-all duration-300 ${spanClass}`}
               >
@@ -117,7 +148,6 @@ export default function GallerySection() {
                     isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
                   }`}
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                  quality={85}
                   loading={index < 4 ? "eager" : "lazy"}
                   onLoad={() => handleImageLoad(item.id)}
                 />
@@ -128,12 +158,12 @@ export default function GallerySection() {
                     <Maximize2 className="w-4 h-4" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
-      </div>
+      </motion.div>
 
       {/* Animated Full-Screen Lightbox Modal for Mobile View */}
       {selectedImageIndex !== null && (
@@ -181,7 +211,6 @@ export default function GallerySection() {
               className="object-contain p-2"
               sizes="100vw"
               priority
-              quality={90}
             />
 
             {/* Bottom Bar - Photo Counter */}

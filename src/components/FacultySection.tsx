@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { UserRound } from "lucide-react";
 import {
@@ -81,18 +81,28 @@ const facultyList: FacultyMember[] = [
 ];
 
 function FacultyCard({ member }: { member: FacultyMember }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div className="group bg-white p-6 sm:p-8 rounded-3xl border border-[#EBE6FE] shadow-sm hover:shadow-xl hover:border-[#25176E]/30 transition-all duration-300 text-center flex flex-col items-center justify-between h-full">
       <div className="w-full flex flex-col items-center">
         {/* Centered Avatar Image or 2D Icon */}
         {member.image ? (
-          <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-lg border-4 border-[#F0EBFF] mb-5 shrink-0 bg-[#1E1266]">
+          <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-lg border-4 border-[#F0EBFF] mb-5 shrink-0 bg-[#F0EBFF]">
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-r from-[#F0EBFF] via-[#EBE6FE] to-[#F0EBFF] animate-pulse rounded-full flex items-center justify-center z-10">
+                <div className="w-6 h-6 rounded-full border-2 border-[#25176E]/20 border-t-[#25176E] animate-spin" />
+              </div>
+            )}
             <Image
               src={member.image}
               alt={member.name}
               fill
-              className="object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
+              className={`object-cover object-top group-hover:scale-105 transition-all duration-500 ease-out ${
+                imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+              }`}
               sizes="(max-width: 640px) 160px, 160px"
+              onLoad={() => setImageLoaded(true)}
             />
           </div>
         ) : (
@@ -128,13 +138,45 @@ function FacultyCard({ member }: { member: FacultyMember }) {
   );
 }
 
+import { motion, Variants } from "framer-motion";
+
 export default function FacultySection() {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.65,
+        ease: [0.21, 0.47, 0.32, 0.98],
+      },
+    },
+  };
+
   return (
-    <section id="faculty" className="py-16 sm:py-24 relative bg-[#F6F4FE]" suppressHydrationWarning={true}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faculty" className="py-16 sm:py-24 relative bg-[#F6F4FE] overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-2">
+        <motion.div variants={cardVariants} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-2">
           <span className="text-xs font-extrabold uppercase tracking-widest text-[#25176E] bg-[#F0EBFF] px-3.5 py-1 rounded-full border border-[#EBE6FE]">
             High Academics Faculty
           </span>
@@ -144,10 +186,10 @@ export default function FacultySection() {
           <p className="text-sm sm:text-base text-[#64748B] max-w-2xl mx-auto leading-relaxed">
             Our distinguished faculty members hold postgraduate & doctorate degrees from premier technical institutions with over a decade of dedicated teaching experience.
           </p>
-        </div>
+        </motion.div>
 
         {/* Mobile View: 1 Card at a time Carousel with Backward/Forward Buttons */}
-        <div className="block md:hidden px-6 relative">
+        <motion.div variants={cardVariants} className="block md:hidden px-6 relative">
           <Carousel opts={{ align: "start", loop: true }} className="relative w-full">
             <CarouselContent>
               {facultyList.map((member) => (
@@ -158,20 +200,22 @@ export default function FacultySection() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-5 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF]" />
-            <CarouselNext className="-right-5 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF]" />
+            <CarouselPrevious className="-left-3 sm:-left-5 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF] active:scale-95" />
+            <CarouselNext className="-right-3 sm:-right-5 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF] active:scale-95" />
             <CarouselDots />
           </Carousel>
-        </div>
+        </motion.div>
 
         {/* Desktop View: Original 3-Column Grid */}
         <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {facultyList.map((member) => (
-            <FacultyCard key={member.id} member={member} />
+            <motion.div key={member.id} variants={cardVariants} whileHover={{ y: -6, transition: { duration: 0.25 } }}>
+              <FacultyCard member={member} />
+            </motion.div>
           ))}
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

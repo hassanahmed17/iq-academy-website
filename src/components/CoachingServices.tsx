@@ -2,15 +2,45 @@
 
 import React from "react";
 import { CheckCircle2, ArrowRight, Sparkles, BookOpen } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import { GradientBackground } from "@/components/ui/noisy-gradient-backgrounds";
 
 export default function CoachingServices() {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.06,
+        delayChildren: 0.02,
+      },
+    },
+  };
+
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <section id="coaching" className="py-16 sm:py-20 relative bg-white border-y border-[#EBE6FE]" suppressHydrationWarning={true}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="coaching" className="py-16 sm:py-20 relative bg-white border-y border-[#EBE6FE] overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.05 }}
+        variants={containerVariants}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-2">
+        <motion.div variants={cardVariants} className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F0EBFF] text-[#25176E] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-[#25176E]" />
             <span>Entrance Exam Specialization</span>
@@ -21,13 +51,18 @@ export default function CoachingServices() {
           <p className="text-sm sm:text-base text-[#64748B]">
             Targeted preparation for POLYCET, ECET, and TS EAPCET entrance examinations.
           </p>
-        </div>
+        </motion.div>
 
         {/* 3 Featured Modules */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           
           {/* Module 1: POLYCET Card */}
-          <div id="exam-polycet" className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            id="exam-polycet"
+            className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]"
+          >
             <GradientBackground
               gradientOrigin="top-left"
               colors={[
@@ -77,16 +112,21 @@ export default function CoachingServices() {
                   e.preventDefault();
                   document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
-                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-xs sm:text-sm hover:bg-lime-400 transition-all shadow-md"
+                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-xs sm:text-sm hover:bg-lime-400 active:scale-95 transition-all shadow-md"
               >
                 <span>Join POLYCET Batch</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Module 2: ECET Card */}
-          <div id="exam-ecet" className="saasmo-white-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#EBE6FE]">
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            id="exam-ecet"
+            className="saasmo-white-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#EBE6FE]"
+          >
             <GradientBackground
               gradientOrigin="bottom-right"
               colors={[
@@ -136,16 +176,21 @@ export default function CoachingServices() {
                   e.preventDefault();
                   document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
-                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#1E1266] text-white font-extrabold text-xs sm:text-sm hover:bg-[#25176E] transition-all shadow-md"
+                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#1E1266] text-white font-extrabold text-xs sm:text-sm hover:bg-[#25176E] active:scale-95 transition-all shadow-md"
               >
                 <span>Join ECET Batch</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Module 3: TS EAPCET Card */}
-          <div id="exam-eapcet" className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]">
+          <motion.div
+            variants={cardVariants}
+            whileHover={{ y: -6, transition: { duration: 0.25 } }}
+            id="exam-eapcet"
+            className="saasmo-indigo-card p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between rounded-3xl border border-[#372692]"
+          >
             <GradientBackground
               gradientOrigin="top-right"
               colors={[
@@ -195,17 +240,17 @@ export default function CoachingServices() {
                   e.preventDefault();
                   document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
-                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-xs sm:text-sm hover:bg-lime-400 transition-all shadow-md"
+                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-[#D2FF00] text-[#1B1054] font-extrabold text-xs sm:text-sm hover:bg-lime-400 active:scale-95 transition-all shadow-md"
               >
                 <span>Join TS EAPCET Batch</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }

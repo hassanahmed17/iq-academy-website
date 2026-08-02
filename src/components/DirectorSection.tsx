@@ -5,9 +5,38 @@ import Image from "next/image";
 import { Quote, Award, GraduationCap, Sparkles } from "lucide-react";
 import { GradientBackground } from "@/components/ui/noisy-gradient-backgrounds";
 
+import { motion, Variants } from "framer-motion";
+
 export default function DirectorSection() {
+  const leftColumnVariants: Variants = {
+    hidden: { opacity: 0, x: -30, filter: "blur(3px)" },
+    visible: {
+      opacity: 1,
+      x: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.75,
+        ease: [0.21, 0.47, 0.32, 0.98],
+      },
+    },
+  };
+
+  const rightColumnVariants: Variants = {
+    hidden: { opacity: 0, x: 30, filter: "blur(3px)" },
+    visible: {
+      opacity: 1,
+      x: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.75,
+        delay: 0.15,
+        ease: [0.21, 0.47, 0.32, 0.98],
+      },
+    },
+  };
+
   return (
-    <section id="director" className="py-16 sm:py-24 relative bg-white border-y border-[#EBE6FE]" suppressHydrationWarning={true}>
+    <section id="director" className="py-16 sm:py-24 relative bg-white border-y border-[#EBE6FE] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Indigo Glassmorphic Container with Noisy Gradient */}
@@ -21,7 +50,6 @@ export default function DirectorSection() {
             ]}
             noiseIntensity={0.65}
             noisePatternSize={95}
-            noisePatternRefreshInterval={2}
           />
           
           {/* Subtle Ambient Background Decorative Glows */}
@@ -31,7 +59,13 @@ export default function DirectorSection() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
             
             {/* LEFT COLUMN: DIRECTOR PROFILE HERO PHOTO CARD */}
-            <div className="lg:col-span-5 flex flex-col items-center">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={leftColumnVariants}
+              className="lg:col-span-5 flex flex-col items-center"
+            >
               <div className="w-full max-w-md bg-white/5 backdrop-blur-xl p-4 sm:p-5 rounded-3xl border border-white/15 shadow-2xl space-y-4">
                 
                 {/* Director Portrait Photo */}
@@ -83,10 +117,16 @@ export default function DirectorSection() {
                 </div>
 
               </div>
-            </div>
+            </motion.div>
 
             {/* RIGHT COLUMN: DIRECTOR'S MESSAGE & VISION */}
-            <div className="lg:col-span-7 space-y-6">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={rightColumnVariants}
+              className="lg:col-span-7 space-y-6"
+            >
               
               {/* Header Eyebrow */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/15 text-[#D2FF00] text-xs font-extrabold uppercase tracking-widest">
@@ -112,7 +152,7 @@ export default function DirectorSection() {
                 </p>
               </div>
 
-            </div>
+            </motion.div>
 
           </div>
 

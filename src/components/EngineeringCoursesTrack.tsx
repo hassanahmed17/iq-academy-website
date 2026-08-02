@@ -843,7 +843,7 @@ function DiplomaCourseCard({
     <div
       id={`course-${course.id}`}
       onClick={() => onSelect(course)}
-      className="rounded-[24px] bg-white border border-[#EBE6FE] p-6 flex flex-col justify-between items-center text-center group hover:shadow-xl hover:border-[#25176E]/30 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden cursor-pointer h-full"
+      className="rounded-[24px] bg-white border border-[#EBE6FE] p-5 sm:p-6 flex flex-col justify-between items-center text-center group hover:shadow-xl hover:border-[#25176E]/30 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 relative overflow-hidden cursor-pointer h-full"
     >
       <div className="flex flex-col items-center w-full">
         {/* Enlarged Centered Square Icon Badge with Rounded Corners */}
@@ -873,6 +873,8 @@ function DiplomaCourseCard({
   );
 }
 
+import { motion, Variants } from "framer-motion";
+
 export default function EngineeringCoursesTrack() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
@@ -901,12 +903,42 @@ export default function EngineeringCoursesTrack() {
     };
   }, []);
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.65,
+        ease: [0.21, 0.47, 0.32, 0.98],
+      },
+    },
+  };
+
   return (
-    <section id="courses" className="py-14 sm:py-20 relative bg-[#F6F4FE]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="courses" className="py-14 sm:py-20 relative bg-[#F6F4FE] overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         
         {/* Section Header */}
-        <div className="mb-8 sm:mb-12">
+        <motion.div variants={itemVariants} className="mb-8 sm:mb-12">
           <span className="text-xs font-extrabold uppercase tracking-widest text-[#25176E] bg-[#F0EBFF] px-3 py-1 rounded-full border border-[#EBE6FE]">
             DIPLOMA SPECIALTIES & SCHEMES
           </span>
@@ -916,10 +948,10 @@ export default function EngineeringCoursesTrack() {
           <p className="text-xs sm:text-sm text-[#64748B] mt-2 leading-relaxed max-w-3xl">
             Comprehensive coaching for Telangana SBTET diploma branches across C-24 & C-26 curriculum schemes, board examinations, and BE / B.Tech entrance preparation.
           </p>
-        </div>
+        </motion.div>
 
         {/* Mobile View: 1 Card at a time Carousel with Backward/Forward Buttons */}
-        <div className="block md:hidden px-8 sm:px-10 relative">
+        <motion.div variants={itemVariants} className="block md:hidden px-8 sm:px-10 relative">
           <Carousel opts={{ align: "start", loop: true }} className="relative w-full">
             <CarouselContent>
               {coursesData.map((course) => (
@@ -930,24 +962,25 @@ export default function EngineeringCoursesTrack() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-7 bg-white text-[#25176E] border border-[#EBE6FE] shadow-lg hover:bg-[#F0EBFF] active:scale-95" />
-            <CarouselNext className="-right-7 bg-[#25176E] text-white border border-[#EBE6FE] shadow-lg hover:bg-[#1B1054] active:scale-95" />
+            <CarouselPrevious className="-left-4 sm:-left-6 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF] active:scale-95" />
+            <CarouselNext className="-right-4 sm:-right-6 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF] active:scale-95" />
             <CarouselDots />
           </Carousel>
-        </div>
+        </motion.div>
 
         {/* Desktop View: Original Refined Grid */}
         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
           {coursesData.map((course) => (
-            <DiplomaCourseCard
-              key={course.id}
-              course={course}
-              onSelect={setSelectedCourse}
-            />
+            <motion.div key={course.id} variants={itemVariants} whileHover={{ y: -6, transition: { duration: 0.25 } }}>
+              <DiplomaCourseCard
+                course={course}
+                onSelect={setSelectedCourse}
+              />
+            </motion.div>
           ))}
         </div>
 
-      </div>
+      </motion.div>
 
       {/* Modal Dialog */}
       {selectedCourse && (

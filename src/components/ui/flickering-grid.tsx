@@ -126,12 +126,19 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     setupCanvas(canvas, canvasSize.width, canvasSize.height);
 
     let animationFrameId: number;
-    const render = () => {
-      animate();
+    let lastTime = 0;
+    const fpsInterval = 1000 / 12; // 12 FPS throttle for background grid
+
+    const render = (currentTime: number) => {
       animationFrameId = requestAnimationFrame(render);
+      const elapsed = currentTime - lastTime;
+      if (elapsed > fpsInterval) {
+        lastTime = currentTime - (elapsed % fpsInterval);
+        animate();
+      }
     };
 
-    render();
+    animationFrameId = requestAnimationFrame(render);
 
     return () => cancelAnimationFrame(animationFrameId);
   }, [isInView, canvasSize, setupCanvas, animate]);
