@@ -1,16 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Code2, Cpu, Building2, Radio, Zap, Cog } from "lucide-react";
 import CourseDetailModal from "./CourseDetailModal";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-  CarouselDots,
-} from "@/components/ui/services-card";
 
 export interface C24SchemeSyllabus {
   sem1: string[];
@@ -700,139 +692,28 @@ const coursesData: Course[] = [
   },
 ];
 
-// Compact Vector SVG Graphic Components with Soft Rounded Background Corners
-function MinimalistBranchGraphic({ code }: { code: string }) {
+// Engineering Icon Component using Lucide icons
+function EngineeringIcon({ code }: { code: string }) {
   switch (code) {
-    case "CIVIL":
-      return (
-        <svg className="w-full h-full text-white" viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(100, 65) scale(1.05)" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="-60" y1="50" x2="60" y2="50" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-            <line x1="-30" y1="-43" x2="-30" y2="50" stroke="#FFFFFF" strokeWidth="4" />
-            <line x1="-14" y1="-43" x2="-14" y2="50" stroke="#FFFFFF" strokeWidth="4" />
-            <path d="M-30 -37L-14 -21M-14 -37L-30 -21 M-30 -21L-14 -5M-14 -21L-30 -5 M-30 -5L-14 11M-14 -5L-30 11 M-30 11L-14 27M-14 11L-30 27 M-30 27L-14 43M-14 27L-30 43" stroke="#FFFFFF" strokeWidth="2.5" opacity="0.85" />
-            <path d="M-34 -43L-22 -57L-10 -43" stroke="#FFFFFF" strokeWidth="3.5" strokeLinejoin="round" fill="#FFFFFF" fillOpacity="0.25" />
-            <line x1="-55" y1="-30" x2="65" y2="-30" stroke="#FFFFFF" strokeWidth="4" />
-            <line x1="-40" y1="-43" x2="65" y2="-43" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M-14 -43L2 -30M2 -43L-14 -30 M2 -43L18 -30M18 -43L2 -30 M34 -43L50 -30M50 -43L34 -30" stroke="#FFFFFF" strokeWidth="2" opacity="0.85" />
-            <rect x="-55" y="-41" width="15" height="18" rx="4" fill="#FFFFFF" />
-            <path d="M-55 -32H-64" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-            <line x1="40" y1="-30" x2="40" y2="20" stroke="#FFFFFF" strokeWidth="3" />
-            <rect x="36" y="5" width="8" height="12" rx="3" fill="#FFFFFF" />
-            <path d="M40 17C40 27 30 27 30 21C30 17 36 17 36 17" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-          </g>
-        </svg>
-      );
-
-    case "ECE":
-      return (
-        <svg className="w-full h-full text-white" viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(100, 65) scale(1.05)" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="-25" y="-25" width="50" height="50" rx="12" stroke="#FFFFFF" strokeWidth="4" fill="#FFFFFF" fillOpacity="0.18" />
-            <rect x="-10" y="-10" width="20" height="20" rx="4" stroke="#FFFFFF" strokeWidth="3" fill="#FFFFFF" />
-            <path d="M0 -25V-43" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
-            <circle cx="0" cy="-49" r="5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M0 25V43" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
-            <circle cx="0" cy="49" r="5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M-25 0H-43" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
-            <circle cx="-49" cy="0" r="5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M25 0H43" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
-            <circle cx="49" cy="0" r="5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M-20 -20L-35 -35H-43" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="-49" cy="-35" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M20 -20L35 -35H43" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="49" cy="-35" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M-20 20L-35 35H-43" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="-49" cy="35" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <path d="M20 20L35 35H43" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="49" cy="35" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-          </g>
-        </svg>
-      );
-
-    case "EEE":
-      return (
-        <svg className="w-full h-full text-white" viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(100, 65) scale(1.0)" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M0 -52L-12 -28H12L0 -52Z" stroke="#FFFFFF" strokeWidth="3.5" fill="#FFFFFF" fillOpacity="0.2" />
-            <line x1="-38" y1="-28" x2="38" y2="-28" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-            <line x1="-48" y1="-10" x2="48" y2="-10" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-            <line x1="-42" y1="8" x2="42" y2="8" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-            <line x1="-38" y1="-28" x2="-38" y2="-20" stroke="#FFFFFF" strokeWidth="3.5" />
-            <line x1="38" y1="-28" x2="38" y2="-20" stroke="#FFFFFF" strokeWidth="3.5" />
-            <line x1="-48" y1="-10" x2="-48" y2="-2" stroke="#FFFFFF" strokeWidth="3.5" />
-            <line x1="48" y1="-10" x2="48" y2="-2" stroke="#FFFFFF" strokeWidth="3.5" />
-            <line x1="-42" y1="8" x2="-42" y2="16" stroke="#FFFFFF" strokeWidth="3.5" />
-            <line x1="42" y1="8" x2="42" y2="16" stroke="#FFFFFF" strokeWidth="3.5" />
-            <line x1="-12" y1="-28" x2="-26" y2="48" stroke="#FFFFFF" strokeWidth="4" />
-            <line x1="12" y1="-28" x2="26" y2="48" stroke="#FFFFFF" strokeWidth="4" />
-            <line x1="-28" y1="48" x2="28" y2="48" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" />
-            <path d="M-15 -10L15 8M15 -10L-15 8 M-18 8L18 28M18 8L-18 28 M-22 28L22 48M22 28L-22 48" stroke="#FFFFFF" strokeWidth="2.5" />
-          </g>
-        </svg>
-      );
-
     case "AI & ML":
     case "AI / ML":
-      return (
-        <svg className="w-full h-full text-white" viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(100, 65) scale(1.0)" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M0 -40L-45 25H45L0 -40Z" stroke="#FFFFFF" strokeWidth="3.5" strokeLinejoin="round" fill="#FFFFFF" fillOpacity="0.12" />
-            <path d="M0 -40L0 25M-45 25L0 -8M45 25L0 -8" stroke="#FFFFFF" strokeWidth="3" opacity="0.8" />
-            <path d="M-22 -8L22 -8M-22 -8L0 25M22 -8L0 25" stroke="#FFFFFF" strokeWidth="2.5" opacity="0.6" />
-
-            <circle cx="-45" cy="25" r="5" fill="#FFFFFF" />
-            <circle cx="45" cy="25" r="5" fill="#FFFFFF" />
-            <circle cx="0" cy="25" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <circle cx="-22" cy="-8" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-            <circle cx="22" cy="-8" r="4.5" fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="3" />
-
-            {/* Selected Top Apex Node with Concentric Selection Rings */}
-            <circle cx="0" cy="-40" r="16" stroke="#FFFFFF" strokeWidth="2" strokeDasharray="3 3" opacity="0.85" />
-            <circle cx="0" cy="-40" r="10" stroke="#FFFFFF" strokeWidth="2" opacity="0.9" />
-            <circle cx="0" cy="-40" r="6" fill="#FFFFFF" />
-          </g>
-        </svg>
-      );
-
+      return <Cpu className="w-6 h-6 text-white shrink-0" />;
+    case "CIVIL":
+      return <Building2 className="w-6 h-6 text-white shrink-0" />;
+    case "ECE":
+      return <Radio className="w-6 h-6 text-white shrink-0" />;
+    case "EEE":
+      return <Zap className="w-6 h-6 text-white shrink-0" />;
     case "MECH":
-      return (
-        <svg className="w-full h-full text-white" viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(100, 65) scale(1.0)">
-            <circle cx="0" cy="0" r="32" stroke="#FFFFFF" strokeWidth="5" fill="#FFFFFF" fillOpacity="0.2" />
-            <rect x="-6" y="-44" width="12" height="14" rx="3" fill="#FFFFFF" />
-            <rect x="-6" y="30" width="12" height="14" rx="3" fill="#FFFFFF" />
-            <rect x="-44" y="-6" width="14" height="12" rx="3" fill="#FFFFFF" />
-            <rect x="30" y="-6" width="14" height="12" rx="3" fill="#FFFFFF" />
-            <rect x="-32" y="-32" width="12" height="13" rx="3" fill="#FFFFFF" transform="rotate(45)" />
-            <rect x="20" y="20" width="12" height="13" rx="3" fill="#FFFFFF" transform="rotate(45)" />
-            <rect x="-32" y="20" width="12" height="13" rx="3" fill="#FFFFFF" transform="rotate(-45)" />
-            <rect x="20" y="-32" width="12" height="13" rx="3" fill="#FFFFFF" transform="rotate(-45)" />
-            <circle cx="0" cy="0" r="22" stroke="#FFFFFF" strokeWidth="2.5" fill="#25176E" />
-            <circle cx="0" cy="0" r="14" stroke="#FFFFFF" strokeWidth="3" fill="#FFFFFF" />
-          </g>
-        </svg>
-      );
-
+      return <Cog className="w-6 h-6 text-white shrink-0" />;
     case "CSE":
     default:
-      return (
-        <svg className="w-full h-full text-white" viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(100, 65) scale(1.05)" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="-55" y="-37" width="110" height="74" rx="12" stroke="#FFFFFF" strokeWidth="4" fill="#FFFFFF" fillOpacity="0.15" />
-            <path d="M-55 -19H55" stroke="#FFFFFF" strokeWidth="3" opacity="0.5" />
-            <circle cx="-42" cy="-28" r="3.5" fill="#FFFFFF" />
-            <circle cx="-32" cy="-28" r="3.5" fill="#FFFFFF" />
-            <circle cx="-22" cy="-28" r="3.5" fill="#FFFFFF" />
-            <path d="M-30 -5L-41 6L-30 17M-5 0L6 11L-5 22M-15 23L-8 -1" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M18 -1H38M18 13H28" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
-          </g>
-        </svg>
-      );
+      return <Code2 className="w-6 h-6 text-white shrink-0" />;
   }
 }
 
-function DiplomaCourseCard({
+// Diploma Course Card matching user's component design (Subject counts omitted as requested)
+export function DiplomaCourseCard({
   course,
   onSelect,
 }: {
@@ -843,30 +724,117 @@ function DiplomaCourseCard({
     <div
       id={`course-${course.id}`}
       onClick={() => onSelect(course)}
-      className="rounded-[24px] bg-white border border-[#EBE6FE] p-5 sm:p-6 flex flex-col justify-between items-center text-center group hover:shadow-xl hover:border-[#25176E]/30 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 relative overflow-hidden cursor-pointer h-full"
+      className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden border border-[#EBE6FE] shadow-sm hover:shadow-xl hover:border-[#25176E]/30 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between h-full"
     >
-      <div className="flex flex-col items-center w-full">
-        {/* Enlarged Centered Square Icon Badge with Rounded Corners */}
-        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[22px] sm:rounded-[26px] bg-[#1E1266] flex items-center justify-center p-3 mb-5 shadow-lg border border-[#372692]/25 group-hover:scale-105 transition-transform duration-300 mx-auto shrink-0">
-          <MinimalistBranchGraphic code={course.code} />
+      {/* Corner circle background ornament */}
+      <div className="absolute -top-8 -right-8 w-28 h-28 bg-[#F0EBFF] rounded-full group-hover:bg-[#EBE6FE] transition-colors pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col justify-between h-full">
+        <div>
+          <div className="flex items-center justify-between">
+            <div className="w-[52px] h-[52px] rounded-2xl bg-[#1E1266] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300 shrink-0">
+              <EngineeringIcon code={course.code} />
+            </div>
+            <span className="bg-[#F0EBFF] text-[#25176E] text-[10px] sm:text-[11px] font-extrabold px-3 py-1 rounded-full border border-[#EBE6FE]">
+              {course.category || "C-24 & C-26"}
+            </span>
+          </div>
+
+          <h3 className="font-display-saasmo text-[18px] sm:text-[20px] font-extrabold text-[#1E1266] mt-4 mb-3 group-hover:text-[#25176E] transition-colors leading-snug tracking-tight">
+            {course.name}
+          </h3>
         </div>
 
-        {/* Clean Centered Content Area */}
-        <h3 className="font-display-saasmo text-lg sm:text-xl font-extrabold text-[#1E1266] group-hover:text-[#25176E] transition-colors leading-snug">
-          {course.name}
-        </h3>
+        <div className="border-t border-[#F0EBFF] pt-3.5 mt-4 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(course);
+            }}
+            className="text-xs sm:text-sm font-bold text-[#25176E] group-hover:text-[#1b1054] transition-colors text-left"
+          >
+            View syllabus and details
+          </button>
+          <span className="w-7 h-7 rounded-full bg-[#F0EBFF] text-[#25176E] flex items-center justify-center group-hover:bg-[#25176E] group-hover:text-white transition-all shrink-0 ml-2">
+            <ArrowRight className="w-4 h-4 text-[#25176E] group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-        {/* Subtitle Text */}
-        <p className="text-xs text-[#64748B] font-medium mt-1">
-          SBTET C-24 & C-26 Curriculum Scheme
-        </p>
+// User Provided Diploma Courses Carousel Component
+export function DiplomaCoursesCarousel({
+  courses = coursesData,
+  onViewSyllabus = () => {},
+}: {
+  courses?: Course[];
+  onViewSyllabus?: (course: Course) => void;
+}) {
+  const [index, setIndex] = useState(0);
+
+  const goTo = (i: number) => setIndex(Math.max(0, Math.min(courses.length - 1, i)));
+
+  const isLast = index === courses.length - 1;
+  const translateX = isLast
+    ? `calc(-${index} * (88% + 12px) + 6%)`
+    : `calc(-${index} * (88% + 12px))`;
+
+  return (
+    <div className="w-full relative">
+      {/* Track */}
+      <div className="overflow-hidden py-2 px-1">
+        <div
+          className="flex gap-3 sm:gap-4 transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(${translateX})` }}
+        >
+          {courses.map((course) => (
+            <div
+              key={course.id}
+              className="flex-none w-[88%] sm:w-[340px]"
+            >
+              <DiplomaCourseCard course={course} onSelect={onViewSyllabus} />
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Bottom Action Footer */}
-      <div className="w-full flex items-center justify-between text-xs font-bold text-[#25176E] group-hover:text-[#1b1054] transition-colors pt-4 border-t border-[#F0EBFF] mt-5">
-        <span>View Syllabus & Details</span>
-        <div className="w-7 h-7 rounded-full bg-[#F0EBFF] text-[#25176E] flex items-center justify-center group-hover:bg-[#25176E] group-hover:text-white transition-all">
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+      {/* Controls */}
+      <div className="flex items-center justify-between mt-4 px-1">
+        <div className="flex gap-1.5 items-center">
+          {courses.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === index
+                  ? "w-6 bg-[#1E1266]"
+                  : "w-2 bg-[#25176E]/35 hover:bg-[#25176E]/60 border border-[#25176E]/20"
+              }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <div className="flex gap-2 items-center">
+          <button
+            onClick={() => goTo(index - 1)}
+            disabled={index === 0}
+            className="w-[34px] h-[34px] rounded-full bg-white border border-[#EBE6FE] flex items-center justify-center disabled:opacity-40 shadow-xs hover:bg-[#F0EBFF] active:scale-95 transition-all"
+            aria-label="Previous course"
+          >
+            <ChevronLeft className="w-4 h-4 text-[#1E1266]" />
+          </button>
+          <button
+            onClick={() => goTo(index + 1)}
+            disabled={index === courses.length - 1}
+            className="w-[34px] h-[34px] rounded-full bg-[#1E1266] text-white flex items-center justify-center disabled:opacity-40 shadow-xs hover:bg-[#25176E] active:scale-95 transition-all"
+            aria-label="Next course"
+          >
+            <ChevronRight className="w-4 h-4 text-white" />
+          </button>
         </div>
       </div>
     </div>
@@ -950,25 +918,15 @@ export default function EngineeringCoursesTrack() {
           </p>
         </motion.div>
 
-        {/* Mobile View: 1 Card at a time Carousel with Backward/Forward Buttons */}
-        <motion.div variants={itemVariants} className="block md:hidden px-8 sm:px-10 relative">
-          <Carousel opts={{ align: "start", loop: true }} className="relative w-full">
-            <CarouselContent>
-              {coursesData.map((course) => (
-                <CarouselItem key={course.id} className="basis-full">
-                  <div className="py-1 h-full">
-                    <DiplomaCourseCard course={course} onSelect={setSelectedCourse} />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="-left-4 sm:-left-6 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF] active:scale-95" />
-            <CarouselNext className="-right-4 sm:-right-6 bg-white text-[#25176E] border border-[#EBE6FE] shadow-md hover:bg-[#F0EBFF] active:scale-95" />
-            <CarouselDots />
-          </Carousel>
+        {/* Mobile View: Carousel with Dots & Controls matching user code design */}
+        <motion.div variants={itemVariants} className="block md:hidden relative">
+          <DiplomaCoursesCarousel
+            courses={coursesData}
+            onViewSyllabus={setSelectedCourse}
+          />
         </motion.div>
 
-        {/* Desktop View: Original Refined Grid */}
+        {/* Desktop View: Grid matching user card design */}
         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
           {coursesData.map((course) => (
             <motion.div key={course.id} variants={itemVariants} whileHover={{ y: -6, transition: { duration: 0.25 } }}>

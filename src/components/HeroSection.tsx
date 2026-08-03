@@ -131,9 +131,9 @@ export default function HeroSection() {
       ref={heroRef}
     >
       {/* ========================================================================= */}
-      {/* 📱 MOBILE HERO VIEW (lg:hidden) - BALANCED SPACING TO NEXT SECTION        */}
+      {/* 📱 MOBILE HERO VIEW (lg:hidden) - FULL VIEWPORT HEIGHT (NO SECTION PEEK)  */}
       {/* ========================================================================= */}
-      <div className="block lg:hidden w-full pt-14 pb-6 sm:pb-8 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
+      <div className="block lg:hidden w-full min-h-[100dvh] pt-14 pb-12 sm:pb-16 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
         
         {/* 1. Top Framed Video (Fixed height bounds anchored to top) */}
         <div className="relative w-full h-[200px] min-[380px]:h-[230px] min-[440px]:h-[250px] overflow-hidden shrink-0 bg-[#F6F4FE]">
@@ -149,7 +149,7 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={heroContainerVariants}
-          className="px-4 pt-1 pb-4 flex flex-col items-center text-center gap-2.5 relative z-30 max-w-xs min-[390px]:max-w-sm mx-auto w-full -mt-5 min-[390px]:-mt-7"
+          className="px-4 pt-1 pb-4 flex flex-col items-center text-center gap-2.5 relative z-30 max-w-xs min-[390px]:max-w-sm mx-auto w-full -mt-5 min-[390px]:-mt-7 -translate-y-[3.5%]"
         >
           {/* Green Pill Tag Badge */}
           <motion.div variants={badgePopVariants} className="flex justify-center w-full shrink-0">

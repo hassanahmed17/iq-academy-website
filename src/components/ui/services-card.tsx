@@ -99,11 +99,12 @@ const Carousel = React.forwardRef<
 
     React.useEffect(() => {
       if (!api) return;
-      onSelect(api);
-      api.on("reInit", onSelect);
-      api.on("select", onSelect);
+      const handleSelect = () => onSelect(api);
+      handleSelect();
+      api.on("reInit", handleSelect);
+      api.on("select", handleSelect);
       return () => {
-        api?.off("select", onSelect);
+        api?.off("select", handleSelect);
       };
     }, [api, onSelect]);
 
@@ -342,15 +343,15 @@ const CarouselDots = React.forwardRef<
 
   React.useEffect(() => {
     if (!api) return;
-    setScrollSnaps(api.scrollSnapList());
-    onSelect(api);
-    api.on("select", onSelect);
-    api.on("reInit", () => {
+    const syncState = () => {
       setScrollSnaps(api.scrollSnapList());
       onSelect(api);
-    });
+    };
+    syncState();
+    api.on("select", () => onSelect(api));
+    api.on("reInit", syncState);
     return () => {
-      api?.off("select", onSelect);
+      api?.off("select", () => onSelect(api));
     };
   }, [api, onSelect]);
 

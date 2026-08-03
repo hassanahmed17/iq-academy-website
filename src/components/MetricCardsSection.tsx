@@ -44,27 +44,25 @@ function prefersReducedMotion(): boolean {
 
 function useCountUp(target: number, active: boolean, decimals = 0, duration = 1000) {
   const [display, setDisplay] = useState(0);
-  const fromRef = useRef(0);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!active) return;
-    if (prefersReducedMotion()) {
-      setDisplay(target);
-      fromRef.current = target;
+    if (!active) {
+      setDisplay(0);
       return;
     }
-    const from = fromRef.current;
+    if (prefersReducedMotion()) {
+      setDisplay(target);
+      return;
+    }
     const start = performance.now();
     function tick(now: number) {
       const t = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
-      const value = from + (target - from) * eased;
+      const value = target * eased;
       setDisplay(value);
       if (t < 1) {
         rafRef.current = requestAnimationFrame(tick);
-      } else {
-        fromRef.current = target;
       }
     }
     rafRef.current = requestAnimationFrame(tick);
@@ -202,6 +200,8 @@ export default function MetricCardsSection() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
+        } else {
+          setVisible(false);
         }
       },
       { threshold: 0.15 }
@@ -224,7 +224,7 @@ export default function MetricCardsSection() {
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      <div className="flex justify-center mb-6 sm:mb-10">
+      <div className={`flex justify-center mb-6 sm:mb-10 transition-all duration-700 ease-out transform ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"}`}>
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold uppercase shadow-xs"
           style={{ backgroundColor: "white", color: INK, letterSpacing: "0.08em", border: "1px solid rgba(23,21,58,0.08)" }}
@@ -237,7 +237,9 @@ export default function MetricCardsSection() {
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 max-w-3xl mx-auto items-start">
         {/* Card 1 — Highest GPA (quiet) */}
         <div
-          className="sm:col-span-5 p-5 sm:p-6 flex flex-col transition-all duration-300 hover:-translate-y-1"
+          className={`sm:col-span-5 p-5 sm:p-6 flex flex-col transition-all duration-700 ease-out delay-100 transform hover:-translate-y-1 ${
+            visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"
+          }`}
           style={{
             backgroundColor: CARD_TINT,
             border: "1px solid rgba(23,21,58,0.08)",
@@ -274,7 +276,9 @@ export default function MetricCardsSection() {
         </div>
 
         {/* Card 2 — State Rank (hero, stamped) */}
-        <div className="sm:col-span-7 relative sm:mt-[-10px]">
+        <div className={`sm:col-span-7 relative sm:mt-[-10px] transition-all duration-700 ease-out delay-200 transform ${
+          visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"
+        }`}>
           <div
             className="absolute inset-0 rounded-[22px]"
             style={{ backgroundColor: INK, transform: "rotate(1.4deg) translate(4px, 6px)", zIndex: 0 }}

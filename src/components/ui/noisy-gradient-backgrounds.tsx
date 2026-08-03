@@ -33,7 +33,6 @@ function Noise({
       return;
     }
 
-    let frame = 0;
     const patternCanvas = document.createElement("canvas");
     patternCanvas.width = patternSize;
     patternCanvas.height = patternSize;

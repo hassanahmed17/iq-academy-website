@@ -51,15 +51,23 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     return () => window.removeEventListener("resize", updateCanvasSize);
   }, [updateCanvasSize]);
 
-  const gridParams = useMemo(() => {
+  const squaresRef = useRef<Float32Array | null>(null);
+
+  const gridDimensions = useMemo(() => {
     const cols = Math.floor((canvasSize.width + gridGap) / (squareSize + gridGap));
     const rows = Math.floor((canvasSize.height + gridGap) / (squareSize + gridGap));
-    const squares = new Float32Array(cols * rows);
-    for (let i = 0; i < squares.length; i++) {
+    return { cols, rows };
+  }, [canvasSize, squareSize, gridGap]);
+
+  useEffect(() => {
+    const total = gridDimensions.cols * gridDimensions.rows;
+    if (total <= 0) return;
+    const squares = new Float32Array(total);
+    for (let i = 0; i < total; i++) {
       squares[i] = Math.random() * maxOpacity;
     }
-    return { cols, rows, squares };
-  }, [canvasSize, squareSize, gridGap, maxOpacity]);
+    squaresRef.current = squares;
+  }, [gridDimensions, maxOpacity]);
 
   const setupCanvas = useCallback(
     (canvas: HTMLCanvasElement, w: number, h: number) => {
@@ -84,7 +92,9 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
     ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-    const { cols, rows, squares } = gridParams;
+    const { cols, rows } = gridDimensions;
+    const squares = squaresRef.current;
+    if (!squares) return;
 
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
@@ -102,7 +112,7 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
         }
       }
     }
-  }, [canvasSize, gridParams, flickerChance, maxOpacity, memoizedColor, squareSize, gridGap]);
+  }, [canvasSize, gridDimensions, flickerChance, maxOpacity, memoizedColor, squareSize, gridGap]);
 
   useEffect(() => {
     const container = containerRef.current;
