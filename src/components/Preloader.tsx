@@ -53,7 +53,7 @@ export default function Preloader() {
               alt="IQ Academy Logo"
               width={192}
               height={192}
-              priority
+              loading="eager"
               className="w-full h-full object-contain filter drop-shadow-[0_15px_30px_rgba(91,61,245,0.35)]"
             />
           </motion.div>

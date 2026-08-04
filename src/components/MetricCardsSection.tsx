@@ -141,31 +141,52 @@ function RibbonWatermark() {
 function ExamToggle({ active, onChange }: { active: ExamKey; onChange: (key: ExamKey) => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [rect, setRect] = useState({ left: 0, width: 0 });
+  const [rect, setRect] = useState<{ left: number; width: number } | null>(null);
 
-  useLayoutEffect(() => {
+  const updateRect = React.useCallback(() => {
     const btn = btnRefs.current[active];
     const container = containerRef.current;
     if (btn && container) {
       const c = container.getBoundingClientRect();
       const b = btn.getBoundingClientRect();
-      setRect({ left: b.left - c.left, width: b.width });
+      if (b.width > 0) {
+        setRect({ left: b.left - c.left, width: b.width });
+      }
     }
   }, [active]);
+
+  useLayoutEffect(() => {
+    updateRect();
+    const raf = requestAnimationFrame(updateRect);
+    const timer = setTimeout(updateRect, 60);
+    window.addEventListener("resize", updateRect);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+      window.removeEventListener("resize", updateRect);
+    };
+  }, [updateRect]);
+
+  const keys = Object.keys(EXAM_DATA) as ExamKey[];
+  const activeIndex = keys.indexOf(active);
 
   return (
     <div
       ref={containerRef}
-      className="relative inline-flex p-1 rounded-full"
+      className="relative inline-flex p-1 rounded-full w-auto"
       style={{ backgroundColor: "rgba(23,21,58,0.1)" }}
       role="tablist"
       aria-label="Select exam"
     >
       <div
         className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out"
-        style={{ backgroundColor: INK, left: rect.left, width: rect.width }}
+        style={{
+          backgroundColor: INK,
+          left: rect && rect.width > 0 ? rect.left : activeIndex === 0 ? "4px" : "calc(50% + 2px)",
+          width: rect && rect.width > 0 ? rect.width : "calc(50% - 6px)",
+        }}
       />
-      {(Object.keys(EXAM_DATA) as ExamKey[]).map((key) => {
+      {keys.map((key) => {
         const exam = EXAM_DATA[key];
         const isActive = active === key;
         return (
@@ -200,8 +221,6 @@ export default function MetricCardsSection() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
-        } else {
-          setVisible(false);
         }
       },
       { threshold: 0.15 }
@@ -224,7 +243,7 @@ export default function MetricCardsSection() {
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      <div className={`flex justify-center mb-6 sm:mb-10 transition-all duration-700 ease-out transform ${visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"}`}>
+      <div className={`flex justify-center mb-6 sm:mb-10 transition-all duration-700 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-98"}`}>
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold uppercase shadow-xs"
           style={{ backgroundColor: "white", color: INK, letterSpacing: "0.08em", border: "1px solid rgba(23,21,58,0.08)" }}
@@ -237,8 +256,8 @@ export default function MetricCardsSection() {
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 max-w-3xl mx-auto items-start">
         {/* Card 1 — Highest GPA (quiet) */}
         <div
-          className={`sm:col-span-5 p-5 sm:p-6 flex flex-col transition-all duration-700 ease-out delay-100 transform hover:-translate-y-1 ${
-            visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"
+          className={`sm:col-span-5 p-5 sm:p-6 flex flex-col transition-all duration-700 ease-out delay-100 ${
+            visible ? "opacity-100 scale-100" : "opacity-0 scale-98"
           }`}
           style={{
             backgroundColor: CARD_TINT,
@@ -276,8 +295,8 @@ export default function MetricCardsSection() {
         </div>
 
         {/* Card 2 — State Rank (hero, stamped) */}
-        <div className={`sm:col-span-7 relative sm:mt-[-10px] transition-all duration-700 ease-out delay-200 transform ${
-          visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"
+        <div className={`sm:col-span-7 relative sm:mt-[-10px] transition-all duration-700 ease-out delay-200 ${
+          visible ? "opacity-100 scale-100" : "opacity-0 scale-98"
         }`}>
           <div
             className="absolute inset-0 rounded-[22px]"

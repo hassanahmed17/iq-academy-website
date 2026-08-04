@@ -16,7 +16,7 @@ const engineeringFields = [
 const entranceExams = [
   { id: "exam-polycet", name: "POLYCET Coaching", tag: "Post-10th Diploma Entrance" },
   { id: "exam-ecet", name: "ECET Coaching", tag: "BE / B.Tech Lateral Entry" },
-  { id: "exam-eapcet", name: "TS EAPCET (EAMCET)", tag: "Intermediate B.Tech Entrance" },
+  { id: "exam-eapcet", name: "TS EAPCET (EAMCET)", tag: "Intermediate BE / B.Tech Entrance" },
 ];
 
 export default function Navbar() {
@@ -134,22 +134,22 @@ export default function Navbar() {
     >
       <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between h-16 md:h-20" suppressHydrationWarning={true}>
         
-        {/* Brand Logo & Text (ALWAYS VISIBLE in top-left corner) */}
-        <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="flex items-center gap-1.5 sm:gap-3 group z-50">
+        {/* Brand Logo & Text (ALWAYS VISIBLE in top-left corner, sleek & balanced) */}
+        <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="flex items-center gap-1.5 sm:gap-2.5 group z-50">
           <img
             src="/images/iqae-crest.png"
             alt="IQ Academy of Excellence Shield Crest"
-            className="h-8 sm:h-10 md:h-11 lg:h-12 w-auto object-contain group-hover:scale-105 transition-transform"
+            className="h-9 sm:h-[42px] md:h-[46px] lg:h-[52px] w-auto object-contain group-hover:scale-105 transition-transform"
           />
           <img
             src="/images/iq-text-logo.png"
             alt="IQ Academy of Excellence"
-            className="h-4.5 sm:h-7 md:h-8 w-auto object-contain group-hover:scale-102 transition-transform"
+            className="h-5 sm:h-[27px] md:h-[31px] lg:h-[35px] w-auto object-contain group-hover:scale-102 transition-transform"
           />
         </a>
 
-        {/* Desktop Links (Appears smoothly on scroll) */}
-        <div className={`hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-[#64748B] transition-all duration-300 ease-out ${
+        {/* Desktop Links (Appears smoothly on scroll for Desktop xl+ screens 1280px+) */}
+        <div className={`hidden xl:flex items-center gap-6 xl:gap-7 text-sm font-semibold text-[#64748B] transition-all duration-300 ease-out ${
           isScrolled ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
         }`}>
           
@@ -272,8 +272,8 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Desktop CTA Action Button (Appears smoothly on scroll) */}
-        <div className={`hidden md:flex items-center gap-3 transition-all duration-300 ease-out ${
+        {/* Desktop CTA Action Button (Appears smoothly on scroll for Desktop xl+ screens 1280px+) */}
+        <div className={`hidden xl:flex items-center gap-3 transition-all duration-300 ease-out ${
           isScrolled ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
         }`}>
           <a
@@ -286,11 +286,11 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Hamburger Toggle Button (Always visible in mobile view) */}
-        <div className="md:hidden flex items-center gap-2 z-50">
+        {/* Hamburger Toggle Button (Active for Mobile & Tablet screens up to 1280px) */}
+        <div className="xl:hidden flex items-center gap-2 z-50">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl text-[#25176E] hover:bg-[#EBE6FE] transition-colors focus:outline-none"
+            className="p-2.5 rounded-xl text-[#25176E] hover:bg-[#EBE6FE] transition-colors focus:outline-none bg-white/80 border border-[#EBE6FE] shadow-xs"
             aria-label="Toggle Navigation Menu"
             suppressHydrationWarning={true}
           >
@@ -300,7 +300,7 @@ export default function Navbar() {
 
       </div>
 
-      {/* FULL-SCREEN MOBILE OVERLAY MENU */}
+      {/* FULL-SCREEN MOBILE & TABLET OVERLAY MENU */}
       <AnimatePresence>
         {mobileMenuOpen && (
             <motion.div
@@ -308,7 +308,7 @@ export default function Navbar() {
               animate="open"
               exit="closed"
               variants={menuOverlayVariants}
-              className="fixed inset-0 w-full max-w-full h-full min-h-screen bg-[#F6F4FE] z-40 flex flex-col justify-between px-6 pt-24 pb-10 md:hidden overflow-y-auto"
+              className="fixed inset-0 w-full max-w-full h-full min-h-screen bg-[#F6F4FE] z-40 flex flex-col justify-between px-6 sm:px-10 pt-24 pb-10 xl:hidden overflow-y-auto"
               suppressHydrationWarning={true}
             >
               {/* Navigation Links Container */}

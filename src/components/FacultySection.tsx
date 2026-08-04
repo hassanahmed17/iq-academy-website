@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { UserRound } from "lucide-react";
+import { UserRound, Briefcase } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import {
   Carousel,
@@ -13,23 +13,26 @@ import {
   CarouselDots,
 } from "@/components/ui/services-card";
 
-interface FacultyMember {
+export interface StaffMember {
   id: number;
   name: string;
   qualification: string;
-  subject: string;
-  experience: string;
-  image: string;
+  roleOrSubject: string;
+  category: "teaching" | "admin";
+  experience?: string;
+  image?: string;
   objectPos?: string;
   imageClass?: string;
 }
 
-const facultyList: FacultyMember[] = [
+const staffList: StaffMember[] = [
+  // --- TEACHING FACULTY ---
   {
     id: 1,
     name: "M.D. Abdul Rafeeq",
     qualification: "M.E., M.Sc.",
-    subject: "Mechanical Engineering, Mathematics",
+    roleOrSubject: "Mechanical Engineering, Mathematics, Physics",
+    category: "teaching",
     experience: "13+ Years Experience",
     image: "/images/faculty/rafeeq.jpg",
     objectPos: "object-[center_0%]",
@@ -39,7 +42,8 @@ const facultyList: FacultyMember[] = [
     id: 2,
     name: "Mohammed Amin Sultan",
     qualification: "M.Tech",
-    subject: "Electronics & Communication, Physics",
+    roleOrSubject: "Electronics & Communication, Physics",
+    category: "teaching",
     experience: "13+ Years Experience",
     image: "/images/faculty/aminsultan.jpg",
     objectPos: "object-[center_0%]",
@@ -49,7 +53,8 @@ const facultyList: FacultyMember[] = [
     id: 3,
     name: "Syed Sultan",
     qualification: "M.Sc.",
-    subject: "Chemistry",
+    roleOrSubject: "Chemistry",
+    category: "teaching",
     experience: "10+ Years Experience",
     image: "/images/faculty/syedsultan.jpg",
     objectPos: "object-top",
@@ -58,7 +63,8 @@ const facultyList: FacultyMember[] = [
     id: 4,
     name: "M. A Amer Qureshi",
     qualification: "M.Tech",
-    subject: "Civil Engineering",
+    roleOrSubject: "Civil Engineering",
+    category: "teaching",
     experience: "8+ Years Experience",
     image: "/images/faculty/quraishi.jpg",
     objectPos: "object-[center_0%]",
@@ -68,7 +74,8 @@ const facultyList: FacultyMember[] = [
     id: 5,
     name: "Mohammed Taha Hussain",
     qualification: "B.E.",
-    subject: "Computer Science Engineering",
+    roleOrSubject: "Computer Science Engineering",
+    category: "teaching",
     experience: "3+ Years Experience",
     image: "/images/faculty/taha.jpg",
     objectPos: "object-[center_0%]",
@@ -78,7 +85,8 @@ const facultyList: FacultyMember[] = [
     id: 6,
     name: "Mir Mohsin Ali",
     qualification: "B.Tech",
-    subject: "Computer Science Engineering",
+    roleOrSubject: "Computer Science Engineering",
+    category: "teaching",
     experience: "5+ Years Experience",
     image: "",
   },
@@ -86,8 +94,38 @@ const facultyList: FacultyMember[] = [
     id: 7,
     name: "Javed Sir",
     qualification: "M.Tech",
-    subject: "Electrical & Electronics (EEE)",
+    roleOrSubject: "Electrical & Electronics (EEE)",
+    category: "teaching",
     experience: "5+ Years Experience",
+    image: "",
+  },
+
+  // --- NON-TEACHING & ADMINISTRATIVE STAFF ---
+  {
+    id: 8,
+    name: "Syed Moin Ali",
+    qualification: "MBA",
+    roleOrSubject: "Administrative Head",
+    category: "admin",
+    experience: "IQ Academy Administration",
+    image: "",
+  },
+  {
+    id: 9,
+    name: "Mohammed Shahnawaz",
+    qualification: "B.Com",
+    roleOrSubject: "Business Development Executive",
+    category: "admin",
+    experience: "Business Development",
+    image: "",
+  },
+  {
+    id: 10,
+    name: "Hassan Ahmed",
+    qualification: "B.E.",
+    roleOrSubject: "Administration, Graphic Designer",
+    category: "admin",
+    experience: "Administration & Design",
     image: "",
   },
 ];
@@ -97,13 +135,13 @@ const gradientStyle = {
     "linear-gradient(to bottom, rgba(31,17,80,0) 35%, rgba(31,17,80,0.65) 70%, rgba(20,11,59,0.96) 100%)",
 };
 
-function FacultyCard({ member }: { member: FacultyMember }) {
+function StaffCard({ member }: { member: StaffMember }) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const subjects = member.subject.split(",").map((s) => s.trim()).filter(Boolean);
+  const tags = member.roleOrSubject.split(",").map((s) => s.trim()).filter(Boolean);
 
   return (
-    <div className="group flex-none w-full rounded-2xl sm:rounded-3xl relative overflow-hidden aspect-[4/3.4] md:aspect-[4/3] shadow-md hover:shadow-xl border border-[#EBE6FE]/40 transition-all duration-300">
-      {/* Background Photo with Grayscale Filter or Gradient Fallback */}
+    <div className="group flex-none w-full rounded-2xl sm:rounded-3xl relative overflow-hidden aspect-[4/3.4] md:aspect-[4/3] shadow-md hover:shadow-xl border border-[#EBE6FE]/40 transition-all duration-300 bg-[#1E1266]">
+      {/* Background Photo or Icon Fallback */}
       {member.image ? (
         <>
           {!imageLoaded && (
@@ -122,17 +160,23 @@ function FacultyCard({ member }: { member: FacultyMember }) {
         </>
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-[#25176E] via-[#1E1266] to-[#140B3B] flex items-center justify-center">
-          <UserRound className="w-20 h-20 text-white/20 stroke-[1.2]" />
+          {member.category === "admin" ? (
+            <Briefcase className="w-20 h-20 text-white/20 stroke-[1.2]" />
+          ) : (
+            <UserRound className="w-20 h-20 text-white/20 stroke-[1.2]" />
+          )}
         </div>
       )}
 
       {/* Dark Overlay Gradient */}
       <div className="absolute inset-0 pointer-events-none" style={gradientStyle} />
 
-      {/* Top Experience Pill Tag */}
-      <span className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-full border border-white/15 shadow-xs z-10">
-        {member.experience}
-      </span>
+      {/* Top Tag */}
+      {member.experience && (
+        <span className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-full border border-white/15 shadow-xs z-10">
+          {member.experience}
+        </span>
+      )}
 
       {/* Bottom Content Area */}
       <div className="absolute bottom-0 left-0 right-0 p-3.5 sm:p-5 pb-2.5 sm:pb-5 flex flex-col justify-end text-left z-10">
@@ -143,14 +187,14 @@ function FacultyCard({ member }: { member: FacultyMember }) {
           {member.qualification}
         </p>
 
-        {/* Subject Specialization Badges */}
-        <div className="flex flex-wrap gap-1.5">
-          {subjects.map((sub, idx) => (
+        {/* Role or Subject Specialization Badges (Single Line) */}
+        <div className="flex flex-nowrap items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar w-full">
+          {tags.map((tag, idx) => (
             <span
               key={idx}
-              className="bg-white/20 backdrop-blur-md text-white text-[11px] font-medium px-2.5 py-1 rounded-lg border border-white/10 shadow-2xs"
+              className="bg-white/20 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-medium px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border border-white/10 shadow-2xs whitespace-nowrap shrink-0"
             >
-              {sub}
+              {tag}
             </span>
           ))}
         </div>
@@ -160,85 +204,87 @@ function FacultyCard({ member }: { member: FacultyMember }) {
 }
 
 export default function FacultySection() {
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.05,
-      },
-    },
-  };
+  const [activeCategory, setActiveCategory] = useState<"teaching" | "admin">("teaching");
 
-  const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: {
-        duration: 0.65,
-        ease: [0.21, 0.47, 0.32, 0.98],
-      },
-    },
-  };
+  const filteredStaff = staffList.filter((m) => m.category === activeCategory);
 
   return (
-    <section id="faculty" className="py-16 sm:py-24 relative bg-[#F6F4FE] overflow-hidden">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={containerVariants}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-      >
+    <section id="faculty" className="py-16 sm:py-24 relative bg-[#F6F4FE] overflow-hidden" suppressHydrationWarning={true}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" suppressHydrationWarning={true}>
+        
         {/* Section Header */}
-        <motion.div variants={cardVariants} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-2">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-2">
           <span className="text-xs font-extrabold uppercase tracking-widest text-[#25176E] bg-[#F0EBFF] px-3.5 py-1 rounded-full border border-[#EBE6FE]">
-            High Academics Faculty
+            FACULTY & TEAM
           </span>
-          <h2 className="font-display-saasmo text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-[#1E1266]">
-            Skilled Instructors & Educators
+          <h2 className="font-display-saasmo text-2xl sm:text-3xl lg:text-[36px] font-bold tracking-tight text-[#1E1266] mt-2">
+            Our Faculty & Administration
           </h2>
-          <p className="text-sm sm:text-base text-[#64748B] max-w-2xl mx-auto leading-relaxed">
-            Our distinguished faculty members hold postgraduate & doctorate degrees from premier technical institutions with over a decade of dedicated teaching experience.
+          <p className="text-xs sm:text-sm text-[#64748B] max-w-2xl mx-auto leading-relaxed">
+            Our distinguished faculty members and administrative team are dedicated to academic excellence and student success.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Mobile View Carousel */}
-        <motion.div variants={cardVariants} className="block md:hidden relative px-1">
-          <Carousel opts={{ align: "start", loop: true }} className="relative w-full">
+        {/* Category Switcher Tabs: Teaching Staff vs Non-Teaching Staff (No Emojis/Icons) */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 w-full max-w-md mx-auto px-2">
+          <button
+            onClick={() => setActiveCategory("teaching")}
+            className={`flex-1 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center ${
+              activeCategory === "teaching"
+                ? "bg-[#25176E] text-white shadow-md scale-105"
+                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
+            }`}
+          >
+            Teaching Staff
+          </button>
+
+          <button
+            onClick={() => setActiveCategory("admin")}
+            className={`flex-1 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center ${
+              activeCategory === "admin"
+                ? "bg-[#25176E] text-white shadow-md scale-105"
+                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
+            }`}
+          >
+            Non-Teaching Staff
+          </button>
+        </div>
+
+        {/* Mobile View Carousel (Instant visibility on button click) */}
+        <div className="block md:hidden relative px-1">
+          <Carousel opts={{ align: "start", loop: false }} className="relative w-full">
             <CarouselContent className="-ml-3">
-              {facultyList.map((member) => (
+              {filteredStaff.map((member) => (
                 <CarouselItem key={member.id} className="pl-3 basis-[88%] sm:basis-[65%]">
                   <div className="h-full py-1">
-                    <FacultyCard member={member} />
+                    <StaffCard member={member} />
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
             
             {/* Carousel Controls */}
-            <div className="flex items-center justify-between mt-6 px-1">
-              <CarouselDots />
-              <div className="flex items-center gap-2 z-10">
-                <CarouselPrevious className="static translate-x-0 translate-y-0 w-9 h-9 bg-white text-[#25176E] border border-[#EBE6FE] shadow-sm hover:bg-[#F0EBFF] active:scale-95" />
-                <CarouselNext className="static translate-x-0 translate-y-0 w-9 h-9 bg-[#25176E] text-white border border-[#25176E] shadow-sm hover:bg-[#1E1266] active:scale-95" />
+            {filteredStaff.length > 1 && (
+              <div className="flex items-center justify-between mt-6 px-1">
+                <CarouselDots />
+                <div className="flex items-center gap-2 z-10">
+                  <CarouselPrevious className="static translate-x-0 translate-y-0 w-9 h-9 bg-white text-[#25176E] border border-[#EBE6FE] shadow-sm hover:bg-[#F0EBFF] active:scale-95" />
+                  <CarouselNext className="static translate-x-0 translate-y-0 w-9 h-9 bg-[#25176E] text-white border border-[#25176E] shadow-sm hover:bg-[#1E1266] active:scale-95" />
+                </div>
               </div>
-            </div>
+            )}
           </Carousel>
-        </motion.div>
+        </div>
 
-        {/* Desktop View 3-Column Grid */}
+        {/* Desktop View 3-Column Grid (100% visible immediately on button click) */}
         <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {facultyList.map((member) => (
-            <motion.div key={member.id} variants={cardVariants} whileHover={{ y: -6, transition: { duration: 0.25 } }}>
-              <FacultyCard member={member} />
-            </motion.div>
+          {filteredStaff.map((member) => (
+            <div key={member.id} className="hover:-translate-y-1.5 transition-all duration-300">
+              <StaffCard member={member} />
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

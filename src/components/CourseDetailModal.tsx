@@ -14,6 +14,7 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
   const [selectedScheme, setSelectedScheme] = useState<"c24" | "c26">("c26"); // Default C-26 Scheme
   const [selectedC24Sem, setSelectedC24Sem] = useState<"sem1" | "sem2" | "sem3" | "sem4" | "sem5">("sem1");
   const [selectedC26Tab, setSelectedC26Tab] = useState<"year1" | "sem3" | "sem4" | "sem5">("year1");
+  const [interYear, setInterYear] = useState<"year1" | "year2">("year1");
 
   const contentBodyRef = React.useRef<HTMLDivElement>(null);
 
@@ -22,18 +23,37 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
     if (contentBodyRef.current) {
       contentBodyRef.current.scrollTop = 0;
     }
-  }, [activeTab, course, selectedScheme, selectedC26Tab, selectedC24Sem]);
+  }, [activeTab, course, selectedScheme, selectedC26Tab, selectedC24Sem, interYear]);
 
   if (!course) return null;
 
-  const courseTitle = course.fullTitle || course.name || course.title || "Engineering Course";
-  
-  // Get active subjects based on scheme selection
-  const currentSemSubjects: string[] = selectedScheme === "c26"
-    ? (course.c26Syllabus ? course.c26Syllabus[selectedC26Tab] || [] : [])
-    : (course.c24Syllabus ? course.c24Syllabus[selectedC24Sem] || [] : []);
+  const courseTitle = course.fullTitle || course.name || course.title || "Course Details";
+  const isIntermediate = course.type === "intermediate";
+  const isSSC = course.type === "ssc";
+  const isDiploma = !isIntermediate && !isSSC;
+
+  // Get active subjects based on course type & scheme selection
+  const getSubjects = (): string[] => {
+    if (isIntermediate && course.interSyllabus) {
+      return course.interSyllabus[interYear] || [];
+    }
+    if (isSSC && course.sscSyllabus) {
+      return course.sscSyllabus.subjects || [];
+    }
+    return selectedScheme === "c26"
+      ? (course.c26Syllabus ? course.c26Syllabus[selectedC26Tab] || [] : [])
+      : (course.c24Syllabus ? course.c24Syllabus[selectedC24Sem] || [] : []);
+  };
+
+  const currentSemSubjects = getSubjects();
 
   const getSemesterLabel = () => {
+    if (isIntermediate) {
+      return interYear === "year1" ? "1ST YEAR" : "2ND YEAR";
+    }
+    if (isSSC) {
+      return "CLASS 10TH";
+    }
     if (selectedScheme === "c26") {
       switch (selectedC26Tab) {
         case "year1": return "FIRST YEAR (COMMON)";
@@ -57,7 +77,7 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
           <div>
             <div className="flex items-center gap-2">
               <span className="px-3 py-0.5 rounded-full bg-[#D2FF00] text-[#1B1054] text-xs font-extrabold uppercase tracking-wider">
-                {course.category || "Telangana SBTET"}
+                {course.category || "Telangana Board"}
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-white/15 text-white text-xs font-mono font-bold">
                 {course.code}
@@ -99,20 +119,22 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
             }`}
           >
             <Layers className="w-4 h-4" />
-            <span>2. Theory Subjects (C-24 & C-26)</span>
+            <span>2. Board Subjects & Syllabus</span>
           </button>
 
-          <button
-            onClick={() => setActiveTab("scope")}
-            className={`flex items-center gap-2 py-3.5 px-4 font-semibold text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap ${
-              activeTab === "scope"
-                ? "border-[#25176E] text-[#25176E] bg-white rounded-t-lg font-bold"
-                : "border-transparent text-[#64748B] hover:text-[#25176E]"
-            }`}
-          >
-            <Compass className="w-4 h-4" />
-            <span>3. Scope & Government Jobs</span>
-          </button>
+          {isDiploma && (
+            <button
+              onClick={() => setActiveTab("scope")}
+              className={`flex items-center gap-2 py-3.5 px-4 font-semibold text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap ${
+                activeTab === "scope"
+                  ? "border-[#25176E] text-[#25176E] bg-white rounded-t-lg font-bold"
+                  : "border-transparent text-[#64748B] hover:text-[#25176E]"
+              }`}
+            >
+              <Compass className="w-4 h-4" />
+              <span>3. Entrance Exams & Scope</span>
+            </button>
+          )}
         </div>
 
         {/* Content Body */}
@@ -144,116 +166,154 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
             </div>
           )}
 
-          {/* TAB 2: SYLLABUS EXPLORER - C-26 (1st Year, Sem 3,4,5) & C-24 (Sem 1,2,3,4,5) */}
+          {/* TAB 2: SYLLABUS EXPLORER */}
           {activeTab === "syllabus" && (
             <div className="space-y-6 animate-fadeIn">
               
-              {/* Scheme Switcher & Dynamic Academic Controls */}
+              {/* Controls for Intermediate, SSC, and Diploma */}
               <div className="p-4 rounded-2xl bg-[#F6F4FE] border border-[#EBE6FE] space-y-4">
                 
-                {/* 1. Scheme Selector Toggle (C-26 vs C-24) */}
-                <div className="flex items-center justify-between flex-wrap gap-3">
-                  <span className="text-xs font-extrabold text-[#25176E] uppercase tracking-wider">
-                    Select Telangana SBTET Scheme:
-                  </span>
-                  
-                  <div className="bg-[#EBE6FE] p-1 rounded-xl flex items-center gap-1">
-                    <button
-                      onClick={() => setSelectedScheme("c26")}
-                      className={`px-4 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
-                        selectedScheme === "c26"
-                          ? "bg-[#25176E] text-white shadow-sm"
-                          : "text-[#1E1266] hover:bg-white/50"
-                      }`}
-                    >
-                      SBTET C-26 Scheme (New)
-                    </button>
-                    <button
-                      onClick={() => setSelectedScheme("c24")}
-                      className={`px-4 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
-                        selectedScheme === "c24"
-                          ? "bg-[#25176E] text-white shadow-sm"
-                          : "text-[#1E1266] hover:bg-white/50"
-                      }`}
-                    >
-                      SBTET C-24 Scheme
-                    </button>
-                  </div>
-                </div>
-
-                {/* 2. Dynamic Buttons Based on Selected Scheme */}
-                {selectedScheme === "c26" ? (
-                  /* C-26 Scheme Controls: 1st Year, Sem 3, Sem 4, Sem 5 (No Sem 1 & Sem 2) */
-                  <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-2 border-t border-[#EBE6FE]">
-                    <button
-                      onClick={() => setSelectedC26Tab("year1")}
-                      className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
-                        selectedC26Tab === "year1"
-                          ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
-                          : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
-                      }`}
-                    >
-                      1st Year
-                    </button>
-                    <button
-                      onClick={() => setSelectedC26Tab("sem3")}
-                      className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
-                        selectedC26Tab === "sem3"
-                          ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
-                          : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
-                      }`}
-                    >
-                      Sem 3
-                    </button>
-                    <button
-                      onClick={() => setSelectedC26Tab("sem4")}
-                      className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
-                        selectedC26Tab === "sem4"
-                          ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
-                          : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
-                      }`}
-                    >
-                      Sem 4
-                    </button>
-                    <button
-                      onClick={() => setSelectedC26Tab("sem5")}
-                      className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
-                        selectedC26Tab === "sem5"
-                          ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
-                          : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
-                      }`}
-                    >
-                      Sem 5
-                    </button>
-                  </div>
-                ) : (
-                  /* C-24 Scheme Controls: Sem 1, Sem 2, Sem 3, Sem 4, Sem 5 */
-                  <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-2 border-t border-[#EBE6FE]">
-                    {(["sem1", "sem2", "sem3", "sem4", "sem5"] as const).map((semKey, i) => (
+                {isIntermediate && (
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <span className="text-xs font-extrabold text-[#25176E] uppercase tracking-wider">
+                      Select Academic Year:
+                    </span>
+                    <div className="bg-[#EBE6FE] p-1 rounded-xl flex items-center gap-1">
                       <button
-                        key={semKey}
-                        onClick={() => setSelectedC24Sem(semKey)}
-                        className={`flex-1 min-w-[75px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
-                          selectedC24Sem === semKey
-                            ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
-                            : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
+                        onClick={() => setInterYear("year1")}
+                        className={`px-5 py-2 rounded-lg text-xs font-extrabold transition-all ${
+                          interYear === "year1"
+                            ? "bg-[#25176E] text-white shadow-sm"
+                            : "text-[#1E1266] hover:bg-white/50"
                         }`}
                       >
-                        Sem {i + 1}
+                        1st Year
                       </button>
-                    ))}
+                      <button
+                        onClick={() => setInterYear("year2")}
+                        className={`px-5 py-2 rounded-lg text-xs font-extrabold transition-all ${
+                          interYear === "year2"
+                            ? "bg-[#25176E] text-white shadow-sm"
+                            : "text-[#1E1266] hover:bg-white/50"
+                        }`}
+                      >
+                        2nd Year
+                      </button>
+                    </div>
                   </div>
+                )}
+
+                {isSSC && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-extrabold text-[#25176E] uppercase tracking-wider">
+                      Class 10th Board Subjects
+                    </span>
+                  </div>
+                )}
+
+                {isDiploma && (
+                  <>
+                    <div className="flex items-center justify-between flex-wrap gap-3">
+                      <span className="text-xs font-extrabold text-[#25176E] uppercase tracking-wider">
+                        Select Telangana SBTET Scheme:
+                      </span>
+                      
+                      <div className="bg-[#EBE6FE] p-1 rounded-xl flex items-center gap-1">
+                        <button
+                          onClick={() => setSelectedScheme("c26")}
+                          className={`px-4 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
+                            selectedScheme === "c26"
+                              ? "bg-[#25176E] text-white shadow-sm"
+                              : "text-[#1E1266] hover:bg-white/50"
+                          }`}
+                        >
+                          SBTET C-26 Scheme (New)
+                        </button>
+                        <button
+                          onClick={() => setSelectedScheme("c24")}
+                          className={`px-4 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
+                            selectedScheme === "c24"
+                              ? "bg-[#25176E] text-white shadow-sm"
+                              : "text-[#1E1266] hover:bg-white/50"
+                          }`}
+                        >
+                          SBTET C-24 Scheme
+                        </button>
+                      </div>
+                    </div>
+
+                    {selectedScheme === "c26" ? (
+                      <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-2 border-t border-[#EBE6FE]">
+                        <button
+                          onClick={() => setSelectedC26Tab("year1")}
+                          className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+                            selectedC26Tab === "year1"
+                              ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
+                              : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
+                          }`}
+                        >
+                          1st Year
+                        </button>
+                        <button
+                          onClick={() => setSelectedC26Tab("sem3")}
+                          className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+                            selectedC26Tab === "sem3"
+                              ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
+                              : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
+                          }`}
+                        >
+                          Sem 3
+                        </button>
+                        <button
+                          onClick={() => setSelectedC26Tab("sem4")}
+                          className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+                            selectedC26Tab === "sem4"
+                              ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
+                              : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
+                          }`}
+                        >
+                          Sem 4
+                        </button>
+                        <button
+                          onClick={() => setSelectedC26Tab("sem5")}
+                          className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+                            selectedC26Tab === "sem5"
+                              ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
+                              : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
+                          }`}
+                        >
+                          Sem 5
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-2 border-t border-[#EBE6FE]">
+                        {(["sem1", "sem2", "sem3", "sem4", "sem5"] as const).map((semKey, i) => (
+                          <button
+                            key={semKey}
+                            onClick={() => setSelectedC24Sem(semKey)}
+                            className={`flex-1 min-w-[75px] py-2 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+                              selectedC24Sem === semKey
+                                ? "bg-[#D2FF00] text-[#1B1054] shadow-sm font-black border border-lime-400"
+                                : "bg-white text-[#1E1266] hover:bg-[#F0EBFF] border border-[#EBE6FE]"
+                            }`}
+                          >
+                            Sem {i + 1}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
 
               </div>
 
-              {/* Display Academic Theory Subjects Only */}
+              {/* Display Academic Theory Subjects */}
               {currentSemSubjects && currentSemSubjects.length > 0 ? (
                 <div className="p-5 rounded-2xl bg-white border border-[#EBE6FE] shadow-xs space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-[#EBE6FE]">
                     <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
                       <BookOpen className="w-4 h-4 text-[#25176E]" />
-                      <span>SBTET Academic Theory Subjects ({selectedScheme.toUpperCase()} • {getSemesterLabel()})</span>
+                      <span>Academic Board Subjects ({getSemesterLabel()})</span>
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full bg-[#F0EBFF] text-[#25176E] text-[11px] font-extrabold">
                       {currentSemSubjects.length} Core Subjects
@@ -273,64 +333,70 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
                 </div>
               ) : (
                 <div className="p-8 text-center text-xs text-[#64748B]">
-                  Academic theory subjects updating for this scheme.
+                  Academic theory subjects updating.
                 </div>
               )}
 
             </div>
           )}
 
-          {/* TAB 3: SCOPE, CERTIFICATIONS & GOVERNMENT JOBS */}
+          {/* TAB 3: SCOPE & ENTRANCE EXAMS */}
           {activeTab === "scope" && (
             <div className="space-y-6 animate-fadeIn">
               
-              {/* Professional & Industry Certifications */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
-                  <Award className="w-4 h-4 text-[#25176E]" />
-                  <span>Recommended Industry Certifications</span>
+              {/* Professional & Industry Certifications / Skills */}
+              {course.certifications && course.certifications.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
+                    <Award className="w-4 h-4 text-[#25176E]" />
+                    <span>Recommended Skills & Certifications</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {course.certifications.map((cert: string, idx: number) => (
+                      <div key={idx} className="flex items-center gap-2.5 bg-[#F6F4FE] p-3 rounded-xl border border-[#EBE6FE] text-xs font-semibold text-[#1E1266]">
+                        <Sparkles className="w-4 h-4 text-[#25176E] shrink-0" />
+                        <span>{cert}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {(course.certifications || []).map((cert: string, idx: number) => (
-                    <div key={idx} className="flex items-center gap-2.5 bg-[#F6F4FE] p-3 rounded-xl border border-[#EBE6FE] text-xs font-semibold text-[#1E1266]">
-                      <Sparkles className="w-4 h-4 text-[#25176E] shrink-0" />
-                      <span>{cert}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              )}
 
               {/* Competitive Entrance Exams */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
-                  <Shield className="w-4 h-4 text-[#25176E]" />
-                  <span>BE / B.Tech Lateral Entry Entrance Exams</span>
+              {course.competitiveExams && course.competitiveExams.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
+                    <Shield className="w-4 h-4 text-[#25176E]" />
+                    <span>Competitive Entrance Exams & Academic Pathways</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {course.competitiveExams.map((exam: string, idx: number) => (
+                      <div key={idx} className="flex items-center gap-2.5 bg-[#F0EBFF] p-3 rounded-xl border border-[#EBE6FE] text-xs font-semibold text-[#1E1266]">
+                        <ArrowRight className="w-4 h-4 text-[#25176E] shrink-0" />
+                        <span>{exam}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {(course.competitiveExams || course.scope || []).map((exam: string, idx: number) => (
-                    <div key={idx} className="flex items-center gap-2.5 bg-[#F0EBFF] p-3 rounded-xl border border-[#EBE6FE] text-xs font-semibold text-[#1E1266]">
-                      <ArrowRight className="w-4 h-4 text-[#25176E] shrink-0" />
-                      <span>{exam}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              )}
 
-              {/* State & Central Government Jobs & PSUs */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
-                  <Briefcase className="w-4 h-4 text-[#25176E]" />
-                  <span>State & Central Government Job Opportunities for Telangana Diploma Holders</span>
+              {/* State & Central Government Jobs (EXCLUSIVELY FOR DIPLOMA ENGINEEERING COURSES) */}
+              {isDiploma && course.governmentJobs && course.governmentJobs.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center gap-2 text-[#25176E] font-bold text-xs uppercase tracking-wider">
+                    <Briefcase className="w-4 h-4 text-[#25176E]" />
+                    <span>State & Central Government Job Opportunities for Telangana Diploma Holders</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {course.governmentJobs.map((job: string, idx: number) => (
+                      <div key={idx} className="flex items-start gap-3 bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 text-xs font-semibold text-emerald-950">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <span className="leading-relaxed">{job}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 gap-2.5">
-                  {(course.governmentJobs || []).map((job: string, idx: number) => (
-                    <div key={idx} className="flex items-start gap-3 bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 text-xs font-semibold text-emerald-950">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span className="leading-relaxed">{job}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              )}
 
             </div>
           )}
@@ -340,7 +406,7 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
         {/* Footer CTA */}
         <div className="p-5 border-t border-[#EBE6FE] bg-[#F6F4FE] flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
           <p className="text-xs text-[#64748B]">
-            Enrolling for 2026 Academic Batches • Telangana SBTET C-24 & C-26 Aligned
+            Enrolling for 2026 Academic Batches • Telangana Board Aligned
           </p>
           <a
             href="#contact-form-block"
@@ -353,7 +419,7 @@ export default function CourseDetailModal({ course, onClose }: CourseDetailModal
             }}
             className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#25176E] text-white font-bold text-xs sm:text-sm hover:bg-[#1b1054] transition-all text-center shadow-md"
           >
-            Enrol in this Course
+            Enrol in this Program
           </a>
         </div>
 

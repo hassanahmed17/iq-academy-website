@@ -18,10 +18,11 @@ export default function CoachingServices() {
   };
 
   const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 16 },
+    hidden: { opacity: 0, y: 0, scale: 0.98 },
     visible: {
       opacity: 1,
       y: 0,
+      scale: 1,
       transition: {
         duration: 0.4,
         ease: "easeOut",
@@ -205,7 +206,7 @@ export default function CoachingServices() {
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded-full bg-[#D2FF00] text-[#1B1054] text-[11px] sm:text-xs font-extrabold shadow-sm">
-                  INTERMEDIATE B.TECH ENTRANCE
+                  INTERMEDIATE BE / B.TECH ENTRANCE
                 </span>
                 <BookOpen className="w-5 h-5 text-[#D2FF00]" />
               </div>

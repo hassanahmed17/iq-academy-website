@@ -34,7 +34,8 @@ export default function Home() {
 
       timerId = setTimeout(() => {
         setIsLoading(false);
-        document.body.style.overflow = "";
+        document.body.style.overflowX = "hidden";
+        document.body.style.overflowY = "auto";
       }, remainingTime);
     };
 
@@ -47,7 +48,8 @@ export default function Home() {
     return () => {
       if (timerId) clearTimeout(timerId);
       window.removeEventListener("load", handleLoadComplete);
-      document.body.style.overflow = "";
+      document.body.style.overflowX = "hidden";
+      document.body.style.overflowY = "auto";
     };
   }, []);
 

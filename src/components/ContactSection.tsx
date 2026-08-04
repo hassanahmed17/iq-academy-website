@@ -158,7 +158,7 @@ export default function ContactSection() {
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.01 }}
             variants={leftColumnVariants}
             className="lg:col-span-5 space-y-6"
           >
@@ -233,7 +233,7 @@ export default function ContactSection() {
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.01 }}
             variants={rightColumnVariants}
             id="contact-form-block"
             className="scroll-mt-16 sm:scroll-mt-24 lg:col-span-7"

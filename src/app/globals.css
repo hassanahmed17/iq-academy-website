@@ -25,11 +25,13 @@ body {
   background-color: var(--canvas);
   color: var(--text-primary);
   font-family: var(--font-outfit), var(--font-inter), system-ui, sans-serif;
-  overflow-x: hidden !important;
+  overflow-x: hidden;
+  overflow-y: auto;
   width: 100%;
   max-width: 100%;
   position: relative;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* UI/UX Pro Max Focus Ring Accessibility Token */

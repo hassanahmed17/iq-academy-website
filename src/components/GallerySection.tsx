@@ -85,10 +85,11 @@ export default function GallerySection() {
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 28, filter: "blur(3px)" },
+    hidden: { opacity: 0, y: 0, scale: 0.98, filter: "blur(3px)" },
     visible: {
       opacity: 1,
       y: 0,
+      scale: 1,
       filter: "blur(0px)",
       transition: {
         duration: 0.65,
@@ -98,13 +99,14 @@ export default function GallerySection() {
   };
 
   return (
-    <section id="gallery" className="py-14 sm:py-24 relative bg-white border-t border-[#EBE6FE] overflow-hidden">
+    <section id="gallery" className="py-14 sm:py-24 relative bg-white border-t border-[#EBE6FE] overflow-hidden" suppressHydrationWarning={true}>
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
         variants={containerVariants}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        suppressHydrationWarning={true}
       >
         
         {/* Section Header */}
@@ -122,7 +124,7 @@ export default function GallerySection() {
         </motion.div>
 
         {/* Dynamic Responsive Bento Grid (2-cols on mobile, 4-cols on desktop) */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[260px] gap-3 sm:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[140px] sm:auto-rows-[260px] gap-3 sm:gap-5" suppressHydrationWarning={true}>
           {initialGalleryImages.map((item, index) => {
             const spanClass = bentoSpans[index] || "col-span-1 row-span-1 h-full";
             const isLoaded = loadedImages[item.id];
@@ -132,11 +134,12 @@ export default function GallerySection() {
                 variants={itemVariants}
                 onClick={() => openLightbox(index)}
                 className={`group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-[#EBE6FE] bg-[#F6F4FE] md:cursor-default cursor-pointer hover:shadow-lg transition-all duration-300 ${spanClass}`}
+                suppressHydrationWarning={true}
               >
                 {/* Skeleton UI Loading Placeholder */}
                 {!isLoaded && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#F0EBFF] via-[#EBE6FE] to-[#F0EBFF] animate-pulse rounded-2xl sm:rounded-3xl flex items-center justify-center z-10">
-                    <div className="w-7 h-7 rounded-full border-2 border-[#25176E]/20 border-t-[#25176E] animate-spin" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#F0EBFF] via-[#EBE6FE] to-[#F0EBFF] animate-pulse rounded-2xl sm:rounded-3xl flex items-center justify-center z-10" suppressHydrationWarning={true}>
+                    <div className="w-7 h-7 rounded-full border-2 border-[#25176E]/20 border-t-[#25176E] animate-spin" suppressHydrationWarning={true} />
                   </div>
                 )}
 
@@ -153,8 +156,8 @@ export default function GallerySection() {
                 />
 
                 {/* Mobile-only subtle touch indicator */}
-                <div className="md:hidden absolute inset-0 bg-black/10 group-active:bg-black/20 transition-all duration-200 flex items-center justify-center opacity-0 group-active:opacity-100 z-20">
-                  <div className="w-9 h-9 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white border border-white/40 shadow-md">
+                <div className="md:hidden absolute inset-0 bg-black/10 group-active:bg-black/20 transition-all duration-200 flex items-center justify-center opacity-0 group-active:opacity-100 z-20" suppressHydrationWarning={true}>
+                  <div className="w-9 h-9 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white border border-white/40 shadow-md" suppressHydrationWarning={true}>
                     <Maximize2 className="w-4 h-4" />
                   </div>
                 </div>

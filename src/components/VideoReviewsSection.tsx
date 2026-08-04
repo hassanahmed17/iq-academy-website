@@ -18,10 +18,11 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
+  hidden: { opacity: 0, y: 0, scale: 0.98, filter: "blur(3px)" },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
     filter: "blur(0px)",
     transition: {
       duration: 0.7,
@@ -238,6 +239,13 @@ export default function VideoReviewsSection() {
       course: "Student Feedback & Experience",
       quote: "The shortcut formulas, mock tests, and faculty guidance gave me the confidence to excel in state entrance exams!",
     },
+    {
+      id: 3,
+      src: "/videos/students-success-stories.mp4",
+      studentName: "Students Success Stories",
+      course: "Student Feedback & Success",
+      quote: "Watch our students share their inspiring learning journey, rank achievements, and success stories at IQ Academy of Excellence!",
+    },
   ];
 
   return (
@@ -295,8 +303,8 @@ export default function VideoReviewsSection() {
               </p>
             </motion.div>
 
-            {/* 2 Video Cards Grid (4:5 Aspect Ratio) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto items-center">
+            {/* 3 Video Cards Grid (4:5 Aspect Ratio) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto items-center">
               {videoReviewsData.map((video) => (
                 <motion.div key={video.id} variants={itemVariants} whileHover={{ y: -6, transition: { duration: 0.25 } }}>
                   <VideoCardItem

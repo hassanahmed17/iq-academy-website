@@ -41,15 +41,9 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-[#64748B] pt-16 pb-12 text-sm border-t border-[#EBE6FE] shadow-sm relative overflow-hidden">
+    <footer className="bg-white text-[#64748B] pt-14 sm:pt-16 pb-16 sm:pb-20 text-sm border-t border-[#EBE6FE] shadow-sm relative overflow-hidden">
       
-      <motion.div
-        initial={{ opacity: 0, y: 25, filter: "blur(3px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-      >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           
@@ -205,11 +199,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright Bar */}
-        <div className="border-t border-[#EBE6FE] pt-8 flex items-center justify-center text-center text-xs text-[#64748B]">
-          <p>© {new Date().getFullYear()} IQ Academy of Excellence. All rights reserved.</p>
+        <div className="border-t border-[#EBE6FE] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <p className="text-xs sm:text-sm font-medium text-[#475569]">
+            © {new Date().getFullYear()} IQ Academy of Excellence. All rights reserved.
+          </p>
+          
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#F0EBFF] border border-[#EBE6FE] text-xs sm:text-sm font-semibold text-[#1E1266] shadow-xs">
+            <span className="text-[#64748B]">Designed & Developed by</span>
+            <span className="font-extrabold text-[#25176E] tracking-tight">Hassan Ahmed</span>
+          </div>
         </div>
 
-      </motion.div>
+      </div>
     </footer>
   );
 }

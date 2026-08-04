@@ -14,7 +14,7 @@ function SeamlessLoopVideo({ src, objectPos = "object-[center_10%]" }: { src: st
     if (!video) return;
 
     const playVideo = () => {
-      if (video.paused) {
+      if (video && video.paused) {
         video.play().catch(() => {});
       }
     };
@@ -22,18 +22,11 @@ function SeamlessLoopVideo({ src, objectPos = "object-[center_10%]" }: { src: st
     video.addEventListener("canplay", playVideo);
     video.addEventListener("loadeddata", playVideo);
     
-    // Auto-resume if browser power-saving pauses video
-    const handlePause = () => {
-      video.play().catch(() => {});
-    };
-    video.addEventListener("pause", handlePause);
-
     playVideo();
 
     return () => {
       video.removeEventListener("canplay", playVideo);
       video.removeEventListener("loadeddata", playVideo);
-      video.removeEventListener("pause", handlePause);
     };
   }, [src]);
 
@@ -46,7 +39,7 @@ function SeamlessLoopVideo({ src, objectPos = "object-[center_10%]" }: { src: st
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         className={`w-full h-full object-cover ${objectPos} bg-[#F6F4FE]`}
       />
     </div>
@@ -131,16 +124,16 @@ export default function HeroSection() {
       ref={heroRef}
     >
       {/* ========================================================================= */}
-      {/* 📱 MOBILE HERO VIEW (lg:hidden) - CONTENT ANCHORED WITH BOTTOM SPACE      */}
+      {/* 📱 MOBILE & TABLET HERO VIEW (xl:hidden) - RESPONSIVE FOR ALL TABLET/MOBILE SIZES (INCLUDING 1024x1366 IPAD PRO) */}
       {/* ========================================================================= */}
-      <div className="block lg:hidden w-full pt-14 pb-20 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
+      <div className="block xl:hidden w-full pt-16 sm:pt-20 pb-20 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
         
-        {/* 1. Top Framed Video (Fixed height bounds anchored to top) */}
-        <div className="relative w-full h-[200px] min-[380px]:h-[220px] min-[440px]:h-[240px] overflow-hidden shrink-0 bg-[#F6F4FE]">
+        {/* 1. Top Framed Video (Scales smoothly up to 1024px portrait tablet size) */}
+        <div className="relative w-full h-[200px] min-[380px]:h-[220px] min-[440px]:h-[240px] sm:h-[300px] md:h-[360px] lg:h-[420px] overflow-hidden shrink-0 bg-[#F6F4FE]">
           <SeamlessLoopVideo src="/videos/hero-mobile.mp4" objectPos="object-[center_42%]" />
           
           {/* Soft Vignette Gradient Fade Mask seamlessly blending video into background with NO hard edge */}
-          <div className="absolute inset-x-0 -bottom-2 h-16 bg-gradient-to-t from-[#F6F4FE] via-[#F6F4FE]/90 to-transparent z-20 pointer-events-none" />
+          <div className="absolute inset-x-0 -bottom-2 h-16 sm:h-24 bg-gradient-to-t from-[#F6F4FE] via-[#F6F4FE]/90 to-transparent z-20 pointer-events-none" />
           <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[#F6F4FE]/30 to-transparent z-20 pointer-events-none" />
         </div>
 
@@ -149,11 +142,11 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
           variants={heroContainerVariants}
-          className="px-4 pt-0 pb-6 flex flex-col items-center text-center gap-2.5 relative z-30 max-w-xs min-[390px]:max-w-sm mx-auto w-full -mt-4"
+          className="px-4 pt-0 pb-6 flex flex-col items-center text-center gap-2.5 sm:gap-3.5 relative z-30 max-w-xs min-[390px]:max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto w-full -mt-4 sm:-mt-6"
         >
           {/* Green Pill Tag Badge */}
           <motion.div variants={badgePopVariants} className="flex justify-center w-full shrink-0">
-            <span className="px-5 py-1.5 rounded-full bg-[#D2FF00] text-[#1B1054] font-black text-xs tracking-wide uppercase shadow-md inline-block">
+            <span className="px-5 py-1.5 sm:px-6 sm:py-2 rounded-full bg-[#D2FF00] text-[#1B1054] font-black text-xs sm:text-sm tracking-wide uppercase shadow-md inline-block">
               SSC • INTER • DIPLOMA
             </span>
           </motion.div>
@@ -161,19 +154,19 @@ export default function HeroSection() {
           {/* Centered 2-Line Headline */}
           <motion.h1
             variants={itemFadeUpVariants}
-            className="font-display-saasmo text-[24px] min-[390px]:text-[27px] font-extrabold text-[#1E1266] leading-[1.15] tracking-tight text-center max-w-xs shrink-0"
+            className="font-display-saasmo text-[24px] min-[390px]:text-[27px] sm:text-[34px] md:text-[40px] lg:text-[46px] font-extrabold text-[#1E1266] leading-[1.15] tracking-tight text-center max-w-xs sm:max-w-md md:max-w-xl lg:max-w-2xl shrink-0"
           >
             <span className="block w-full text-center">A leading institute for</span>
             <span className="block w-full text-center text-[#5B3DF5] font-black min-h-[1.2em] flex items-center justify-center">
               <span>{currentText}</span>
-              <span className="w-[3px] h-[0.75em] bg-[#5B3DF5] animate-cursor-blink ml-1 rounded-full inline-block shrink-0 align-middle" />
+              <span className="w-[3px] sm:w-[4px] h-[0.75em] bg-[#5B3DF5] animate-cursor-blink ml-1 sm:ml-2 rounded-full inline-block shrink-0 align-middle" />
             </span>
           </motion.h1>
 
           {/* Centered Subtext Description */}
           <motion.p
             variants={itemFadeUpVariants}
-            className="text-xs text-[#475569] font-medium leading-relaxed max-w-xs mx-auto text-center px-1 shrink-0"
+            className="text-xs sm:text-sm md:text-base lg:text-lg text-[#475569] font-medium leading-relaxed max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto text-center px-1 shrink-0"
           >
             Empowering SSC, Intermediate, and Polytechnic Diploma students with expert faculty, structured learning, and personalised guidance to build confidence and achieve academic excellence.
           </motion.p>
@@ -181,7 +174,7 @@ export default function HeroSection() {
           {/* CTA Buttons */}
           <motion.div
             variants={itemFadeUpVariants}
-            className="flex flex-col items-center justify-center gap-2 pt-1 w-full max-w-[270px] min-[390px]:max-w-xs shrink-0"
+            className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 pt-1 sm:pt-3 w-full max-w-[270px] min-[390px]:max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl shrink-0"
           >
             <a
               href="#contact-form-block"
@@ -189,18 +182,18 @@ export default function HeroSection() {
                 e.preventDefault();
                 document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
-              className="w-full py-3 px-5 rounded-2xl bg-[#1B1054] text-white font-bold text-xs min-[390px]:text-sm shadow-md flex items-center justify-center gap-2 group hover:bg-[#150c45] active:scale-95 transition-all"
+              className="w-full sm:w-auto py-3 px-5 sm:py-3.5 sm:px-7 rounded-2xl sm:rounded-full bg-[#1B1054] text-white font-bold text-xs min-[390px]:text-sm sm:text-base shadow-md flex items-center justify-center gap-2 group hover:bg-[#150c45] active:scale-95 transition-all"
             >
               <span>Join the Next Batch</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
             </a>
 
             <a
               href="#courses"
-              className="w-full py-3 px-5 rounded-2xl bg-white border border-[#EBE6FE] text-[#1B1054] font-bold text-xs min-[390px]:text-sm shadow-xs flex items-center justify-center gap-2 hover:bg-[#F6F4FE] active:scale-95 transition-all"
+              className="w-full sm:w-auto py-3 px-5 sm:py-3.5 sm:px-7 rounded-2xl sm:rounded-full bg-white border border-[#EBE6FE] text-[#1B1054] font-bold text-xs min-[390px]:text-sm sm:text-base shadow-xs flex items-center justify-center gap-2 hover:bg-[#F6F4FE] active:scale-95 transition-all"
             >
               <span>View Programs</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#1B1054]" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1B1054]" />
             </a>
           </motion.div>
         </motion.div>
@@ -242,9 +235,9 @@ export default function HeroSection() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 💻 DESKTOP HERO VIEW (hidden lg:flex) - SPECIFICALLY USES 1212 VIDEO      */}
+      {/* 💻 DESKTOP HERO VIEW (hidden xl:flex) - FOR WIDESCREEN DESKTOP MONITORS    */}
       {/* ========================================================================= */}
-      <div className="hidden lg:flex relative w-full min-h-[100dvh] min-h-screen pt-36 pb-24 flex-col justify-center bg-white">
+      <div className="hidden xl:flex relative w-full min-h-[100dvh] min-h-screen pt-36 pb-24 flex-col justify-center bg-white">
         {/* Background video covering full section width & height with Desktop Specific Video (1212.mp4) */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
           <SeamlessLoopVideo src="/videos/hero-desktop.mp4" objectPos="object-[center_10%]" />

@@ -160,10 +160,11 @@ export default function AboutUsSection() {
   };
 
   const cardVariants: Variants = {
-    hidden: { opacity: 0, y: 32, filter: "blur(3px)" },
+    hidden: { opacity: 0, y: 0, scale: 0.98, filter: "blur(3px)" },
     visible: {
       opacity: 1,
       y: 0,
+      scale: 1,
       filter: "blur(0px)",
       transition: {
         duration: 0.7,
