@@ -205,28 +205,34 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* 3. Soft, Light-Strength U-Shaped Ambient Gradient Glow filling extended bottom space */}
-        <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 overflow-hidden">
-          <div className="w-full h-full relative opacity-30">
+        {/* 3. Soft, Light-Strength U-Shaped Ambient Gradient Glow (Feathered Bottom, No Sharp Lines) */}
+        <div 
+          className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 overflow-hidden"
+          style={{
+            WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+            maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)"
+          }}
+        >
+          <div className="w-full h-full relative opacity-20">
             {/* Left Arm of U-Shape: Sweeps up the bottom-left corner */}
             <div 
-              className="absolute bottom-0 left-0 w-52 h-44 blur-2xl pointer-events-none"
+              className="absolute -bottom-6 left-0 w-56 h-48 blur-3xl pointer-events-none"
               style={{
-                background: "radial-gradient(ellipse 100% 100% at 0% 100%, #5B3DF5 0%, #7C3AED 50%, transparent 100%)"
+                background: "radial-gradient(ellipse 100% 100% at 0% 100%, #5B3DF5 0%, #7C3AED 45%, transparent 100%)"
               }}
             />
 
             {/* Right Arm of U-Shape: Sweeps up the bottom-right corner */}
             <div 
-              className="absolute bottom-0 right-0 w-52 h-44 blur-2xl pointer-events-none"
+              className="absolute -bottom-6 right-0 w-56 h-48 blur-3xl pointer-events-none"
               style={{
-                background: "radial-gradient(ellipse 100% 100% at 100% 100%, #7C3AED 0%, #5B3DF5 50%, transparent 100%)"
+                background: "radial-gradient(ellipse 100% 100% at 100% 100%, #7C3AED 0%, #5B3DF5 45%, transparent 100%)"
               }}
             />
 
             {/* U-Shape Hollow Curve Rim: Center stays transparent (0-40%), Outer rim curves into a soft U-bowl */}
             <div 
-              className="absolute bottom-0 inset-x-0 h-36 blur-xl pointer-events-none"
+              className="absolute -bottom-6 inset-x-0 h-40 blur-2xl pointer-events-none"
               style={{
                 background: "radial-gradient(ellipse 75% 90% at 50% 100%, transparent 40%, #5B3DF5 65%, #25176E 100%)"
               }}
