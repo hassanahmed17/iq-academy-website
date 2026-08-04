@@ -131,9 +131,9 @@ export default function HeroSection() {
       ref={heroRef}
     >
       {/* ========================================================================= */}
-      {/* 📱 MOBILE HERO VIEW (lg:hidden) - CONTENT ANCHORED & TIGHTLY FITTED        */}
+      {/* 📱 MOBILE HERO VIEW (lg:hidden) - CONTENT ANCHORED WITH BOTTOM SPACE      */}
       {/* ========================================================================= */}
-      <div className="block lg:hidden w-full pt-14 pb-8 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
+      <div className="block lg:hidden w-full pt-14 pb-20 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
         
         {/* 1. Top Framed Video (Fixed height bounds anchored to top) */}
         <div className="relative w-full h-[200px] min-[380px]:h-[220px] min-[440px]:h-[240px] overflow-hidden shrink-0 bg-[#F6F4FE]">
@@ -205,12 +205,12 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* 3. Soft, Light-Strength U-Shaped Ambient Gradient Glow (Hollow Center U-Curve, Bottom-Left & Bottom-Right Arms) */}
-        <div className="absolute inset-x-0 bottom-0 h-36 pointer-events-none z-10 overflow-hidden">
-          <div className="w-full h-full relative opacity-25">
+        {/* 3. Soft, Light-Strength U-Shaped Ambient Gradient Glow filling extended bottom space */}
+        <div className="absolute inset-x-0 bottom-0 h-48 pointer-events-none z-10 overflow-hidden">
+          <div className="w-full h-full relative opacity-30">
             {/* Left Arm of U-Shape: Sweeps up the bottom-left corner */}
             <div 
-              className="absolute bottom-0 left-0 w-44 h-36 blur-2xl pointer-events-none"
+              className="absolute bottom-0 left-0 w-52 h-44 blur-2xl pointer-events-none"
               style={{
                 background: "radial-gradient(ellipse 100% 100% at 0% 100%, #5B3DF5 0%, #7C3AED 50%, transparent 100%)"
               }}
@@ -218,17 +218,17 @@ export default function HeroSection() {
 
             {/* Right Arm of U-Shape: Sweeps up the bottom-right corner */}
             <div 
-              className="absolute bottom-0 right-0 w-44 h-36 blur-2xl pointer-events-none"
+              className="absolute bottom-0 right-0 w-52 h-44 blur-2xl pointer-events-none"
               style={{
                 background: "radial-gradient(ellipse 100% 100% at 100% 100%, #7C3AED 0%, #5B3DF5 50%, transparent 100%)"
               }}
             />
 
-            {/* U-Shape Hollow Curve Rim: Center stays transparent (0-45%), Outer rim curves into a soft U-bowl */}
+            {/* U-Shape Hollow Curve Rim: Center stays transparent (0-40%), Outer rim curves into a soft U-bowl */}
             <div 
-              className="absolute bottom-0 inset-x-0 h-28 blur-xl pointer-events-none"
+              className="absolute bottom-0 inset-x-0 h-36 blur-xl pointer-events-none"
               style={{
-                background: "radial-gradient(ellipse 70% 85% at 50% 100%, transparent 45%, #5B3DF5 70%, #25176E 100%)"
+                background: "radial-gradient(ellipse 75% 90% at 50% 100%, transparent 40%, #5B3DF5 65%, #25176E 100%)"
               }}
             />
           </div>
