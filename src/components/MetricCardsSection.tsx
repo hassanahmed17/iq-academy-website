@@ -1,343 +1,415 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { Sparkles } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { GradientBackground } from "@/components/ui/noisy-gradient-backgrounds";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
-const INK = "#17153A";
-const PAPER = "#F4F1FC";
-const CARD_TINT = "#FBFAFF";
-const LIME = "#D7FF3F";
+export type ExamFilter = "ALL" | "POLYCET" | "ECET";
 
-type ExamKey = "POLYCET" | "ECET";
-
-interface ExamInfo {
-  tabLabel: string;
-  statLabel: string;
-  rank: number;
-  description: string;
+export interface StudentAchiever {
+  id: string;
+  name: string;
+  category: "POLYCET" | "ECET";
+  rank: string;
+  hallTicketNo: string; // 10+ digit Hall Ticket / Reg Number
+  image?: string;
+  objectPos?: string;
+  imageClass?: string;
 }
 
-const EXAM_DATA: Record<ExamKey, ExamInfo> = {
-  POLYCET: {
-    tabLabel: "POLYCET '26",
-    statLabel: "POLYCET 2026 STATE RANK",
-    rank: 874, // placeholder — swap in the real POLYCET '26 rank
-    description:
-      "Top Telangana state ranks achieved by IQ Academy students in the POLYCET entrance exam.",
+const achieversList: StudentAchiever[] = [
+  // --- ECET TOPPERS ---
+  {
+    id: "1",
+    name: "Syed Kamran Ahmed",
+    category: "ECET",
+    rank: "State Rank #48",
+    hallTicketNo: "2401011116",
+    image: "/images/toppers/kamran.png",
   },
-  ECET: {
-    tabLabel: "ECET '26",
-    statLabel: "ECET 2026 STATE RANK",
-    rank: 1042,
-    description:
-      "Top Telangana state ranks achieved by IQ Academy students in the ECET entrance exam.",
+  {
+    id: "2",
+    name: "Mohd Inzimam Ghori",
+    category: "ECET",
+    rank: "State Rank #54",
+    hallTicketNo: "10404031058",
+    image: "/images/toppers/inzimam.jpg",
   },
-};
+  {
+    id: "3",
+    name: "Mohammad Faizan",
+    category: "ECET",
+    rank: "State Rank #346",
+    hallTicketNo: "2402051693",
+    image: "/images/toppers/faizan.jpg",
+  },
+  {
+    id: "4",
+    name: "Mohammed Zaid Farooqi",
+    category: "ECET",
+    rank: "State Rank #402",
+    hallTicketNo: "1201052001",
+    image: "/images/toppers/zaidfarooqi.png",
+    objectPos: "object-[center_10%]",
+    imageClass: "-translate-y-[8%] scale-[1.1]",
+  },
 
-function prefersReducedMotion(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia !== undefined &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
-
-function useCountUp(target: number, active: boolean, decimals = 0, duration = 1000) {
-  const [display, setDisplay] = useState(0);
-  const rafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!active) {
-      setDisplay(0);
-      return;
-    }
-    if (prefersReducedMotion()) {
-      setDisplay(target);
-      return;
-    }
-    const start = performance.now();
-    function tick(now: number) {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const value = target * eased;
-      setDisplay(value);
-      if (t < 1) {
-        rafRef.current = requestAnimationFrame(tick);
-      }
-    }
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [target, active, duration]);
-
-  return decimals > 0 ? display.toFixed(decimals) : Math.round(display);
-}
-
-function Badge({ children, dot }: { children: React.ReactNode; dot: string }) {
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide"
-      style={{ backgroundColor: "rgba(255,255,255,0.85)", color: INK, letterSpacing: "0.06em" }}
-    >
-      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: dot }} />
-      {children}
-    </span>
-  );
-}
-
-function Sparkline() {
-  return (
-    <div className="p-1.5 rounded-xl bg-[#F0EBFF] border border-[rgba(23,21,58,0.08)] flex items-center justify-center shrink-0">
-      <svg width="42" height="28" viewBox="-4 -4 48 36" fill="none" className="overflow-visible">
-        <path
-          d="M2 22 L11 15 L20 18 L29 8 L38 4"
-          stroke={INK}
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity="0.65"
-        />
-        {[
-          [2, 22],
-          [11, 15],
-          [20, 18],
-          [29, 8],
-          [38, 4],
-        ].map(([x, y], i) => (
-          <circle 
-            key={i} 
-            cx={x} 
-            cy={y} 
-            r={i === 4 ? 3.5 : 2} 
-            fill={i === 4 ? LIME : INK} 
-            stroke={i === 4 ? INK : "none"} 
-            strokeWidth={i === 4 ? 1.5 : 0} 
-            opacity={i === 4 ? 1 : 0.65} 
-          />
-        ))}
-      </svg>
-    </div>
-  );
-}
-
-function RibbonWatermark() {
-  return (
-    <svg
-      className="absolute -right-3 -top-3 pointer-events-none"
-      width="140"
-      height="150"
-      viewBox="0 0 140 150"
-      fill="none"
-      style={{ opacity: 0.1 }}
-    >
-      <circle cx="70" cy="55" r="42" fill={INK} />
-      <path d="M45 90 L38 148 L70 128 L102 148 L95 90 Z" fill={INK} />
-      <path d="M60 55 L67 63 L82 46" stroke={PAPER} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ExamToggle({ active, onChange }: { active: ExamKey; onChange: (key: ExamKey) => void }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [rect, setRect] = useState<{ left: number; width: number } | null>(null);
-
-  const updateRect = React.useCallback(() => {
-    const btn = btnRefs.current[active];
-    const container = containerRef.current;
-    if (btn && container) {
-      const c = container.getBoundingClientRect();
-      const b = btn.getBoundingClientRect();
-      if (b.width > 0) {
-        setRect({ left: b.left - c.left, width: b.width });
-      }
-    }
-  }, [active]);
-
-  useLayoutEffect(() => {
-    updateRect();
-    const raf = requestAnimationFrame(updateRect);
-    const timer = setTimeout(updateRect, 60);
-    window.addEventListener("resize", updateRect);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(timer);
-      window.removeEventListener("resize", updateRect);
-    };
-  }, [updateRect]);
-
-  const keys = Object.keys(EXAM_DATA) as ExamKey[];
-  const activeIndex = keys.indexOf(active);
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative inline-flex p-1 rounded-full w-auto"
-      style={{ backgroundColor: "rgba(23,21,58,0.1)" }}
-      role="tablist"
-      aria-label="Select exam"
-    >
-      <div
-        className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out"
-        style={{
-          backgroundColor: INK,
-          left: rect && rect.width > 0 ? rect.left : activeIndex === 0 ? "4px" : "calc(50% + 2px)",
-          width: rect && rect.width > 0 ? rect.width : "calc(50% - 6px)",
-        }}
-      />
-      {keys.map((key) => {
-        const exam = EXAM_DATA[key];
-        const isActive = active === key;
-        return (
-          <button
-            key={key}
-            ref={(el) => {
-              btnRefs.current[key] = el;
-            }}
-            role="tab"
-            aria-selected={isActive}
-            onClick={() => onChange(key)}
-            className="relative z-10 rounded-full px-3 py-1 text-xs font-bold transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
-            style={{ color: isActive ? LIME : "rgba(23,21,58,0.55)" }}
-          >
-            {exam.tabLabel}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
+  // --- POLYCET TOPPERS ---
+  {
+    id: "5",
+    name: "Syed Azam Uddin",
+    category: "POLYCET",
+    rank: "State Rank #1714",
+    hallTicketNo: "2602332",
+    image: "/images/toppers/azam.png",
+    imageClass: "-translate-y-[15%] scale-[1.36]",
+  },
+  {
+    id: "6",
+    name: "Mohammed Muzakkir Ashraf",
+    category: "POLYCET",
+    rank: "State Rank #1792",
+    hallTicketNo: "2604115",
+    image: "/images/toppers/muzakkir.png",
+  },
+  {
+    id: "7",
+    name: "Mohd Zainullah Shareef",
+    category: "POLYCET",
+    rank: "State Rank #3059",
+    hallTicketNo: "2601256",
+    image: "/images/toppers/zainullah.png",
+  },
+  {
+    id: "8",
+    name: "Shaik Rizwan",
+    category: "POLYCET",
+    rank: "State Rank #5252",
+    hallTicketNo: "2602114",
+    image: "/images/toppers/rizwan.png",
+  },
+  {
+    id: "9",
+    name: "Mohammed Tauseef Uddin",
+    category: "POLYCET",
+    rank: "State Rank #5499",
+    hallTicketNo: "2602051",
+    image: "/images/toppers/tauseef.png",
+    imageClass: "-translate-y-[15%] scale-[1.36]",
+  },
+  {
+    id: "10",
+    name: "Syed Aayan Uddin",
+    category: "POLYCET",
+    rank: "State Rank #5626",
+    hallTicketNo: "2602521",
+    image: "/images/toppers/aayan.png",
+  },
+  {
+    id: "11",
+    name: "Mohammed Ishaq Uddin",
+    category: "POLYCET",
+    rank: "State Rank #6756",
+    hallTicketNo: "2601198",
+    image: "/images/toppers/ishaq.png",
+  },
+];
 
 export default function MetricCardsSection() {
-  const [activeExam, setActiveExam] = useState<ExamKey>("ECET");
-  const [visible, setVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [activeFilter, setActiveFilter] = useState<ExamFilter>("ALL");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  useEffect(() => {
-    const el = sectionRef.current;
+  const filteredAchievers = achieversList.filter(
+    (item) => activeFilter === "ALL" || item.category === activeFilter
+  );
+
+  const checkScroll = React.useCallback(() => {
+    const el = scrollContainerRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    const canLeft = el.scrollLeft > 4;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const canRight = maxScroll > 4 && el.scrollLeft < maxScroll - 4;
+    setCanScrollLeft(canLeft);
+    setCanScrollRight(canRight);
   }, []);
 
-  const gpa = useCountUp(9.8, visible, 1, 1100);
-  const rank = useCountUp(EXAM_DATA[activeExam].rank, visible, 0, 900);
+  const handleFilterChange = (filter: ExamFilter) => {
+    setActiveFilter(filter);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    checkScroll();
+
+    const handleScroll = () => checkScroll();
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    const t1 = setTimeout(checkScroll, 50);
+    const t2 = setTimeout(checkScroll, 250);
+    const t3 = setTimeout(checkScroll, 600);
+
+    const resizeObserver = new ResizeObserver(() => {
+      checkScroll();
+    });
+    resizeObserver.observe(el);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      el.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      resizeObserver.disconnect();
+    };
+  }, [activeFilter, filteredAchievers, checkScroll]);
+
+  const scrollLeft = () => {
+    const el = scrollContainerRef.current;
+    if (el) {
+      const scrollAmount = Math.max(el.clientWidth * 0.75, 260);
+      el.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      setTimeout(checkScroll, 350);
+    }
+  };
+
+  const scrollRight = () => {
+    const el = scrollContainerRef.current;
+    if (el) {
+      const scrollAmount = Math.max(el.clientWidth * 0.75, 260);
+      el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      setTimeout(checkScroll, 350);
+    }
+  };
 
   return (
-    <section
-      ref={sectionRef}
-      className="pt-6 pb-12 sm:py-16 px-4 sm:px-6 relative border-t border-[#EBE6FE]"
-      style={{
-        backgroundColor: PAPER,
-        backgroundImage: "radial-gradient(circle at 1px 1px, rgba(23,21,58,0.07) 1px, transparent 0)",
-        backgroundSize: "18px 18px",
-        fontFamily: "'Inter', sans-serif",
-      }}
-    >
-      <div className={`flex justify-center mb-6 sm:mb-10 transition-all duration-700 ease-out ${visible ? "opacity-100 scale-100" : "opacity-0 scale-98"}`}>
-        <span
-          className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold uppercase shadow-xs"
-          style={{ backgroundColor: "white", color: INK, letterSpacing: "0.08em", border: "1px solid rgba(23,21,58,0.08)" }}
-        >
-          <Sparkles size={12} />
-          Key Academic Benchmarks
-        </span>
-      </div>
+    <section className="py-8 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative bg-[#F6F4FE]" id="top-ranks">
+      <div className="max-w-7xl mx-auto relative z-10">
 
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 max-w-3xl mx-auto items-start">
-        {/* Card 1 — Highest GPA (quiet) */}
-        <div
-          className={`sm:col-span-5 p-5 sm:p-6 flex flex-col transition-all duration-700 ease-out delay-100 ${
-            visible ? "opacity-100 scale-100" : "opacity-0 scale-98"
-          }`}
-          style={{
-            backgroundColor: CARD_TINT,
-            border: "1px solid rgba(23,21,58,0.08)",
-            borderRadius: "22px",
-            boxShadow: "0 1px 2px rgba(23,21,58,0.04)",
-          }}
-        >
-          <div className="flex items-start justify-between mb-4">
-            <Sparkline />
-            <Badge dot="#22C55E">Top Score</Badge>
-          </div>
+        {/* ========================================================================= */}
+        {/* 🏆 ULTRA-EXECUTIVE SAASMO INDIGO BANNER WITH GLASSMORPHIC POLISH          */}
+        {/* ========================================================================= */}
+        <div className="relative rounded-3xl sm:rounded-[36px] lg:rounded-[44px] p-5 sm:p-10 lg:p-12 text-white shadow-2xl overflow-hidden border border-[#372692]/60">
 
-          <h3 className="font-bold text-sm sm:text-base mb-0.5" style={{ color: INK }}>
-            Highest GPA
-          </h3>
-          <p className="text-xs sm:text-sm mb-4" style={{ color: "rgba(23,21,58,0.45)" }}>
-            SBTET Diploma Semester Exam
-          </p>
-
-          <div className="h-px mb-4" style={{ backgroundColor: "rgba(23,21,58,0.08)" }} />
-
-          <div className="flex items-baseline gap-1.5 mb-2">
-            <span className="stat-numeral text-5xl font-bold tabular-nums" style={{ color: INK }}>
-              {gpa}
-            </span>
-            <span className="text-sm sm:text-base font-semibold" style={{ color: "rgba(23,21,58,0.35)" }}>
-              GPA
-            </span>
-          </div>
-
-          <p className="text-xs sm:text-sm leading-relaxed mt-auto" style={{ color: "rgba(23,21,58,0.55)" }}>
-            Highest GPA achieved by IQ Academy students in previous SBTET semester examinations.
-          </p>
-        </div>
-
-        {/* Card 2 — State Rank (hero, stamped) */}
-        <div className={`sm:col-span-7 relative sm:mt-[-10px] transition-all duration-700 ease-out delay-200 ${
-          visible ? "opacity-100 scale-100" : "opacity-0 scale-98"
-        }`}>
-          <div
-            className="absolute inset-0 rounded-[22px]"
-            style={{ backgroundColor: INK, transform: "rotate(1.4deg) translate(4px, 6px)", zIndex: 0 }}
+          {/* Exact Signature Indigo Noisy Gradient Background */}
+          <GradientBackground
+            gradientOrigin="bottom-right"
+            colors={[
+              { color: "rgba(30,18,102,1)", stop: "0%" },
+              { color: "rgba(37,23,110,1)", stop: "50%" },
+              { color: "rgba(18,10,62,1)", stop: "100%" }
+            ]}
+            noiseIntensity={0.65}
+            noisePatternSize={95}
           />
-          <div
-            className="relative overflow-hidden p-5 sm:p-6 flex flex-col transition-all duration-300 hover:-translate-y-1"
-            style={{
-              backgroundColor: LIME,
-              borderRadius: "22px",
-              transform: "rotate(-0.6deg)",
-              boxShadow: "0 10px 20px -6px rgba(23,21,58,0.22)",
-              zIndex: 1,
-            }}
-          >
-            <RibbonWatermark />
 
-            <div className="flex items-start justify-between mb-4 relative">
-              <ExamToggle active={activeExam} onChange={setActiveExam} />
-              <Badge dot={INK}>Top Rank</Badge>
+          {/* Micro Flickering Grid Overlay */}
+          <FlickeringGrid
+            squareSize={4}
+            gridGap={6}
+            flickerChance={0.15}
+            color="rgb(210, 255, 0)"
+            maxOpacity={0.08}
+            className="absolute inset-0 z-0 pointer-events-none opacity-20"
+          />
+
+          {/* Ambient Lighting Orbs */}
+          <div className="absolute -top-28 -right-28 w-96 h-96 bg-[#D2FF00]/12 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-28 -left-28 w-96 h-96 bg-[#5B3DF5]/30 rounded-full blur-3xl pointer-events-none" />
+
+          {/* BANNER HEADER & RESPONSIVE SINGLE-ROW FILTER BAR */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 relative z-10 border-b border-white/10 pb-6">
+            
+            {/* Left Header Title */}
+            <div className="space-y-2 text-left">
+              <div className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-[#D2FF00] text-xs font-black uppercase tracking-widest shadow-xs">
+                <span>State Level Achievements</span>
+              </div>
+              
+              <h2 className="font-display-saasmo text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+                Telangana State Top Ranks
+              </h2>
+              
+              <p className="text-xs sm:text-sm text-white/70 max-w-lg font-medium leading-relaxed">
+                Top state ranks secured by IQ Academy students in POLYCET and ECET entrance examinations.
+              </p>
             </div>
 
-            <div className="h-px mb-4" style={{ backgroundColor: "rgba(23,21,58,0.15)" }} />
+            {/* Filter Buttons: Single-Row Segmented Controller */}
+            <div className="w-full lg:w-auto flex items-center justify-between gap-1 p-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-xl shrink-0 shadow-inner">
+              {(["ALL", "POLYCET", "ECET"] as ExamFilter[]).map((filter) => {
+                const isActive = activeFilter === filter;
+                return (
+                  <button
+                    key={filter}
+                    onClick={() => handleFilterChange(filter)}
+                    className={`relative flex-1 lg:flex-initial px-3 py-2 sm:px-5 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-extrabold transition-all duration-300 cursor-pointer text-center ${
+                      isActive
+                        ? "text-[#0C091F] shadow-lg"
+                        : "text-white/75 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeFilterPill"
+                        className="absolute inset-0 bg-[#D2FF00] rounded-full z-0"
+                        transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative z-10 block whitespace-nowrap">
+                      {filter === "ALL" && "All Ranks"}
+                      {filter === "POLYCET" && (
+                        <>
+                          <span className="sm:hidden">POLYCET</span>
+                          <span className="hidden sm:inline">POLYCET Top Ranks</span>
+                        </>
+                      )}
+                      {filter === "ECET" && (
+                        <>
+                          <span className="sm:hidden">ECET</span>
+                          <span className="hidden sm:inline">ECET Top Ranks</span>
+                        </>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-            <p
-              className="text-[11px] font-bold uppercase mb-1.5 relative"
-              style={{ color: "rgba(23,21,58,0.6)", letterSpacing: "0.08em" }}
-            >
-              {EXAM_DATA[activeExam].statLabel}
-            </p>
-            <div className="mb-2 relative">
-              <span className="stat-numeral text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: INK }}>
-                Rank #{rank}
+          {/* STUDENT RANKS CAROUSEL & GRID TRACK */}
+          <div className="relative z-10">
+            {/* Scrollable Cards Track (Touch Snap-Scroll on Mobile, Smooth Tab Fade Animation) */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeFilter}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                ref={scrollContainerRef}
+                className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar pb-2 pt-1 scroll-smooth snap-x snap-mandatory"
+              >
+                {filteredAchievers.map((student) => (
+                  <div
+                    key={student.id}
+                    className="w-[230px] sm:w-[270px] lg:w-[280px] shrink-0 snap-start bg-gradient-to-b from-white/10 via-white/[0.04] to-white/[0.02] backdrop-blur-xl border border-white/15 rounded-2xl sm:rounded-3xl p-4 flex flex-col justify-between hover:border-[#D2FF00]/60 hover:shadow-[0_20px_40px_-15px_rgba(210,255,0,0.2)] transition-all duration-500 group relative overflow-hidden"
+                  >
+                    {/* Top Glow Accent Bar on Hover */}
+                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#D2FF00] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    {/* Student Photo Frame */}
+                    <div className="relative w-full h-48 sm:h-56 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1E1266]/60 border border-white/15 mb-4 flex items-center justify-center shadow-inner">
+                      {student.image ? (
+                        <>
+                          <img
+                            src={student.image}
+                            alt={student.name}
+                            className={`w-full h-full object-cover ${
+                              student.category === "POLYCET"
+                                ? `${student.objectPos || "object-[center_0%]"} -translate-y-[10%] scale-[1.28] group-hover:scale-[1.32]`
+                                : `${student.objectPos || "object-top"} scale-[1.12] group-hover:scale-[1.16]`
+                            } transition-transform duration-700 ease-out ${student.imageClass || ""}`}
+                          />
+                          {/* Faculty-styled bottom purple gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0C091F] via-[#1E1266]/35 to-transparent pointer-events-none z-10" />
+                        </>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center p-3 text-center">
+                          <div className="w-14 h-14 rounded-full bg-[#D2FF00]/15 border border-[#D2FF00]/30 flex items-center justify-center text-[#D2FF00] font-black text-lg mb-1 shadow-sm">
+                            {student.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </div>
+                          <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+                            Photo Pending
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Exam Category Floating Pill (Top-Right) */}
+                      <div className="absolute top-2.5 right-2.5 bg-[#0C091F]/85 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg border border-white/20 z-20 shadow-md uppercase tracking-wider">
+                        {student.category}
+                      </div>
+                    </div>
+
+                    {/* Rank, Name & Hall Ticket Number */}
+                    <div className="space-y-2 text-left">
+                      {/* State Rank Badge */}
+                      <div>
+                        <span className="inline-block px-3 py-1 rounded-full bg-[#D2FF00] text-[#0C091F] text-xs font-black shadow-md tracking-tight group-hover:scale-105 transition-transform">
+                          {student.rank}
+                        </span>
+                      </div>
+
+                      {/* Student Name (Line Clamp 2 to ensure long names fit completely without truncation) */}
+                      <h3
+                        className="font-display-saasmo text-xs sm:text-sm md:text-base font-bold text-white group-hover:text-[#D2FF00] transition-colors leading-snug line-clamp-2 min-h-[2.4rem] flex items-center tracking-tight pt-0.5"
+                        title={student.name}
+                      >
+                        {student.name}
+                      </h3>
+
+                      {/* Hall Ticket Number Glass Pill (if available) */}
+                      {student.hallTicketNo && (
+                        <div className="pt-1">
+                          <div className="text-[11px] font-mono font-semibold text-white/90 bg-white/10 backdrop-blur-md px-3 py-1 rounded-xl border border-white/15 inline-block tracking-wider whitespace-nowrap shadow-xs">
+                            HT No: {student.hallTicketNo}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Bottom Navigation Arrow Bar */}
+            <div className="flex items-center justify-between pt-6 border-t border-white/10 mt-5">
+              <span className="text-xs font-bold text-white/60 uppercase tracking-widest">
+                Showing {filteredAchievers.length} Top Rankers
               </span>
-            </div>
 
-            <p className="text-xs sm:text-sm font-medium leading-relaxed mt-auto relative" style={{ color: "rgba(23,21,58,0.75)" }}>
-              {EXAM_DATA[activeExam].description}
-            </p>
+              <div className="flex items-center gap-2.5">
+                <button
+                  onClick={scrollLeft}
+                  disabled={!canScrollLeft}
+                  aria-label="Scroll Left"
+                  className={`p-2.5 sm:p-3 rounded-full border transition-all cursor-pointer ${canScrollLeft
+                      ? "bg-white/15 hover:bg-white/25 text-white border-white/25 active:scale-95 shadow-md"
+                      : "bg-white/5 text-white/30 border-white/10 cursor-not-allowed"
+                    }`}
+                >
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+
+                <button
+                  onClick={scrollRight}
+                  disabled={!canScrollRight}
+                  aria-label="Scroll Right"
+                  className={`p-2.5 sm:p-3 rounded-full border transition-all cursor-pointer ${canScrollRight
+                      ? "bg-[#D2FF00] hover:bg-[#bce400] text-[#0C091F] border-[#D2FF00] active:scale-95 shadow-lg font-black"
+                      : "bg-white/5 text-white/30 border-white/10 cursor-not-allowed"
+                    }`}
+                >
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );

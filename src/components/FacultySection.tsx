@@ -252,7 +252,7 @@ export default function FacultySection() {
 
         {/* Mobile View Carousel (Instant visibility on button click) */}
         <div className="block md:hidden relative px-1">
-          <Carousel opts={{ align: "start", loop: false }} className="relative w-full">
+          <Carousel key={activeCategory} opts={{ align: "start", loop: false }} className="relative w-full">
             <CarouselContent className="-ml-3">
               {filteredStaff.map((member) => (
                 <CarouselItem key={member.id} className="pl-3 basis-[88%] sm:basis-[65%]">

@@ -549,7 +549,7 @@ export function DiplomaCoursesCarousel({
 
   return (
     <div className="w-full relative">
-      <Carousel opts={{ align: "start", loop: false }} className="relative w-full">
+      <Carousel key={courses.map((c) => c.id).join("-")} opts={{ align: "start", loop: false }} className="relative w-full">
         <CarouselContent className="-ml-3">
           {courses.map((course) => (
             <CarouselItem key={course.id} className="pl-3 basis-[88%] sm:basis-[340px]">
@@ -634,7 +634,7 @@ export default function EngineeringCoursesTrack() {
                 : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
             }`}
           >
-            Polytechnic Diploma
+            Diploma
           </button>
           
           <button

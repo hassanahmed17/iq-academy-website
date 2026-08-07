@@ -105,6 +105,7 @@ const Carousel = React.forwardRef<
       api.on("select", handleSelect);
       return () => {
         api?.off("select", handleSelect);
+        api?.off("reInit", handleSelect);
       };
     }, [api, onSelect]);
 
@@ -185,7 +186,7 @@ CarouselItem.displayName = "CarouselItem";
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className, variant = "outline", size = "icon", onClick, ...props }, ref) => {
   const { scrollPrev, canScrollPrev } = useCarousel();
   return (
     <Button
@@ -197,7 +198,10 @@ const CarouselPrevious = React.forwardRef<
         "left-2 top-1/2 -translate-y-1/2",
         className,
       )}
-      onClick={scrollPrev}
+      onClick={(e) => {
+        scrollPrev();
+        onClick?.(e);
+      }}
       disabled={!canScrollPrev}
       {...props}
     >
@@ -211,7 +215,7 @@ CarouselPrevious.displayName = "CarouselPrevious";
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
+>(({ className, variant = "outline", size = "icon", onClick, ...props }, ref) => {
   const { scrollNext, canScrollNext } = useCarousel();
   return (
     <Button
@@ -223,7 +227,10 @@ const CarouselNext = React.forwardRef<
         "right-2 top-1/2 -translate-y-1/2",
         className,
       )}
-      onClick={scrollNext}
+      onClick={(e) => {
+        scrollNext();
+        onClick?.(e);
+      }}
       disabled={!canScrollNext}
       {...props}
     >

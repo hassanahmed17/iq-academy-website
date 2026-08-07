@@ -37,7 +37,7 @@ function WhatsappIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
-import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -51,7 +51,7 @@ export default function Footer() {
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
               <img
-                src="/images/iqae-crest.png"
+                src="/images/iqloader-logo.png"
                 alt="IQ Academy of Excellence Crest Emblem"
                 className="h-11 w-auto object-contain"
               />
@@ -65,7 +65,7 @@ export default function Footer() {
             </div>
 
             <p className="text-xs text-[#64748B] leading-relaxed max-w-sm">
-              Empowering Polytechnic & Diploma Engineering aspirants in CSE, ECE, EEE, ME, CE, AI/ML and top rankers in POLYCET & ECET examinations across Hyderabad and Telangana.
+              Empowering Polytechnic Diploma (CSE, ECE, EEE, ME, CE, AI/ML), Intermediate (MPC, BiPC, CEC), and SSC Class 10th aspirants with top coaching across Hyderabad and Telangana.
             </p>
 
             {/* Social Media Channels */}
@@ -128,51 +128,69 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[#64748B]">
               <li>
-                <a href="#about" className="hover:text-[#25176E] transition-colors">Home</a>
+                <Link href="/" className="hover:text-[#25176E] transition-colors">Home</Link>
               </li>
               <li>
-                <a href="#about" className="hover:text-[#25176E] transition-colors">About Us</a>
+                <a href="/#about" className="hover:text-[#25176E] transition-colors">About Us</a>
               </li>
               <li>
-                <a href="#director" className="hover:text-[#25176E] transition-colors">Director's Message</a>
+                <a href="/#director" className="hover:text-[#25176E] transition-colors">Director's Message</a>
               </li>
               <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">Diploma Courses</a>
+                <a href="/#courses" className="hover:text-[#25176E] transition-colors">Diploma Courses</a>
               </li>
               <li>
-                <a href="#coaching" className="hover:text-[#25176E] transition-colors">POLYCET & ECET</a>
+                <a href="/#coaching" className="hover:text-[#25176E] transition-colors">POLYCET & ECET</a>
               </li>
               <li>
-                <a href="#faculty" className="hover:text-[#25176E] transition-colors">Faculty Members</a>
+                <a href="/#faculty" className="hover:text-[#25176E] transition-colors">Faculty Members</a>
+              </li>
+              <li>
+                <Link href="/career-guidance" className="hover:text-[#25176E] transition-colors">Career Guidance</Link>
+              </li>
+              <li>
+                <Link href="/results" className="hover:text-[#25176E] transition-colors">Results</Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Engineering Branches */}
+          {/* Col 3: Courses We Offer */}
           <div className="space-y-3">
             <h4 className="font-display-saasmo font-bold text-sm text-[#1E1266] uppercase tracking-wider">
-              Engineering Branches
+              Courses We Offer
             </h4>
-            <ul className="space-y-2.5 text-xs text-[#64748B]">
-              <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">Computer Science (CSE)</a>
-              </li>
-              <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">AI & Machine Learning</a>
-              </li>
-              <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">Electronics (ECE)</a>
-              </li>
-              <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">Electrical (EEE)</a>
-              </li>
-              <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">Mechanical (ME)</a>
-              </li>
-              <li>
-                <a href="#courses" className="hover:text-[#25176E] transition-colors">Civil Engineering (CE)</a>
-              </li>
-            </ul>
+            
+            <div className="space-y-3 text-xs text-[#64748B]">
+              <div>
+                <span className="font-extrabold text-[#1E1266] text-[11px] uppercase tracking-wider block mb-1">
+                  Polytechnic Diploma
+                </span>
+                <ul className="space-y-1.5 pl-2 border-l-2 border-[#EBE6FE]">
+                  <li><a href="/#courses" className="hover:text-[#25176E] transition-colors">CSE, AI/ML, ECE, EEE</a></li>
+                  <li><a href="/#courses" className="hover:text-[#25176E] transition-colors">Mechanical & Civil Engg</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <span className="font-extrabold text-[#1E1266] text-[11px] uppercase tracking-wider block mb-1">
+                  Intermediate
+                </span>
+                <ul className="space-y-1.5 pl-2 border-l-2 border-[#EBE6FE]">
+                  <li><a href="/#courses" className="hover:text-[#25176E] transition-colors">MPC</a></li>
+                  <li><a href="/#courses" className="hover:text-[#25176E] transition-colors">BiPC</a></li>
+                  <li><a href="/#courses" className="hover:text-[#25176E] transition-colors">CEC</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <span className="font-extrabold text-[#1E1266] text-[11px] uppercase tracking-wider block mb-1">
+                  SSC Board
+                </span>
+                <ul className="space-y-1.5 pl-2 border-l-2 border-[#EBE6FE]">
+                  <li><a href="/#courses" className="hover:text-[#25176E] transition-colors">Class 10th Board Coaching</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
 
           {/* Col 4: Admission Inquiry CTA */}

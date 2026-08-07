@@ -1,16 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, X, ArrowRight, ChevronRight, ChevronDown, PhoneCall, Sparkles, GraduationCap } from "lucide-react";
+import Link from "next/link";
+import { Menu, X, ArrowRight, ChevronRight, ChevronDown, Sparkles, GraduationCap } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 
-const engineeringFields = [
+const diplomaBranches = [
   { id: "cse", name: "Computer Science Engineering", code: "CSE" },
   { id: "aiml", name: "Artificial Intelligence & ML", code: "AI & ML" },
-  { id: "ce", name: "Civil Engineering", code: "CIVIL" },
   { id: "ece", name: "Electronics & Communication", code: "ECE" },
   { id: "eee", name: "Electrical & Electronics", code: "EEE" },
+  { id: "civil", name: "Civil Engineering", code: "CIVIL" },
   { id: "me", name: "Mechanical Engineering", code: "MECH" },
+];
+
+const intermediateStreams = [
+  { id: "mpc", name: "MPC", code: "MPC" },
+  { id: "bipc", name: "BiPC", code: "BiPC" },
+  { id: "cec", name: "CEC", code: "CEC" },
 ];
 
 const entranceExams = [
@@ -23,8 +30,11 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [coursesHover, setCoursesHover] = useState(false);
+  const [activeSubCategory, setActiveSubCategory] = useState<"diploma" | "intermediate" | "ssc">("diploma");
   const [examsHover, setExamsHover] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
+  const [mobileDiplomaOpen, setMobileDiplomaOpen] = useState(false);
+  const [mobileInterOpen, setMobileInterOpen] = useState(false);
   const [mobileExamsOpen, setMobileExamsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -60,6 +70,16 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      // If user is on a subpage like /career-guidance, navigate to home page anchor
+      if (href === "#top" || href === "#") {
+        window.location.href = "/";
+      } else if (href.startsWith("#")) {
+        window.location.href = `/${href}`;
+      }
+      return;
+    }
+
     if (href === "#top" || href === "#") {
       e.preventDefault();
       window.scrollTo({
@@ -126,55 +146,61 @@ export default function Navbar() {
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
-        isScrolled || mobileMenuOpen 
-          ? "bg-[#F6F4FE]/90 backdrop-blur-md border-b border-[#EBE6FE] shadow-xs" 
-          : "bg-transparent border-b border-transparent shadow-none"
+        mobileMenuOpen 
+          ? "bg-[#F6F4FE] border-b border-[#EBE6FE] shadow-sm" 
+          : isScrolled 
+          ? "bg-[#F6F4FE]/95 backdrop-blur-md border-b border-[#EBE6FE] shadow-xs" 
+          : "max-xl:bg-[#F6F4FE] max-xl:border-b max-xl:border-[#EBE6FE] max-xl:shadow-xs bg-transparent border-b border-transparent shadow-none"
       }`} 
       suppressHydrationWarning={true}
     >
-      <div className="w-full px-3 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between h-16 md:h-20" suppressHydrationWarning={true}>
+      <div className="w-full px-3 sm:px-6 xl:px-5 2xl:px-8 flex items-center justify-between h-16 md:h-20" suppressHydrationWarning={true}>
         
-        {/* Brand Logo & Text (ALWAYS VISIBLE in top-left corner, sleek & balanced) */}
-        <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="flex items-center gap-1.5 sm:gap-2.5 group z-50">
+        {/* Brand Logo & Text (Always visible on top left for desktop and mobile) */}
+        <a
+          href="#top"
+          onClick={(e) => handleNavClick(e, "#top")}
+          className="flex items-center gap-1.5 sm:gap-2.5 group z-50 shrink-0 opacity-100 translate-y-0 pointer-events-auto transition-all duration-300 ease-out"
+        >
           <img
-            src="/images/iqae-crest.png"
+            src="/images/iqloader-logo.png"
             alt="IQ Academy of Excellence Shield Crest"
-            className="h-9 sm:h-[42px] md:h-[46px] lg:h-[52px] w-auto object-contain group-hover:scale-105 transition-transform"
+            className="h-9 sm:h-[42px] md:h-[46px] lg:h-[50px] w-auto object-contain group-hover:scale-105 transition-transform"
           />
           <img
             src="/images/iq-text-logo.png"
             alt="IQ Academy of Excellence"
-            className="h-5 sm:h-[27px] md:h-[31px] lg:h-[35px] w-auto object-contain group-hover:scale-102 transition-transform"
+            className="h-5 sm:h-[25px] md:h-[28px] lg:h-[32px] w-auto object-contain group-hover:scale-102 transition-transform"
           />
         </a>
 
         {/* Desktop Links (Appears smoothly on scroll for Desktop xl+ screens 1280px+) */}
-        <div className={`hidden xl:flex items-center gap-6 xl:gap-7 text-sm font-semibold text-[#64748B] transition-all duration-300 ease-out ${
+        <div className={`hidden xl:flex items-center gap-3.5 xl:gap-4 min-[1440px]:gap-6 2xl:gap-7 text-xs xl:text-[13px] min-[1440px]:text-sm font-semibold text-[#64748B] transition-all duration-300 ease-out shrink-0 ${
           isScrolled ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
         }`}>
           
           {/* 1. Home */}
-          <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="hover:text-[#25176E] transition-colors">
+          <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
             Home
           </a>
 
           {/* 2. About Us */}
-          <a href="#about" onClick={(e) => handleNavClick(e, "#about")} className="hover:text-[#25176E] transition-colors">
+          <a href="#about" onClick={(e) => handleNavClick(e, "#about")} className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
             About Us
           </a>
 
-          {/* 3. Engineering Fields with Dropdown */}
+          {/* 3. Courses We Offer with 2-Level Multi-Category Dropdown */}
           <div
-            className="relative"
+            className="relative shrink-0 whitespace-nowrap"
             onMouseEnter={() => setCoursesHover(true)}
             onMouseLeave={() => setCoursesHover(false)}
           >
             <a
               href="#courses"
               onClick={(e) => handleNavClick(e, "#courses")}
-              className="hover:text-[#25176E] transition-colors py-2 flex items-center gap-1 cursor-pointer"
+              className="hover:text-[#25176E] transition-colors py-2 flex items-center gap-1 cursor-pointer whitespace-nowrap"
             >
-              <span>Engineering Fields</span>
+              <span>Courses We Offer</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${coursesHover ? "rotate-180 text-[#25176E]" : ""}`} />
             </a>
 
@@ -185,21 +211,115 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.98 }}
                   transition={{ duration: 0.18 }}
-                  className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-xl border border-[#EBE6FE] p-2 z-50"
+                  className="absolute top-full left-0 w-[490px] bg-white rounded-2xl shadow-2xl border border-[#EBE6FE] p-2.5 z-50 flex gap-2"
                 >
-                  <div className="space-y-0.5">
-                    {engineeringFields.map((field) => (
-                      <button
-                        key={field.id}
-                        onClick={() => handleCourseClick(field.id)}
-                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#1E1266] hover:bg-[#F6F4FE] hover:text-[#25176E] transition-colors flex items-center justify-between group/item"
-                      >
-                        <span className="group-hover/item:translate-x-0.5 transition-transform">{field.name}</span>
-                        <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-[#F0EBFF] text-[#25176E] shrink-0">
-                          {field.code}
-                        </span>
-                      </button>
-                    ))}
+                  {/* Left Column: 3 Category Tabs (Diploma, Intermediate, SSC) */}
+                  <div className="w-[170px] shrink-0 space-y-1 border-r border-[#F0EBFF] pr-2">
+                    <div className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-[#64748B]/60 text-left">
+                      Categories
+                    </div>
+
+                    {/* 1. Diploma (Hover to reveal sub-branches) */}
+                    <button
+                      onMouseEnter={() => setActiveSubCategory("diploma")}
+                      onClick={() => setActiveSubCategory("diploma")}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${
+                        activeSubCategory === "diploma"
+                          ? "bg-[#25176E] text-white shadow-sm"
+                          : "text-[#1E1266] hover:bg-[#F6F4FE]"
+                      }`}
+                    >
+                      <span>Diploma</span>
+                      <ChevronRight className={`w-3.5 h-3.5 ${activeSubCategory === "diploma" ? "text-white" : "text-[#64748B] group-hover:translate-x-0.5"} transition-transform`} />
+                    </button>
+
+                    {/* 2. Intermediate (Hover to reveal streams) */}
+                    <button
+                      onMouseEnter={() => setActiveSubCategory("intermediate")}
+                      onClick={() => setActiveSubCategory("intermediate")}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${
+                        activeSubCategory === "intermediate"
+                          ? "bg-[#25176E] text-white shadow-sm"
+                          : "text-[#1E1266] hover:bg-[#F6F4FE]"
+                      }`}
+                    >
+                      <span>Intermediate</span>
+                      <ChevronRight className={`w-3.5 h-3.5 ${activeSubCategory === "intermediate" ? "text-white" : "text-[#64748B] group-hover:translate-x-0.5"} transition-transform`} />
+                    </button>
+
+                    {/* 3. SSC Class 10th (Direct Click) */}
+                    <button
+                      onMouseEnter={() => setActiveSubCategory("ssc")}
+                      onClick={() => handleCourseClick("ssc-10th")}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between group ${
+                        activeSubCategory === "ssc"
+                          ? "bg-[#25176E] text-white shadow-sm"
+                          : "text-[#1E1266] hover:bg-[#F6F4FE]"
+                      }`}
+                    >
+                      <span>SSC Class 10th</span>
+                      <ChevronRight className={`w-3.5 h-3.5 ${activeSubCategory === "ssc" ? "text-white" : "text-[#64748B] group-hover:translate-x-0.5"} transition-transform`} />
+                    </button>
+                  </div>
+
+                  {/* Right Column: Sub-menu Items for Selected Category */}
+                  <div className="flex-1 pl-1 space-y-1 my-auto text-left">
+                    {activeSubCategory === "diploma" && (
+                      <>
+                        <div className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#25176E]">
+                          Diploma Engineering Branches
+                        </div>
+                        <div className="space-y-0.5 max-h-[260px] overflow-y-auto pr-1">
+                          {diplomaBranches.map((branch) => (
+                            <button
+                              key={branch.id}
+                              onClick={() => handleCourseClick(branch.id)}
+                              className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#1E1266] hover:bg-[#F6F4FE] hover:text-[#25176E] transition-colors flex items-center justify-between group/item"
+                            >
+                              <span className="group-hover/item:translate-x-0.5 transition-transform">{branch.name}</span>
+                              <span className="text-[10px] font-black px-1.5 py-0.5 rounded bg-[#F0EBFF] text-[#25176E] shrink-0">
+                                {branch.code}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {activeSubCategory === "intermediate" && (
+                      <>
+                        <div className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#25176E]">
+                          Intermediate Streams
+                        </div>
+                        <div className="space-y-1">
+                          {intermediateStreams.map((stream) => (
+                            <button
+                              key={stream.id}
+                              onClick={() => handleCourseClick(stream.id)}
+                              className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-[#1E1266] hover:bg-[#F6F4FE] hover:text-[#25176E] transition-colors flex items-center justify-between group/item"
+                            >
+                              <span className="group-hover/item:translate-x-0.5 transition-transform">{stream.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {activeSubCategory === "ssc" && (
+                      <>
+                        <div className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#25176E]">
+                          SSC Board Coaching
+                        </div>
+                        <div className="space-y-1">
+                          <button
+                            onClick={() => handleCourseClick("ssc-10th")}
+                            className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-[#1E1266] hover:bg-[#F6F4FE] hover:text-[#25176E] transition-colors flex items-center justify-between group/item"
+                          >
+                            <span className="group-hover/item:translate-x-0.5 transition-transform">SSC Class 10th Board</span>
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -208,14 +328,14 @@ export default function Navbar() {
 
           {/* 4. Entrance Exams with Dropdown */}
           <div
-            className="relative"
+            className="relative shrink-0 whitespace-nowrap"
             onMouseEnter={() => setExamsHover(true)}
             onMouseLeave={() => setExamsHover(false)}
           >
             <a
               href="#coaching"
               onClick={(e) => handleNavClick(e, "#coaching")}
-              className="hover:text-[#25176E] transition-colors py-2 flex items-center gap-1 cursor-pointer"
+              className="hover:text-[#25176E] transition-colors py-2 flex items-center gap-1 cursor-pointer whitespace-nowrap"
             >
               <span>Entrance Exams</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${examsHover ? "rotate-180 text-[#25176E]" : ""}`} />
@@ -251,38 +371,43 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          {/* 5. Faculty */}
-          <a href="#faculty" onClick={(e) => handleNavClick(e, "#faculty")} className="hover:text-[#25176E] transition-colors">
+          {/* 5. Career Guidance */}
+          <Link href="/career-guidance" className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
+            Career Guidance
+          </Link>
+
+          {/* 6. Faculty */}
+          <a href="#faculty" onClick={(e) => handleNavClick(e, "#faculty")} className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
             Faculty
           </a>
 
-          {/* 6. Director's Message */}
-          <a href="#director" onClick={(e) => handleNavClick(e, "#director")} className="hover:text-[#25176E] transition-colors">
+          {/* 7. Director's Message */}
+          <a href="#director" onClick={(e) => handleNavClick(e, "#director")} className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
             Director's Message
           </a>
 
-          {/* 7. Gallery */}
-          <a href="#gallery" onClick={(e) => handleNavClick(e, "#gallery")} className="hover:text-[#25176E] transition-colors">
+          {/* 8. Gallery */}
+          <a href="#gallery" onClick={(e) => handleNavClick(e, "#gallery")} className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
             Gallery
           </a>
 
-          {/* 8. Testimonials */}
-          <a href="#testimonials" onClick={(e) => handleNavClick(e, "#testimonials")} className="hover:text-[#25176E] transition-colors">
+          {/* 9. Testimonials */}
+          <a href="#testimonials" onClick={(e) => handleNavClick(e, "#testimonials")} className="hover:text-[#25176E] transition-colors whitespace-nowrap shrink-0">
             Testimonials
           </a>
         </div>
 
         {/* Desktop CTA Action Button (Appears smoothly on scroll for Desktop xl+ screens 1280px+) */}
-        <div className={`hidden xl:flex items-center gap-3 transition-all duration-300 ease-out ${
+        <div className={`hidden xl:flex items-center gap-3 shrink-0 transition-all duration-300 ease-out ${
           isScrolled ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
         }`}>
           <a
             href="#contact-form-block"
             onClick={(e) => handleNavClick(e, "#contact-form-block")}
-            className="px-6 py-2.5 rounded-full bg-[#25176E] text-white font-bold text-sm hover:bg-[#1b1054] transition-all shadow-md flex items-center gap-1.5"
+            className="px-4 py-2 xl:px-5 xl:py-2.5 2xl:px-6 2xl:py-2.5 rounded-full bg-[#25176E] text-white font-bold text-xs xl:text-xs 2xl:text-sm hover:bg-[#1b1054] transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap shrink-0"
           >
             <span>Enrol Now</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3.5 h-3.5 2xl:w-4 2xl:h-4" />
           </a>
         </div>
 
@@ -345,27 +470,73 @@ export default function Navbar() {
                     <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
                   </a>
 
-                  {/* Engineering Fields Sub-Accordion */}
+                  {/* Courses We Offer Sub-Accordion (Diploma, Intermediate, SSC) */}
                   <div className="rounded-2xl bg-white/85 border border-[#EBE6FE] overflow-hidden">
                     <button
                       onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}
                       className="w-full flex items-center justify-between p-3.5 text-[#1E1266] font-bold text-base text-left"
                     >
-                      <span>Engineering Fields</span>
+                      <span>Courses We Offer</span>
                       <ChevronDown className={`w-5 h-5 text-[#64748B] transition-transform duration-200 ${mobileCoursesOpen ? "rotate-180" : ""}`} />
                     </button>
                     {mobileCoursesOpen && (
-                      <div className="px-3.5 pb-3.5 pt-1 space-y-1.5 border-t border-[#F0EBFF]">
-                        {engineeringFields.map((field) => (
+                      <div className="px-3 pb-3 pt-1 space-y-2 border-t border-[#F0EBFF]">
+                        {/* 1. Diploma Sub-Category */}
+                        <div className="rounded-xl bg-[#F6F4FE] p-2 space-y-1.5 border border-[#EBE6FE]">
                           <button
-                            key={field.id}
-                            onClick={() => handleCourseClick(field.id)}
-                            className="w-full text-left p-2.5 rounded-xl bg-[#F6F4FE] text-[#25176E] font-bold text-xs flex items-center justify-between hover:bg-[#25176E] hover:text-white transition-colors"
+                            onClick={() => setMobileDiplomaOpen(!mobileDiplomaOpen)}
+                            className="w-full flex items-center justify-between p-1.5 text-[#25176E] font-extrabold text-xs text-left"
                           >
-                            <span>{field.name}</span>
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#EBE6FE] text-[#1E1266] font-extrabold">{field.code}</span>
+                            <span>Diploma Engineering Branches</span>
+                            <ChevronDown className={`w-4 h-4 text-[#25176E] transition-transform duration-200 ${mobileDiplomaOpen ? "rotate-180" : ""}`} />
                           </button>
-                        ))}
+                          {mobileDiplomaOpen && (
+                            <div className="space-y-1 pt-1">
+                              {diplomaBranches.map((branch) => (
+                                <button
+                                  key={branch.id}
+                                  onClick={() => handleCourseClick(branch.id)}
+                                  className="w-full text-left p-2 rounded-lg bg-white text-[#1E1266] font-bold text-xs flex items-center justify-between hover:bg-[#25176E] hover:text-white transition-colors"
+                                >
+                                  <span>{branch.name}</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#F0EBFF] text-[#25176E] font-black">{branch.code}</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 2. Intermediate Sub-Category */}
+                        <div className="rounded-xl bg-[#F6F4FE] p-2 space-y-1.5 border border-[#EBE6FE]">
+                          <button
+                            onClick={() => setMobileInterOpen(!mobileInterOpen)}
+                            className="w-full flex items-center justify-between p-1.5 text-[#25176E] font-extrabold text-xs text-left"
+                          >
+                            <span>Intermediate Streams</span>
+                            <ChevronDown className={`w-4 h-4 text-[#25176E] transition-transform duration-200 ${mobileInterOpen ? "rotate-180" : ""}`} />
+                          </button>
+                          {mobileInterOpen && (
+                            <div className="space-y-1 pt-1">
+                              {intermediateStreams.map((stream) => (
+                                <button
+                                  key={stream.id}
+                                  onClick={() => handleCourseClick(stream.id)}
+                                  className="w-full text-left p-2 rounded-lg bg-white text-[#1E1266] font-bold text-xs flex items-center justify-between hover:bg-[#25176E] hover:text-white transition-colors"
+                                >
+                                  <span>{stream.name}</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 3. SSC Class 10th Direct Button */}
+                        <button
+                          onClick={() => handleCourseClick("ssc-10th")}
+                          className="w-full text-left p-2.5 rounded-xl bg-[#25176E] text-white font-extrabold text-xs flex items-center justify-between hover:bg-[#1b1054] transition-colors"
+                        >
+                          <span>SSC Class 10th Board</span>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -394,6 +565,16 @@ export default function Navbar() {
                       </div>
                     )}
                   </div>
+
+                  {/* Career Guidance */}
+                  <Link
+                    href="/career-guidance"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-white/85 border border-[#EBE6FE] text-[#1E1266] font-bold text-base shadow-xs hover:bg-[#25176E] hover:text-white transition-all group"
+                  >
+                    <span>Career Guidance & Counseling</span>
+                    <ChevronRight className="w-5 h-5 text-[#64748B] group-hover:text-white transition-transform group-hover:translate-x-1" />
+                  </Link>
 
                   {/* Faculty */}
                   <a
@@ -451,7 +632,7 @@ export default function Navbar() {
               </div>
 
               {/* Mobile Bottom Action Buttons */}
-              <div className="pt-5 border-t border-[#EBE6FE] space-y-3">
+              <div className="pt-5 border-t border-[#EBE6FE]">
                 <a
                   href="#contact-form-block"
                   onClick={(e) => {
@@ -463,11 +644,6 @@ export default function Navbar() {
                   <span>Enrol Now for Next Batch</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
-
-                <div className="flex items-center justify-center gap-2 pt-1 text-xs font-semibold text-[#64748B]">
-                  <PhoneCall className="w-3.5 h-3.5 text-[#25176E]" />
-                  <span>IQ Academy of Excellence</span>
-                </div>
               </div>
 
             </motion.div>
