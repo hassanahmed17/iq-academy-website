@@ -107,7 +107,7 @@ export default function DirectorSection() {
                       "For over 13 years, our singular commitment has been empowering diploma engineering students with deep technical fundamentals and top-rank guidance."
                     </p>
                     <p className="text-xs text-white/80 leading-relaxed pt-1">
-                      Mentored 2,000+ alumni to achieve top ranks in ECET, POLYCET, and SBTET board exams through structured problem-solving drills.
+                      Mentored 5,000+ alumni to achieve top ranks in ECET, POLYCET, and SBTET board exams through structured problem-solving drills.
                     </p>
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export default function DirectorSection() {
                   </div>
                   <div className="bg-white/10 p-3 rounded-xl border border-white/10">
                     <span className="block text-[10px] uppercase font-bold text-white/60 mb-0.5">Alumni Mentored</span>
-                    <span className="text-xs sm:text-sm font-extrabold text-white">2,000+</span>
+                    <span className="text-xs sm:text-sm font-extrabold text-white">5,000+</span>
                   </div>
                 </div>
               </motion.div>

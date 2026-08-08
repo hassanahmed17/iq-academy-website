@@ -31,13 +31,14 @@ export default function CoachingServices() {
   };
 
   return (
-    <section id="coaching" className="py-16 sm:py-20 relative bg-white border-y border-[#EBE6FE] overflow-hidden">
+    <section id="coaching" className="py-16 sm:py-20 relative bg-white border-y border-[#EBE6FE] overflow-hidden" suppressHydrationWarning={true}>
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.05 }}
         variants={containerVariants}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        suppressHydrationWarning={true}
       >
         
         {/* Header */}

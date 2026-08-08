@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ArrowRight, Code2, Cpu, Building2, Radio, Zap, Cog, BookOpen, GraduationCap, Atom, Microscope, Landmark } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import CourseDetailModal from "./CourseDetailModal";
 import {
   Carousel,
@@ -626,58 +627,78 @@ export default function EngineeringCoursesTrack() {
 
         {/* 3 Main Category Filter Pills (Polytechnic Diploma, Intermediate, SSC) */}
         <div className="flex items-center justify-center gap-2 sm:gap-3.5 mb-8 sm:mb-10 w-full max-w-xl mx-auto px-2">
-          <button
-            onClick={() => setActiveCategory("diploma")}
-            className={`flex-1 px-3 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center whitespace-nowrap ${
-              activeCategory === "diploma"
-                ? "bg-[#25176E] text-white shadow-md scale-105"
-                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
-            }`}
-          >
-            Diploma
-          </button>
-          
-          <button
-            onClick={() => setActiveCategory("intermediate")}
-            className={`flex-1 px-3 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center whitespace-nowrap ${
-              activeCategory === "intermediate"
-                ? "bg-[#25176E] text-white shadow-md scale-105"
-                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
-            }`}
-          >
-            Intermediate
-          </button>
-
-          <button
-            onClick={() => setActiveCategory("ssc")}
-            className={`flex-1 px-3 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center whitespace-nowrap ${
-              activeCategory === "ssc"
-                ? "bg-[#25176E] text-white shadow-md scale-105"
-                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
-            }`}
-          >
-            SSC
-          </button>
+          {(["diploma", "intermediate", "ssc"] as const).map((cat) => {
+            const isActive = activeCategory === cat;
+            const label = cat === "diploma" ? "Diploma" : cat === "intermediate" ? "Intermediate" : "SSC";
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`relative flex-1 px-3 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 shadow-xs text-center whitespace-nowrap cursor-pointer ${
+                  isActive
+                    ? "text-white shadow-md scale-105"
+                    : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeCourseTab"
+                    className="absolute inset-0 bg-[#25176E] rounded-full z-0"
+                    transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Mobile View: Touch Swiping Carousel with Buttons (or Single Card for SSC without controls) */}
-        <div className="block md:hidden relative">
-          <DiplomaCoursesCarousel
-            courses={filteredCourses}
-            onViewSyllabus={setSelectedCourse}
-          />
-        </div>
-
-        {/* Desktop View: Grid matching card design */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map((course) => (
-            <div key={course.id} className="hover:-translate-y-1 transition-transform duration-200">
-              <DiplomaCourseCard
-                course={course}
-                onSelect={setSelectedCourse}
+        {/* Mobile View: Touch Swiping Carousel with Smooth Fade-Slide Entrance */}
+        <div className="block md:hidden relative min-h-[380px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <DiplomaCoursesCarousel
+                courses={filteredCourses}
+                onViewSyllabus={setSelectedCourse}
               />
-            </div>
-          ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Desktop View: Grid matching card design with Smooth Staggered Entrance */}
+        <div className="hidden md:block min-h-[380px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="grid grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {filteredCourses.map((course, idx) => (
+                <motion.div
+                  key={course.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className="h-full"
+                >
+                  <DiplomaCourseCard
+                    course={course}
+                    onSelect={setSelectedCourse}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
       </div>

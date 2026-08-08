@@ -134,16 +134,16 @@ function VideoCardItem({ id, src, studentName, course, quote, unmutedId, onToggl
     <div
       ref={cardRef}
       className="relative w-full max-w-[340px] sm:max-w-[360px] aspect-[4/5] mx-auto rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-[#0F0A2C] group select-none flex flex-col justify-between"
+      suppressHydrationWarning={true}
     >
       {/* Video Element */}
       <video
         ref={videoRef}
         src={src}
         loop
-        autoPlay
         muted
         playsInline
-        preload="metadata"
+        preload="none"
         onTimeUpdate={handleTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
@@ -249,11 +249,11 @@ export default function VideoReviewsSection() {
   ];
 
   return (
-    <section id="video-reviews" className="py-16 sm:py-24 relative bg-white border-y border-[#EBE6FE] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="video-reviews" className="py-16 sm:py-24 relative bg-white border-y border-[#EBE6FE] overflow-hidden" suppressHydrationWarning={true}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" suppressHydrationWarning={true}>
         
         {/* Main Indigo Glassmorphic Container with Noisy Gradient */}
-        <div className="relative rounded-[32px] p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-hidden border border-[#372692]">
+        <div className="relative rounded-[32px] p-6 sm:p-10 lg:p-14 text-white shadow-2xl overflow-hidden border border-[#372692]" suppressHydrationWarning={true}>
           <GradientBackground
             gradientOrigin="bottom-right"
             colors={[

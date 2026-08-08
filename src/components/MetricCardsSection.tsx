@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trophy } from "lucide-react";
 import { GradientBackground } from "@/components/ui/noisy-gradient-backgrounds";
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
@@ -192,8 +192,8 @@ export default function MetricCardsSection() {
   };
 
   return (
-    <section className="py-8 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative bg-[#F6F4FE]" id="top-ranks">
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section className="py-8 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative bg-[#F6F4FE]" id="top-ranks" suppressHydrationWarning={true}>
+      <div className="max-w-7xl mx-auto relative z-10" suppressHydrationWarning={true}>
 
         {/* ========================================================================= */}
         {/* 🏆 ULTRA-EXECUTIVE SAASMO INDIGO BANNER WITH GLASSMORPHIC POLISH          */}
@@ -227,11 +227,11 @@ export default function MetricCardsSection() {
           <div className="absolute -bottom-28 -left-28 w-96 h-96 bg-[#5B3DF5]/30 rounded-full blur-3xl pointer-events-none" />
 
           {/* BANNER HEADER & RESPONSIVE SINGLE-ROW FILTER BAR */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8 relative z-10 border-b border-white/10 pb-6">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 sm:gap-6 mb-3.5 sm:mb-8 relative z-10 border-b border-white/10 pb-3.5 sm:pb-6">
             
             {/* Left Header Title */}
-            <div className="space-y-2 text-left">
-              <div className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-[#D2FF00] text-xs font-black uppercase tracking-widest shadow-xs">
+            <div className="space-y-1.5 text-left">
+              <div className="inline-flex items-center justify-center px-3.5 py-1 rounded-full bg-white/10 border border-white/15 backdrop-blur-md text-[#D2FF00] text-xs font-black uppercase tracking-widest shadow-xs">
                 <span>State Level Achievements</span>
               </div>
               
@@ -245,14 +245,14 @@ export default function MetricCardsSection() {
             </div>
 
             {/* Filter Buttons: Single-Row Segmented Controller */}
-            <div className="w-full lg:w-auto flex items-center justify-between gap-1 p-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-xl shrink-0 shadow-inner">
+            <div className="w-full lg:w-auto flex items-center justify-between gap-1 p-1 sm:p-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-xl shrink-0 shadow-inner">
               {(["ALL", "POLYCET", "ECET"] as ExamFilter[]).map((filter) => {
                 const isActive = activeFilter === filter;
                 return (
                   <button
                     key={filter}
                     onClick={() => handleFilterChange(filter)}
-                    className={`relative flex-1 lg:flex-initial px-3 py-2 sm:px-5 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-extrabold transition-all duration-300 cursor-pointer text-center ${
+                    className={`relative flex-1 lg:flex-initial px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-[11px] sm:text-xs font-extrabold transition-all duration-300 cursor-pointer text-center ${
                       isActive
                         ? "text-[#0C091F] shadow-lg"
                         : "text-white/75 hover:text-white hover:bg-white/5"
@@ -297,18 +297,18 @@ export default function MetricCardsSection() {
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.22, ease: "easeOut" }}
                 ref={scrollContainerRef}
-                className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar pb-2 pt-1 scroll-smooth snap-x snap-mandatory"
+                className="flex items-stretch gap-3.5 sm:gap-6 overflow-x-auto no-scrollbar pb-2 pt-0.5 scroll-smooth snap-x snap-mandatory"
               >
                 {filteredAchievers.map((student) => (
                   <div
                     key={student.id}
-                    className="w-[230px] sm:w-[270px] lg:w-[280px] shrink-0 snap-start bg-gradient-to-b from-white/10 via-white/[0.04] to-white/[0.02] backdrop-blur-xl border border-white/15 rounded-2xl sm:rounded-3xl p-4 flex flex-col justify-between hover:border-[#D2FF00]/60 hover:shadow-[0_20px_40px_-15px_rgba(210,255,0,0.2)] transition-all duration-500 group relative overflow-hidden"
+                    className="w-[220px] sm:w-[260px] lg:w-[270px] shrink-0 snap-start bg-gradient-to-b from-white/10 via-white/[0.04] to-white/[0.02] backdrop-blur-xl border border-white/15 rounded-2xl sm:rounded-3xl p-3 sm:p-4 flex flex-col justify-between hover:border-[#D2FF00]/60 hover:shadow-[0_20px_40px_-15px_rgba(210,255,0,0.25)] transition-all duration-500 group relative overflow-hidden"
                   >
                     {/* Top Glow Accent Bar on Hover */}
                     <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#D2FF00] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                     {/* Student Photo Frame */}
-                    <div className="relative w-full h-48 sm:h-56 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1E1266]/60 border border-white/15 mb-4 flex items-center justify-center shadow-inner">
+                    <div className="relative w-full h-44 sm:h-52 rounded-xl sm:rounded-2xl overflow-hidden bg-[#1E1266]/60 border border-white/15 mb-3 flex items-center justify-center shadow-inner">
                       {student.image ? (
                         <>
                           <img
@@ -320,12 +320,12 @@ export default function MetricCardsSection() {
                                 : `${student.objectPos || "object-top"} scale-[1.12] group-hover:scale-[1.16]`
                             } transition-transform duration-700 ease-out ${student.imageClass || ""}`}
                           />
-                          {/* Faculty-styled bottom purple gradient overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0C091F] via-[#1E1266]/35 to-transparent pointer-events-none z-10" />
+                          {/* Bottom gradient fade on photo */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0C091F] via-[#1E1266]/30 to-transparent pointer-events-none z-10" />
                         </>
                       ) : (
                         <div className="flex flex-col items-center justify-center p-3 text-center">
-                          <div className="w-14 h-14 rounded-full bg-[#D2FF00]/15 border border-[#D2FF00]/30 flex items-center justify-center text-[#D2FF00] font-black text-lg mb-1 shadow-sm">
+                          <div className="w-13 h-13 rounded-full bg-[#D2FF00]/15 border border-[#D2FF00]/30 flex items-center justify-center text-[#D2FF00] font-black text-lg mb-1 shadow-sm">
                             {student.name
                               .split(" ")
                               .map((n) => n[0])
@@ -338,34 +338,39 @@ export default function MetricCardsSection() {
                         </div>
                       )}
 
-                      {/* Exam Category Floating Pill (Top-Right) */}
-                      <div className="absolute top-2.5 right-2.5 bg-[#0C091F]/85 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg border border-white/20 z-20 shadow-md uppercase tracking-wider">
+                      {/* Exam Category Floating Pill (Top-Right of Photo) */}
+                      <div className="absolute top-2 right-2 bg-[#0C091F]/90 backdrop-blur-md text-[#D2FF00] text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-md border border-white/20 z-20 shadow-md uppercase tracking-wider">
                         {student.category}
                       </div>
                     </div>
 
-                    {/* Rank, Name & Hall Ticket Number */}
-                    <div className="space-y-2 text-left">
-                      {/* State Rank Badge */}
-                      <div>
-                        <span className="inline-block px-3 py-1 rounded-full bg-[#D2FF00] text-[#0C091F] text-xs font-black shadow-md tracking-tight group-hover:scale-105 transition-transform">
-                          {student.rank}
+                    {/* Redesigned Structured Card Footer: Rank, Name & Hall Ticket */}
+                    <div className="space-y-2 text-left w-full">
+                      {/* Row 1: State Rank Trophy Badge & Category indicator */}
+                      <div className="flex items-center justify-between gap-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-[#D2FF00] text-[#0C091F] text-[11px] sm:text-xs font-black shadow-sm tracking-tight group-hover:scale-[1.03] transition-transform">
+                          <Trophy className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#0C091F] shrink-0 stroke-[2.5]" />
+                          <span>{student.rank}</span>
+                        </span>
+                        <span className="text-[9px] sm:text-[10px] font-bold text-white/60 tracking-wider uppercase font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                          Ranker
                         </span>
                       </div>
 
-                      {/* Student Name (Line Clamp 2 to ensure long names fit completely without truncation) */}
+                      {/* Row 2: Student Name */}
                       <h3
-                        className="font-display-saasmo text-xs sm:text-sm md:text-base font-bold text-white group-hover:text-[#D2FF00] transition-colors leading-snug line-clamp-2 min-h-[2.4rem] flex items-center tracking-tight pt-0.5"
+                        className="font-display-saasmo text-xs sm:text-sm font-extrabold text-white group-hover:text-[#D2FF00] transition-colors leading-snug line-clamp-1 tracking-tight"
                         title={student.name}
                       >
                         {student.name}
                       </h3>
 
-                      {/* Hall Ticket Number Glass Pill (if available) */}
+                      {/* Row 3: Hall Ticket Number Glass Pill */}
                       {student.hallTicketNo && (
-                        <div className="pt-1">
-                          <div className="text-[11px] font-mono font-semibold text-white/90 bg-white/10 backdrop-blur-md px-3 py-1 rounded-xl border border-white/15 inline-block tracking-wider whitespace-nowrap shadow-xs">
-                            HT No: {student.hallTicketNo}
+                        <div className="pt-0.5">
+                          <div className="w-full flex items-center justify-between px-2.5 py-1 rounded-lg bg-white/[0.08] backdrop-blur-md border border-white/10 text-white/80 text-[10px] sm:text-[11px] font-mono shadow-xs">
+                            <span className="text-white/50 text-[9px] uppercase tracking-wider font-sans font-bold">HT No</span>
+                            <span className="font-semibold text-white tracking-wider">{student.hallTicketNo}</span>
                           </div>
                         </div>
                       )}

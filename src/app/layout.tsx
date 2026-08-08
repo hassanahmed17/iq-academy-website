@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Cinzel, Cinzel_Decorative } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,6 +14,20 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
+
+const cinzelDecorative = Cinzel_Decorative({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-cinzel-decorative",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://iqacademy.in"),
   title: "IQ Academy of Excellence | Best Polytechnic & Diploma Coaching in Hyderabad",
@@ -21,11 +35,10 @@ export const metadata: Metadata = {
     "IQ Academy of Excellence is Hyderabad's premier coaching institute for Polytechnic & Diploma Engineering (CSE, ECE, EEE, ME, CE, AI/ML), POLYCET, and ECET entrance preparation.",
   icons: {
     icon: [
-      { url: "/images/iq-logo.png", type: "image/png" },
-      { url: "/favicon.ico" },
+      { url: "/images/iqloader-logo.png", type: "image/png" },
     ],
-    shortcut: "/images/iq-logo.png",
-    apple: "/images/iq-logo.png",
+    shortcut: "/images/iqloader-logo.png",
+    apple: "/images/iqloader-logo.png",
   },
   formatDetection: {
     telephone: false,
@@ -57,7 +70,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/iqae-crest.png",
+        url: "/images/iqloader-logo.png",
         width: 512,
         height: 512,
         alt: "IQ Academy of Excellence Crest Emblem",
@@ -85,12 +98,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${plusJakarta.variable} h-full antialiased`}
+      className={`${inter.variable} ${plusJakarta.variable} ${cinzel.variable} ${cinzelDecorative.variable} h-full antialiased`}
       suppressHydrationWarning={true}
     >
       <head>
-        <link rel="icon" href="/images/iq-logo.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/images/iq-logo.png" />
+        <link rel="icon" href="/images/iqloader-logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/images/iqloader-logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/iqloader-logo.png" />
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
       </head>
       <body

@@ -174,7 +174,7 @@ export default function AboutUsSection() {
   };
 
   return (
-    <section id="about" className="py-16 sm:py-20 relative bg-[#F6F4FE] overflow-hidden">
+    <section id="about" className="py-16 sm:py-20 relative bg-[#F6F4FE] overflow-hidden" suppressHydrationWarning={true}>
 
       {/* Ambient Background Glows */}
       <div className="absolute top-1/4 right-0 w-[550px] h-[550px] bg-[#D8CEFE]/35 rounded-full blur-3xl pointer-events-none" />

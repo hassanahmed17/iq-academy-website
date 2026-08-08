@@ -122,11 +122,12 @@ export default function HeroSection() {
     <section 
       className="relative w-full bg-[#F6F4FE] overflow-hidden" 
       ref={heroRef}
+      suppressHydrationWarning={true}
     >
       {/* ========================================================================= */}
       {/* 📱 MOBILE & TABLET HERO VIEW (xl:hidden) - RESPONSIVE FOR ALL TABLET/MOBILE SIZES (INCLUDING 1024x1366 IPAD PRO) */}
       {/* ========================================================================= */}
-      <div className="block xl:hidden w-full pt-16 sm:pt-20 pb-20 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative">
+      <div className="block xl:hidden w-full pt-16 sm:pt-20 pb-20 bg-[#F6F4FE] flex flex-col justify-start overflow-hidden relative" suppressHydrationWarning={true}>
         
         {/* 1. Top Framed Video (Scales smoothly up to 1024px portrait tablet size) */}
         <div className="relative w-full h-[200px] min-[380px]:h-[220px] min-[440px]:h-[240px] sm:h-[300px] md:h-[360px] lg:h-[420px] overflow-hidden shrink-0 bg-[#F6F4FE]">
@@ -237,7 +238,7 @@ export default function HeroSection() {
       {/* ========================================================================= */}
       {/* 💻 DESKTOP HERO VIEW (hidden xl:flex) - FOR WIDESCREEN DESKTOP MONITORS    */}
       {/* ========================================================================= */}
-      <div className="hidden xl:flex relative w-full min-h-[100dvh] min-h-screen pt-36 pb-24 flex-col justify-center bg-white">
+      <div className="hidden xl:flex relative w-full min-h-[100dvh] min-h-screen pt-36 pb-24 flex-col justify-center bg-white" suppressHydrationWarning={true}>
         {/* Background video covering full section width & height with Desktop Specific Video (1212.mp4) */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
           <SeamlessLoopVideo src="/videos/hero-desktop.mp4" objectPos="object-[center_10%]" />

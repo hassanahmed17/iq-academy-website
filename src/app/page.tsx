@@ -24,7 +24,7 @@ export default function Home() {
     // Prevent scrolling while preloader is active
     document.body.style.overflow = "hidden";
 
-    const MIN_LOADER_TIME = 1800; // Entrance and scale completion
+    const MIN_LOADER_TIME = 400; // Fast sleek entrance without blocking FCP/TTI
     const startTime = Date.now();
     let timerId: NodeJS.Timeout | null = null;
 
@@ -42,7 +42,7 @@ export default function Home() {
     if (document.readyState === "complete") {
       handleLoadComplete();
     } else {
-      window.addEventListener("load", handleLoadComplete);
+      window.addEventListener("load", handleLoadComplete, { once: true });
     }
 
     return () => {

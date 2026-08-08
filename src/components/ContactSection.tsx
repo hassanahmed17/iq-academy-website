@@ -110,7 +110,7 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="pt-6 pb-16 sm:pt-8 sm:pb-20 relative bg-[#F6F4FE] overflow-hidden" suppressHydrationWarning={true}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" suppressHydrationWarning={true}>
         
         {/* Saasmo Indigo CTA Banner with Noisy Gradient Background */}
         <div className="saasmo-indigo-card p-6 sm:p-10 text-center text-white relative shadow-2xl mb-12 rounded-3xl overflow-hidden border border-[#372692]">

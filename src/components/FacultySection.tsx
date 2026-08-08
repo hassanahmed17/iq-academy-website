@@ -92,11 +92,11 @@ const staffList: StaffMember[] = [
   },
   {
     id: 7,
-    name: "Javed Sir",
-    qualification: "M.Tech",
+    name: "Shaik Javeed",
+    qualification: "B.Tech",
     roleOrSubject: "Electrical & Electronics (EEE)",
     category: "teaching",
-    experience: "5+ Years Experience",
+    experience: "8+ Years Experience",
     image: "",
   },
 
@@ -140,7 +140,7 @@ function StaffCard({ member }: { member: StaffMember }) {
   const tags = member.roleOrSubject.split(",").map((s) => s.trim()).filter(Boolean);
 
   return (
-    <div className="group flex-none w-full rounded-2xl sm:rounded-3xl relative overflow-hidden aspect-[4/3.4] md:aspect-[4/3] shadow-md hover:shadow-xl border border-[#EBE6FE]/40 transition-all duration-300 bg-[#1E1266]">
+    <div className="group flex-none w-full rounded-2xl sm:rounded-3xl relative overflow-hidden aspect-[4/3.4] md:aspect-[4/3] shadow-md hover:shadow-xl border border-[#EBE6FE]/40 transition-all duration-300 bg-[#1E1266]" suppressHydrationWarning={true}>
       {/* Background Photo or Icon Fallback */}
       {member.image ? (
         <>

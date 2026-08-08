@@ -41,9 +41,9 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-[#64748B] pt-14 sm:pt-16 pb-16 sm:pb-20 text-sm border-t border-[#EBE6FE] shadow-sm relative overflow-hidden">
+    <footer className="bg-white text-[#64748B] pt-14 sm:pt-16 pb-16 sm:pb-20 text-sm border-t border-[#EBE6FE] shadow-sm relative overflow-hidden" suppressHydrationWarning={true}>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" suppressHydrationWarning={true}>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           

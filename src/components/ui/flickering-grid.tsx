@@ -148,9 +148,21 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       }
     };
 
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
     animationFrameId = requestAnimationFrame(render);
 
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [isInView, canvasSize, setupCanvas, animate]);
 
   return (
