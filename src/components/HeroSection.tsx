@@ -118,6 +118,19 @@ export default function HeroSection() {
     },
   };
 
+  const scrollToContact = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById("contact-form-block") || document.getElementById("contact");
+    if (el) {
+      const navHeight = 70;
+      const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: Math.max(0, elementPosition - navHeight),
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
     <section 
       className="relative w-full bg-[#F6F4FE] overflow-hidden" 
@@ -179,11 +192,8 @@ export default function HeroSection() {
           >
             <a
               href="#contact-form-block"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-              className="w-full sm:w-auto py-3 px-5 sm:py-3.5 sm:px-7 rounded-2xl sm:rounded-full bg-[#1B1054] text-white font-bold text-xs min-[390px]:text-sm sm:text-base shadow-md flex items-center justify-center gap-2 group hover:bg-[#150c45] active:scale-95 transition-all"
+              onClick={scrollToContact}
+              className="w-full sm:w-auto py-3 px-5 sm:py-3.5 sm:px-7 rounded-2xl sm:rounded-full bg-[#1B1054] text-white font-bold text-xs min-[390px]:text-sm sm:text-base shadow-md flex items-center justify-center gap-2 group hover:bg-[#150c45] active:scale-95 transition-all cursor-pointer"
             >
               <span>Join the Next Batch</span>
               <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
@@ -287,10 +297,7 @@ export default function HeroSection() {
             >
               <a
                 href="#contact-form-block"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById("contact-form-block")?.scrollIntoView({ behavior: "smooth", block: "center" });
-                }}
+                onClick={scrollToContact}
                 className="w-auto px-7 py-3.5 rounded-full bg-[#25176E] text-white font-bold text-sm hover:bg-[#1b1054] active:scale-95 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group cursor-pointer"
               >
                 <span>Join the Next Batch</span>

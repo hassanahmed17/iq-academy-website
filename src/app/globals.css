@@ -231,12 +231,4 @@ div[class*="nextjs-dev-indicator"],
   animation-play-state: paused !important;
 }
 
-/* CSS Layout Containment & Rendering Optimization for Off-Screen Sections (MDN Web Performance) */
-#gallery,
-#testimonials,
-#faculty,
-#director,
-#video-reviews {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 700px;
-}
+/* End of Global Stylesheet */

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { UserRound, Briefcase } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   Carousel,
   CarouselContent,
@@ -225,64 +225,95 @@ export default function FacultySection() {
           </p>
         </div>
 
-        {/* Category Switcher Tabs: Teaching Staff vs Non-Teaching Staff (No Emojis/Icons) */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 w-full max-w-md mx-auto px-2">
-          <button
-            onClick={() => setActiveCategory("teaching")}
-            className={`flex-1 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center ${
-              activeCategory === "teaching"
-                ? "bg-[#25176E] text-white shadow-md scale-105"
-                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
-            }`}
-          >
-            Teaching Staff
-          </button>
-
-          <button
-            onClick={() => setActiveCategory("admin")}
-            className={`flex-1 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all shadow-xs text-center ${
-              activeCategory === "admin"
-                ? "bg-[#25176E] text-white shadow-md scale-105"
-                : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
-            }`}
-          >
-            Non-Teaching Staff
-          </button>
+        {/* Category Switcher Tabs: Teaching Staff vs Non-Teaching Staff */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3.5 mb-8 sm:mb-12 w-full max-w-md mx-auto px-2">
+          {(["teaching", "admin"] as const).map((cat) => {
+            const isActive = activeCategory === cat;
+            const label = cat === "teaching" ? "Teaching Staff" : "Non-Teaching Staff";
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`relative flex-1 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 shadow-xs text-center whitespace-nowrap cursor-pointer ${
+                  isActive
+                    ? "text-white shadow-md scale-105"
+                    : "bg-white text-[#1E1266] border border-[#EBE6FE] hover:bg-[#F0EBFF]"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeFacultyTab"
+                    className="absolute inset-0 bg-[#25176E] rounded-full z-0"
+                    transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Mobile View Carousel (Instant visibility on button click) */}
-        <div className="block md:hidden relative px-1">
-          <Carousel key={activeCategory} opts={{ align: "start", loop: false }} className="relative w-full">
-            <CarouselContent className="-ml-3">
-              {filteredStaff.map((member) => (
-                <CarouselItem key={member.id} className="pl-3 basis-[88%] sm:basis-[65%]">
-                  <div className="h-full py-1">
-                    <StaffCard member={member} />
+        {/* Mobile View Carousel with Smooth Fade-Slide Entrance */}
+        <div className="block md:hidden relative px-1 min-h-[380px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Carousel opts={{ align: "start", loop: false }} className="relative w-full">
+                <CarouselContent className="-ml-3">
+                  {filteredStaff.map((member) => (
+                    <CarouselItem key={member.id} className="pl-3 basis-[88%] sm:basis-[65%]">
+                      <div className="h-full py-1">
+                        <StaffCard member={member} />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                
+                {/* Carousel Controls */}
+                {filteredStaff.length > 1 && (
+                  <div className="flex items-center justify-between mt-6 px-1">
+                    <CarouselDots />
+                    <div className="flex items-center gap-2 z-10">
+                      <CarouselPrevious className="static translate-x-0 translate-y-0 w-9 h-9 bg-white text-[#25176E] border border-[#EBE6FE] shadow-sm hover:bg-[#F0EBFF] active:scale-95" />
+                      <CarouselNext className="static translate-x-0 translate-y-0 w-9 h-9 bg-[#25176E] text-white border border-[#25176E] shadow-sm hover:bg-[#1E1266] active:scale-95" />
+                    </div>
                   </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            
-            {/* Carousel Controls */}
-            {filteredStaff.length > 1 && (
-              <div className="flex items-center justify-between mt-6 px-1">
-                <CarouselDots />
-                <div className="flex items-center gap-2 z-10">
-                  <CarouselPrevious className="static translate-x-0 translate-y-0 w-9 h-9 bg-white text-[#25176E] border border-[#EBE6FE] shadow-sm hover:bg-[#F0EBFF] active:scale-95" />
-                  <CarouselNext className="static translate-x-0 translate-y-0 w-9 h-9 bg-[#25176E] text-white border border-[#25176E] shadow-sm hover:bg-[#1E1266] active:scale-95" />
-                </div>
-              </div>
-            )}
-          </Carousel>
+                )}
+              </Carousel>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Desktop View 3-Column Grid (100% visible immediately on button click) */}
-        <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredStaff.map((member) => (
-            <div key={member.id} className="hover:-translate-y-1.5 transition-all duration-300">
-              <StaffCard member={member} />
-            </div>
-          ))}
+        {/* Desktop View 3-Column Grid with Smooth Staggered Entrance */}
+        <div className="hidden md:block min-h-[380px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {filteredStaff.map((member, idx) => (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className="h-full"
+                >
+                  <StaffCard member={member} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
